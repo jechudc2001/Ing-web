@@ -1,0 +1,76 @@
+/* Estilos generales */
+.separator-line {
+    border: none;
+    border-top: 1px solid var(--blue); /* Cambia el color a azul */
+    margin-top: 8px;
+    margin-bottom: 8px;
+    width: 40%; /* Mantén el ancho deseado */
+    margin-left: 0; /* Alinea a la izquierda */
+}
+
+.titulo-dashboard2 {
+    font-weight: bold;
+    font-size: 20px;
+    color: var(--blue);
+}
+
+.subtitle-dashboard {
+    font-weight: bold;
+    font-size: 15px;
+    color: var(--blue);
+}
+
+.lista-cursos {
+    font-size: 14px;
+    color: var(--blue);
+    list-style: disc !important; /* Cambia a puntitos */
+    padding-left: 30px; /* Ajusta el espaciado a la izquierda si es necesario */
+}
+
+.fondo-dashboard-link {
+    width: 48%; /* Ajusta el ancho de cada enlace a aproximadamente la mitad */
+    margin: 0 1%; /* Agrega un pequeño margen a los lados para separación */
+}
+
+.contenedor-nombre-examen {
+    background-color: var(--pearl); /* Fondo rosado */
+    border-radius: 30px; /* Borde redondeado */
+    text-align: left; /* Alineación a la izquierda */
+    width: 50%; /* Ancho más estrecho */
+    color: #333; /* Color de texto */
+    text-decoration: none; /* Sin subrayado en los enlaces */
+    margin-left: 0; /* Alineado a la izquierda */
+    padding-left: 15px; /* Espacio adicional para separar el texto del borde */
+}
+
+.contenedor-nombre-examen h5 {
+    font-size: 16px; /* Texto más pequeño */
+    margin: 0;
+    font-weight: bold;
+}
+
+.options-container {
+    margin-left: 20px;
+    display: flex; /* Asegúrate de que el contenedor esté en flex para los botones */
+}
+
+.btn-seleccion{
+    margin-right: 5px;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+/* Ajuste para pantallas pequeñas */
+@media (max-width: 768px) {
+    .d-flex.justify-content-between {
+        flex-direction: column; /* Apila los elementos en pantallas pequeñas */
+    }
+
+    .fondo-dashboard-link {
+        width: 100%; /* Asegura que ocupe todo el ancho en móviles */
+        margin-bottom: 20px; /* Agrega espacio entre los contenedores en vista vertical */
+    }
+    .contenedor-nombre-examen {
+        width: 100%; /* 100% de ancho en pantallas pequeñas */
+    }
+}

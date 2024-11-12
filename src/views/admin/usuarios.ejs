@@ -1,0 +1,78 @@
+<% title = 'Editar Examen' %> <!-- Establecer el título -->
+
+<%- include('../partials/layoutsAdmin.ejs'); %> 
+
+<body>
+    <div class="wrapper"> 
+        <%- include('../partials/sidebarAdmin.ejs'); %> 
+
+        <div id="main-content" class="main p-3">
+            <%- include('../partials/header.ejs'); %>
+            <!-- contenido principal-->
+            <div class="contenedor-dashboard">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="titulo-dashboard" id="tituloUsuarios">Lista de Usuarios</h1>
+                    <a href="/crear_usuario" class="btn1" id="addUserBtn">Añadir usuario</a>
+                </div>
+
+                <div class="fondo-dashboard">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nombre completo</th>
+                                <th scope="col">Correo</th>
+                                <th scope="col">Rol</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userList">
+                            <% user.forEach((user, index) => { %>
+                              <tr id="userRow<%= user.id_usuario %>">
+                                <th scope="row" id="userNumber<%= index + 1 %>"><%= user.id_usuario %></th>
+                                <td id="userName<%= index + 1 %>"><%= user.nombre_completo %></td> <!-- Actualización aquí -->
+                                <td id="userEmail<%= index + 1 %>"><%= user.email %></td>
+                                <td id="userRole<%= index + 1 %>"><%= user.user_type %></td>
+                                <td id="userActions<%= index + 1 %>">
+                                  <a href="/editar_usuario/<%= user.id_usuario %>" class="btn btn-sm btn-warning" id="editUserBtn<%= index + 1 %>">Editar</a>
+                                  <button class="btn btn-sm btn-danger delete-user-btn" data-id="<%= user.id_usuario %>">Eliminar</button>
+                                </td>
+                              </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include('../partials/endPageAdmin.ejs'); %>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll('.delete-user-btn').forEach(button => {
+                button.addEventListener('click', async (event) => {
+                    const userId = event.target.getAttribute('data-id');
+                    
+                    const confirmed = confirm("¿Estás seguro de que deseas eliminar este usuario?");
+                    if (!confirmed) return;
+        
+                    try {
+                        const response = await fetch(`/users/${userId}`, {
+                            method: 'DELETE',
+                        });
+        
+                        if (response.ok) {
+                            alert("Usuario eliminado exitosamente");
+                            // Eliminar la fila del usuario de la tabla sin recargar la página
+                            document.getElementById(`userRow${userId}`).remove();
+                        } else {
+                            alert("Error al eliminar el usuario");
+                        }
+                    } catch (error) {
+                        console.error("Error al enviar la solicitud de eliminación:", error);
+                        alert("Hubo un problema al intentar eliminar el usuario.");
+                    }
+                });
+            });
+        });
+    </script>

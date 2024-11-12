@@ -1,0 +1,124 @@
+<% title = 'Editar Examen' %> <!-- Título de la página -->
+<%- include('../partials/layoutsAdmin.ejs'); %>
+
+<body>
+    <div class="wrapper"> 
+        <%- include('../partials/sidebarAdmin.ejs'); %>
+
+        <div id="main-content" class="main p-3">
+            <%- include('../partials/header.ejs'); %>
+        
+            <div class="contenedor-dashboard">
+                <h1 class="titulo-dashboard">Editar Examen</h1>
+                <div class="fondo-dashboard">
+                    <form id="editExamForm">
+                        <div class="mb-3">
+                            <label for="examId" class="form-label">ID del Examen:</label>
+                            <span id="examId"><%= exam.id_exam %></span> <!-- Mostrar el ID del examen -->
+                            <input type="hidden" id="examIdHidden" value="<%= exam.id_exam %>"> <!-- Input oculto para el ID -->
+                        </div>
+                    
+                        <div class="mb-3">
+                            <label for="examType" class="form-label">Tipo de Examen</label>
+                            <select class="form-select" id="examType" name="exam_type" required>
+                                <option value="1" <%= exam.exam_type === 1 ? 'selected' : '' %>>Fase 1</option>
+                                <option value="2" <%= exam.exam_type === 2 ? 'selected' : '' %>>Fase 2</option>
+                                <option value="3" <%= exam.exam_type === 3 ? 'selected' : '' %>>Cepu Verano 1</option>
+                                <option value="4" <%= exam.exam_type === 4 ? 'selected' : '' %>>Cepu Verano 2</option>
+                                <option value="5" <%= exam.exam_type === 5 ? 'selected' : '' %>>Cepu Otoño 1</option>
+                                <option value="6" <%= exam.exam_type === 6 ? 'selected' : '' %>>Cepu Otoño 2</option>
+                                <option value="7" <%= exam.exam_type === 7 ? 'selected' : '' %>>Cepu Invierno 1</option>
+                                <option value="8" <%= exam.exam_type === 8 ? 'selected' : '' %>>Cepu Invierno 2</option>
+                            </select>
+                        </div>
+                    
+                        <div class="mb-3">
+                            <label for="year" class="form-label">Año</label>
+                            <select class="form-select" id="year" name="year" required>
+                                <option value="2014" <%= exam.year === 2014 ? 'selected' : '' %>>2014</option>
+                                <option value="2015" <%= exam.year === 2015 ? 'selected' : '' %>>2015</option>
+                                <option value="2016" <%= exam.year === 2016 ? 'selected' : '' %>>2016</option>
+                                <option value="2017" <%= exam.year === 2017 ? 'selected' : '' %>>2017</option>
+                                <option value="2018" <%= exam.year === 2018 ? 'selected' : '' %>>2018</option>
+                                <option value="2019" <%= exam.year === 2019 ? 'selected' : '' %>>2019</option>
+                                <option value="2020" <%= exam.year === 2020 ? 'selected' : '' %>>2020</option>
+                                <option value="2021" <%= exam.year === 2021 ? 'selected' : '' %>>2021</option>
+                                <option value="2022" <%= exam.year === 2022 ? 'selected' : '' %>>2022</option>
+                            </select>
+                        </div>
+                    
+                        <div class="mb-3">
+                            <label for="channel" class="form-label">Canal</label>
+                            <select class="form-select" id="channel" name="canal" required>
+                                <option value="1" <%= exam.canal === 1 ? 'selected' : '' %>>1</option>
+                                <option value="2" <%= exam.canal === 2 ? 'selected' : '' %>>2</option>
+                            </select>
+                        </div>
+                    
+                        <div class="text-center">
+                            <button type="submit" class="btn1">Guardar cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/endPageAdmin.ejs'); %>
+
+    <script>
+        // Función fetchRequest para manejar las solicitudes
+        async function fetchRequest(url, method, data) {
+            const options = {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            };
+
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('Error en fetchRequest:', error);
+                throw error; // Captura el error a nivel superior
+            }
+        }
+
+        // Manejo del envío del formulario de edición
+        document.getElementById('editExamForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Previene el envío por defecto
+
+            // Obtener valores de los campos del formulario
+            const examId = document.getElementById('examIdHidden').value;
+            const examType = document.getElementById('examType').value;
+            const year = document.getElementById('year').value;
+            const channel = document.getElementById('channel').value;
+
+            const examData = {
+                exam_type: examType,
+                year: year,
+                canal: channel
+            };
+
+            try {
+                // Llamada a fetchRequest con método PUT
+                const response = await fetchRequest(`/exams/${examId}`, 'PUT', examData);
+                console.log('Examen actualizado:', response);
+                // Mensaje de éxito y redirección
+                alert('Examen actualizado exitosamente');
+                window.location.href = '/Examen'; // Redirige a la ruta deseada
+            } catch (error) {
+                console.error('Error al actualizar el examen:', error);
+                alert('Hubo un error al actualizar el examen');
+            }
+        });
+    </script>
+</body>

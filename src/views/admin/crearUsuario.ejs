@@ -1,0 +1,102 @@
+<% title = 'Crear Usuario' %> <!-- Establecer el título -->
+
+<%- include('../partials/layoutsAdmin.ejs'); %>
+
+<body>
+    <div class="wrapper">
+        <%- include('../partials/sidebarAdmin.ejs'); %>
+
+        <div id="main-content" class="main p-3">
+            <%- include('../partials/header.ejs'); %>
+            <!-- contenido principal-->
+            <div class="contenedor-dashboard">
+                <h1 class="titulo-dashboard" id="tituloUsuario">Crear Usuario</h1>
+                <div class="fondo-dashboard">
+                    <form id="userForm">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Nombre de Usuario</label>
+                            <input type="text" class="form-control" id="username" name="nombre_completo" placeholder="Ingrese nombre de usuario" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Ingrese correo electrónico" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Ingrese contraseña" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="role" class="form-label">Rol de Usuario</label>
+                            <select class="form-select" id="role" name="user_type" required>
+                                <option value="" disabled selected>Seleccione el rol</option>
+                                <option value="1">Administrador</option>
+                                <option value="2">Estudiante</option>
+                            </select>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn1" id="createUserBtn">Crear Usuario</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/endPageAdmin.ejs'); %>
+
+    <script>
+        // Función fetchRequest para enviar solicitudes
+        async function fetchRequest(url, method, data) {
+            const options = {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            };
+
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('Error en fetchRequest:', error);
+                throw error;
+            }
+        }
+
+        // Manejo del envío del formulario
+        document.getElementById('userForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Previene el envío por defecto
+
+            // Recoger valores del formulario
+            const nombre_completo = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const user_type = document.getElementById('role').value;
+
+            const userData = {
+                nombre_completo,
+                password,
+                email,
+                user_type
+            };
+
+            try {
+                // Llamada a la función fetchRequest para enviar el formulario
+                const response = await fetchRequest('/users', 'POST', userData);
+                console.log('Usuario creado:', response);
+                alert('Usuario creado exitosamente');
+                window.location.href = '/usuario'; // Redirige a la ruta deseada
+            } catch (error) {
+                console.error('Error al crear el usuario:', error);
+                alert('Hubo un error al crear el usuario');
+            }
+        });
+    </script>
+</body>

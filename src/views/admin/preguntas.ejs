@@ -1,0 +1,67 @@
+<% title = 'Gestión de Preguntas' %> <!-- Establecer el título -->
+<% 
+  const examTypeNames = {
+    1: "Fase 1",
+    2: "Fase 2",
+    3: "Cepu Verano 1",
+    4: "Cepu Verano 2",
+    5: "Cepu Otoño 1",
+    6: "Cepu Otoño 2",
+    7: "Cepu Invierno 1",
+    8: "Cepu Invierno 2",
+    
+  };
+
+  const getExamTypeName = (type) => examTypeNames[type] || "Tipo desconocido";
+%>
+<%- include('../partials/layoutsAdmin.ejs'); %> 
+<body>
+    <div class="wrapper">
+        <%- include('../partials/sidebarAdmin.ejs'); %> 
+
+        <div id="main-content" class="main p-3">
+
+            <%- include('../partials/header.ejs'); %>
+
+            <!-- contenido principal-->
+            <div class="contenedor-dashboard">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="titulo-dashboard" id="tituloPreguntas">Lista preguntas</h1>
+                </div>
+
+                <!-- Fondo de la tabla -->
+                <div class="fondo-dashboard">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Tipo de Examen</th>
+                                <th scope="col">Año</th>
+                                <th scope="col">Canal</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="examList">
+                            <% exams.forEach((exam, index) => { %>
+                              <tr id="examRow<%= exam.id_exam %>">
+                                <th scope="row" id="examNumber<%= index + 1 %>"><%= exam.id_exam %></th>
+                                <td id="examType<%= index + 1 %>"><%= getExamTypeName(exam.exam_type) %></td> <!-- Mostrar el nombre del tipo de examen -->
+                                <td id="examYear<%= index + 1 %>"><%= exam.year %></td>
+                                <td id="examChannel<%= index + 1 %>"><%= exam.canal %></td>
+                                <td id="examActions<%= index + 1 %>">
+                                    <a href="/preguntas_ver/<%= exam.id_exam %>" class="btn btn-sm btn-warning" id="viewQuestionsBtn1">Ver </a>
+                                    <a href="/crearPregunta/<%= exam.id_exam %>" class="btn btn-sm btn-success" id="addQuestionBtn1">Añadir</a>
+                                </td>
+                              </tr>
+                            <% }); %>
+                          </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/endPageAdmin.ejs'); %> 
+</body>
+
+

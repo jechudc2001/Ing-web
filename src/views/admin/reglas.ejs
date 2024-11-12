@@ -1,0 +1,132 @@
+<% title = 'Reglas' %> <!-- Establecer el título -->
+
+<%- include('../partials/layoutsAdmin.ejs'); %> 
+
+<body>
+    <div class="wrapper"> 
+        <%- include('../partials/sidebarAdmin.ejs'); %> 
+
+        <div id="main-content" class="main p-3">
+            <%- include('../partials/header.ejs'); %>
+
+            <!-- contenido principal-->
+            <div class="contenedor-dashboard">
+                <h1 class="titulo-dashboard" id="tituloReglas">Reglas de Calificación</h1> <!-- Título fuera del dashboard -->
+
+                <div class="fondo-dashboard">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Descripción</th>
+                                <th scope="col">Puntos</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rulesList">
+                            <tr>
+                                <td>Respuesta correcta</td>
+                                <td class="editable" data-field="correct">10</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning edit-btn">Editar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Respuesta incorrecta</td>
+                                <td class="editable" data-field="incorrect">-0.25</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning edit-btn">Editar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Sin respuesta</td>
+                                <td class="editable" data-field="no-answer">1</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning edit-btn">Editar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Puntaje máximo</td>
+                                <td class="editable" data-field="max-score">600</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning edit-btn">Editar</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h1 class="titulo-dashboard mt-5" id="tituloDuracion">Tiempo examen simulacro</h1> <!-- Título para duración -->
+
+                <div class="fondo-dashboard">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Descripción</th>
+                                <th scope="col">Tiempo (min)</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="durationList">
+                            <tr>
+                                <td>Duración total</td>
+                                <td class="editable" data-field="total-time">120</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning edit-btn">Editar</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/endPageAdmin.ejs'); %> 
+
+    <script>
+        // Función para activar la edición
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const row = this.closest('tr'); // Obtener la fila del botón
+                const scoreCell = row.querySelector('.editable'); // Obtener la celda editable
+    
+                // Verificar si el botón está en modo de edición
+                if (this.innerText === 'Editar') {
+                    const currentValue = scoreCell.innerText; // Obtener el valor actual
+    
+                    // Crear un campo de entrada
+                    const input = document.createElement('input');
+                    input.type = 'number'; // Tipo de entrada para números
+                    input.value = currentValue; // Establecer el valor actual
+                    input.className = 'form-control'; // Clase para estilos
+    
+                    // Reemplazar la celda con el campo de entrada
+                    scoreCell.innerHTML = ''; // Limpiar el contenido actual
+                    scoreCell.appendChild(input); // Agregar el campo de entrada
+    
+                    // Cambiar el botón a "Guardar"
+                    this.innerText = 'Guardar';
+                    this.classList.remove('btn-warning');
+                    this.classList.add('btn-success');
+    
+                    // Cambiar el comportamiento del botón al hacer clic nuevamente
+                    this.addEventListener('click', function save() {
+                        const newValue = input.value; // Obtener el nuevo valor
+                        scoreCell.innerText = newValue; // Reemplazar el campo de entrada con el nuevo valor
+    
+                        // Cambiar el botón de vuelta a "Editar"
+                        this.innerText = 'Editar';
+                        this.classList.remove('btn-success');
+                        this.classList.add('btn-warning');
+    
+                        // Quitar el evento 'save' para evitar que se llame nuevamente
+                        this.removeEventListener('click', save);
+                    }, { once: true }); // Asegúrate de que el evento se elimine después de la primera vez
+                }
+            });
+        });
+    </script>
+    
+    
+    
+</body>

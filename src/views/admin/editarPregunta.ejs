@@ -1,0 +1,164 @@
+<% title = 'Editar Pregunta' %>
+<%- include('../partials/layoutsAdmin.ejs'); %> 
+
+<body>
+    <div class="wrapper">
+        <%- include('../partials/sidebarAdmin.ejs'); %> 
+
+        <div id="main-content" class="main p-3">
+            <%- include('../partials/header.ejs'); %>
+
+            <div class="contenedor-dashboard">
+                <h1 class="titulo-dashboard" id="tituloPregunta">Editar Pregunta</h1>
+                <div class="fondo-dashboard">
+                    <form id="editarPreguntaForm" action="/pregunta/<%= pregunta.id_pregunta %>" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="_method" value="PUT"> <!-- Método para actualizar -->
+                        <input type="hidden" id="preguntaIdHidden" value="<%= pregunta.id_pregunta %>"> <!-- Input oculto para el ID -->
+                        <div class="mb-3">
+                            <label for="cursoEditar" class="form-label">Curso</label>
+                            <select class="form-select" name="id_materia" id="cursoEditar" required>
+                                <option value="" disabled>Seleccione el curso</option>
+                                <% 
+                                    const materias = [
+                                        { id: 1, nombre: "Razonamiento Verbal" },
+                                        { id: 2, nombre: "Razonamiento Matemático" },
+                                        { id: 3, nombre: "Realidad Nacional" },
+                                        { id: 4, nombre: "Aritmética y Álgebra" },
+                                        { id: 5, nombre: "Geometría y Trigonometría" },
+                                        { id: 6, nombre: "Física" },
+                                        { id: 7, nombre: "Química" },
+                                        { id: 8, nombre: "Biología" },
+                                        { id: 9, nombre: "Historia" },
+                                        { id: 10, nombre: "Economía" },
+                                        { id: 11, nombre: "Geografía" },
+                                        { id: 12, nombre: "Literatura" },
+                                        { id: 13, nombre: "Lenguaje" },
+                                        { id: 14, nombre: "Lógica" }
+                                    ];
+                                    materias.forEach(materia => {
+                                %>
+                                    <option value="<%= materia.id %>" <%= (pregunta.id_materia == materia.id) ? 'selected' : '' %>><%= materia.nombre %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="preguntaTextoEditar" class="form-label">Pregunta</label>
+                            <textarea class="form-control" name="texto" id="preguntaTextoEditar" rows="3" required><%= pregunta.texto %></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="imagenPregunta" class="form-label">Subir imagen (opcional)</label>
+                            <input type="file" class="form-control" name="img" id="imagenPregunta" accept="image/*">
+                            <% if (pregunta.img) { %>
+                                <p>Imagen actual: <img src="/images/preguntas/<%= pregunta.img %>" alt="Imagen de la pregunta" width="100"></p>
+                            <% } else { %>
+                                <p>No hay imagen actual.</p>
+                            <% } %>
+                        </div>
+
+                        <!-- Opciones de Respuesta en dos columnas -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="respuestaAEditar" class="form-label">Opciones de respuesta</label>
+                                <input type="text" class="form-control mb-2" name="alternativas[0][texto]" value="<%= pregunta.alternativas[0].texto %>" required>
+                                <input type="text" class="form-control mb-2" name="alternativas[1][texto]" value="<%= pregunta.alternativas[1].texto %>" required>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control mb-2" name="alternativas[2][texto]" value="<%= pregunta.alternativas[2].texto %>" required>
+                                <input type="text" class="form-control mb-2" name="alternativas[3][texto]" value="<%= pregunta.alternativas[3].texto %>" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="respuestaCorrectaEditar" class="form-label">Seleccione la respuesta correcta</label>
+                            <select class="form-select" name="alternativas[0][es_correcta]" required>
+                                <option value="A" <%= pregunta.alternativas[0].es_correcta ? 'selected' : '' %>>A</option>
+                                <option value="B" <%= pregunta.alternativas[1].es_correcta ? 'selected' : '' %>>B</option>
+                                <option value="C" <%= pregunta.alternativas[2].es_correcta ? 'selected' : '' %>>C</option>
+                                <option value="D" <%= pregunta.alternativas[3].es_correcta ? 'selected' : '' %>>D</option>
+                            </select>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn1" id="editarPreguntaBtn">Editar Pregunta</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <%- include('../partials/endPageAdmin.ejs'); %>
+    </div>
+
+    <script>
+        // Aquí puedes agregar el mismo código JavaScript que tenías en 'crearPregunta', adaptado para editar.
+        async function fetchRequest(url, method, data) {
+            const options = { method };
+            if (data) {
+                options.body = data; // Data is form data, no need to set content-type as it’s handled automatically.
+            }
+
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('Error in fetchRequest:', error);
+                throw error;
+            }
+        }
+
+        document.getElementById('editarPreguntaForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const idPregunta = document.getElementById('preguntaIdHidden').value;
+            const idMateria = document.getElementById('cursoEditar').value;
+            const preguntaTexto = document.getElementById('preguntaTextoEditar').value;
+            const imagenPregunta = document.getElementById('imagenPregunta').files[0]; // Si se seleccionó una imagen
+            const alternativaA = document.querySelector('[name="alternativas[0][texto]"]').value;
+            const alternativaB = document.querySelector('[name="alternativas[1][texto]"]').value;
+            const alternativaC = document.querySelector('[name="alternativas[2][texto]"]').value;
+            const alternativaD = document.querySelector('[name="alternativas[3][texto]"]').value;
+            const respuestaCorrecta = document.querySelector('[name="alternativas[0][es_correcta]"]').value;
+
+            const preguntaData = {
+                id_pregunta: idPregunta,
+                id_materia: idMateria,
+                texto: preguntaTexto,
+                img: imagenPregunta ? imagenPregunta.name : null, 
+                alternativas: [
+                    { texto: alternativaA, es_correcta: (respuestaCorrecta === 'A') ? 1 : 0 },
+                    { texto: alternativaB, es_correcta: (respuestaCorrecta === 'B') ? 1 : 0 },
+                    { texto: alternativaC, es_correcta: (respuestaCorrecta === 'C') ? 1 : 0 },
+                    { texto: alternativaD, es_correcta: (respuestaCorrecta === 'D') ? 1 : 0 }
+                ]
+            };
+
+            console.log(preguntaData);
+
+            try {
+                const formData = new FormData();
+                formData.append('id_pregunta', preguntaData.id_pregunta);
+                formData.append('id_materia', preguntaData.id_materia);
+                formData.append('texto', preguntaData.texto);
+                if (preguntaData.img) {
+                    formData.append('img', imagenPregunta);
+                }
+
+                preguntaData.alternativas.forEach((alternativa, index) => {
+                    formData.append(`alternativas[${index}][texto]`, alternativa.texto);
+                    formData.append(`alternativas[${index}][es_correcta]`, alternativa.es_correcta);
+                });
+                
+                const response = await fetchRequest(`/preguntas/${idPregunta}`, 'PUT', formData);
+                console.log('Pregunta editada:', response);
+                alert('Pregunta editada exitosamente');
+            } catch (error) {
+                console.error('Error al editar la pregunta:', error);
+                alert('Hubo un error al editar la pregunta');
+            }
+        });
+    </script>
+</body>

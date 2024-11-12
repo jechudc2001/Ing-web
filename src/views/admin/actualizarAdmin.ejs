@@ -1,0 +1,90 @@
+<% title = 'Actualizar Datos y Cambiar Contraseña' %> <!-- Establecer el título -->
+<%- include('../partials/layoutsAdmin.ejs'); %>
+
+<body>
+    <div class="wrapper"> 
+        <%- include('../partials/sidebarUser.ejs'); %> 
+
+        <div id="main-content" class="main p-3">
+            <%- include('../partials/header.ejs'); %>
+
+            <div class="botones-secciones mb-4">
+                <button type="button" class="btn-seccion btn-primary" onclick="showSection('updateData', this)">Actualizar Datos</button>
+                <button type="button" class="btn-seccion btn-secondary" onclick="showSection('changePassword', this)">Cambiar Contraseña</button>
+            </div>
+            
+            
+
+            <div id="updateData" class="contenedor-dashboard" style="display: block;">
+                <h1 class="titulo-dashboard">Actualizar Datos</h1>
+                <div class="fondo-dashboard">
+                    <form id="updateUserForm" method="POST">
+                        <div class="mb-3">
+                            <label for="userFirstName" class="form-label">Nombres</label>
+                            <input type="text" class="form-control" id="userFirstName" name="nombres" placeholder="Ingrese nombres del usuario" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="userLastName" class="form-label">Apellidos</label>
+                            <input type="text" class="form-control" id="userLastName" name="apellidos" placeholder="Ingrese apellidos del usuario" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="userEmail" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="userEmail" name="email" placeholder="Ingrese correo electrónico" required>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn1" id="saveChangesBtn">Guardar cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="changePassword" class="contenedor-dashboard" style="display: none;">
+                <h1 class="titulo-dashboard">Cambiar Contraseña</h1>
+                <div class="fondo-dashboard">
+                    <form id="changePasswordForm" method="POST">
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">Nueva Contraseña</label>
+                            <input type="password" class="form-control" id="newPassword" name="new_password" placeholder="Ingrese nueva contraseña" minlength="6" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="confirmNewPassword" class="form-label">Confirmar Nueva Contraseña</label>
+                            <input type="password" class="form-control" id="confirmNewPassword" name="confirm_new_password" placeholder="Confirme nueva contraseña" minlength="6" required>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn1" id="savePasswordBtn">Guardar contraseña</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <%- include('../partials/endPageAdmin.ejs'); %>
+
+    <!-- Script para alternar entre secciones -->
+    <script>
+        function showSection(sectionId, button) {
+            // Ocultar todas las secciones
+            document.getElementById('updateData').style.display = 'none';
+            document.getElementById('changePassword').style.display = 'none';
+    
+            // Mostrar la sección correspondiente
+            document.getElementById(sectionId).style.display = 'block';
+    
+            // Remover la clase active de todos los botones
+            const buttons = document.querySelectorAll('.btn-seccion');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+    
+            // Agregar la clase active al botón que se clicó
+            button.classList.add('active');
+        }
+    </script>
+    
+</body>

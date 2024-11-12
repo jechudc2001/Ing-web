@@ -1,0 +1,167 @@
+<% title = 'Crear Pregunta' %>
+<%- include('../partials/layoutsAdmin.ejs'); %> 
+
+<body>
+    <div class="wrapper">
+        <%- include('../partials/sidebarAdmin.ejs'); %> 
+
+        <div id="main-content" class="main p-3">
+            <%- include('../partials/header.ejs'); %>
+
+            <div class="contenedor-dashboard">
+                <h1 class="titulo-dashboard" id="tituloPregunta">Crear Pregunta</h1>
+                <div class="fondo-dashboard">
+                    <form id="preguntaForm" action="/pregunta" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="id_exam" value="<%= id %>">
+                        
+                        <div class="mb-3">
+                            <label for="cursoCrear" class="form-label">Curso</label>
+                            <select class="form-select" name="id_materia" id="cursoCrear" required>
+                                <option value="" disabled selected>Seleccione el curso</option>
+                                <% 
+                                    const materias = [
+                                        { id: 1, nombre: "Razonamiento Verbal" },
+                                        { id: 2, nombre: "Razonamiento Matemático" },
+                                        { id: 3, nombre: "Realidad Nacional" },
+                                        { id: 4, nombre: "Aritmética y Álgebra" },
+                                        { id: 5, nombre: "Geometría y Trigonometría" },
+                                        { id: 6, nombre: "Física" },
+                                        { id: 7, nombre: "Química" },
+                                        { id: 8, nombre: "Biología" },
+                                        { id: 9, nombre: "Historia" },
+                                        { id: 10, nombre: "Economía" },
+                                        { id: 11, nombre: "Geografía" },
+                                        { id: 12, nombre: "Literatura" },
+                                        { id: 13, nombre: "Lenguaje" },
+                                        { id: 14, nombre: "Lógica" }
+                                    ];
+                                    materias.forEach(materia => {
+                                %>
+                                    <option value="<%= materia.id %>"><%= materia.nombre %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="preguntaTextoCrear" class="form-label">Pregunta</label>
+                            <textarea class="form-control" name="texto" id="preguntaTextoCrear" rows="3" placeholder="Ingrese la pregunta" required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="imagenPregunta" class="form-label">Subir imagen (opcional)</label>
+                            <input type="file" class="form-control" name="img" id="imagenPregunta" accept="image/*">
+                        </div>
+
+                        <!-- Opciones de Respuesta en dos columnas -->
+                        <div class="row">
+                            <!-- Opciones A, B, C, D y E -->
+                            <div class="col-md-6">
+                                <label for="respuestaACrear" class="form-label">Opciones de respuesta</label>
+                                <input type="text" class="form-control mb-2" name="alternativas[0][texto]" placeholder="Opción A" required>
+                                <input type="text" class="form-control mb-2" name="alternativas[1][texto]" placeholder="Opción B" required>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control mb-2" name="alternativas[2][texto]" placeholder="Opción C" required>
+                                <input type="text" class="form-control mb-2" name="alternativas[3][texto]" placeholder="Opción D" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="respuestaCorrectaCrear" class="form-label">Seleccione la respuesta correcta</label>
+                            <select class="form-select" name="alternativas[0][es_correcta]" required>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                            </select>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn1" id="crearPreguntaBtn">Crear Pregunta</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <%- include('../partials/endPageAdmin.ejs'); %>
+    </div>
+    <script>
+        async function fetchRequest(url, method, data) {
+            const options = { method };
+            if (data) {
+                options.body = data; // Data is form data, no need to set content-type as it’s handled automatically.
+            }
+
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('Error in fetchRequest:', error);
+                throw error;
+            }
+        }
+
+        document.getElementById('preguntaForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            // Recoger los valores del formulario manualmente
+            const idExam = document.querySelector('input[name="id_exam"]').value;
+            const idMateria = document.getElementById('cursoCrear').value;
+            const preguntaTexto = document.getElementById('preguntaTextoCrear').value;
+            const imagenPregunta = document.getElementById('imagenPregunta').files[0]; // Si se seleccionó una imagen
+            const alternativaA = document.querySelector('[name="alternativas[0][texto]"]').value;
+            const alternativaB = document.querySelector('[name="alternativas[1][texto]"]').value;
+            const alternativaC = document.querySelector('[name="alternativas[2][texto]"]').value;
+            const alternativaD = document.querySelector('[name="alternativas[3][texto]"]').value;
+            const respuestaCorrecta = document.querySelector('[name="alternativas[0][es_correcta]"]').value;
+
+            // Crear un objeto con los datos del formulario
+            const preguntaData = {
+                id_exam: idExam,
+                id_materia: idMateria,
+                texto: preguntaTexto,
+                img: imagenPregunta ? imagenPregunta.name : null, // Guardamos el nombre del archivo o null si no hay imagen
+                alternativas: [
+                    { texto: alternativaA, es_correcta: (respuestaCorrecta === 'A') ? 1 : 0 },
+                    { texto: alternativaB, es_correcta: (respuestaCorrecta === 'B') ? 1 : 0 },
+                    { texto: alternativaC, es_correcta: (respuestaCorrecta === 'C') ? 1 : 0 },
+                    { texto: alternativaD, es_correcta: (respuestaCorrecta === 'D') ? 1 : 0 }
+                ]
+            };
+
+            // Imprimir el objeto con los datos de la pregunta
+            console.log(preguntaData);
+
+            try {
+                // Enviar los datos al servidor (incluyendo la imagen si existe)
+                const formData = new FormData();
+                formData.append('id_exam', preguntaData.id_exam);
+                formData.append('id_materia', preguntaData.id_materia);
+                formData.append('texto', preguntaData.texto);
+                if (preguntaData.img) {
+                    formData.append('img', imagenPregunta);
+                }
+                // Enviar las alternativas
+                preguntaData.alternativas.forEach((alternativa, index) => {
+                    formData.append(`alternativas[${index}][texto]`, alternativa.texto);
+                    formData.append(`alternativas[${index}][es_correcta]`, alternativa.es_correcta);
+                });
+
+                // Enviar la solicitud
+                const response = await fetchRequest('/preguntas', 'POST', formData);
+                console.log('Pregunta creada:', response);
+                alert('Pregunta creada exitosamente');
+                // Redirigir si es necesario
+                // window.location.href = `/verPreguntasExam/${examId}`;
+            } catch (error) {
+                console.error('Error al crear la pregunta:', error);
+                alert('Hubo un error al crear la pregunta');
+            }
+        });
+    </script>
+</body>
+
+

@@ -1,0 +1,111 @@
+<% 
+  const materiaNames = {
+    1: "Razonamiento Verbal",
+    2: "Razonamiento Matemático",
+    3: "Realidad Nacional",
+    4: "Aritmética y Álgebra",
+    5: "Geometría y Trigonometría",
+    6: "Física",
+    7: "Química",
+    8: "Biología",
+    9: "Historia",
+    10: "Economía",
+    11: "Geografía",
+    12: "Literatura",
+    13: "Lenguaje",
+    14: "Lógica"
+  };
+
+  const getMateriaName = (id) => materiaNames[id] || "Materia desconocida";
+%>
+
+
+
+
+<% title = 'Ver Preguntas' %>
+<%- include('../partials/layoutsAdmin.ejs'); %> 
+<body>
+    <div class="wrapper">
+        <%- include('../partials/sidebarAdmin.ejs'); %> 
+
+        <div id="main-content" class="main p-3">
+            <%- include('../partials/header.ejs'); %>
+
+            <div class="contenedor-dashboard">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="titulo-dashboard" id="tituloDashboard">Ver Preguntas</h1>
+                </div>
+
+                <div class="fondo-preguntas" id="fondoPreguntas">
+                    <div class="mb-3">
+                        <label for="examIdVer" class="form-label">Examen: <%= exam.exam_type %> </label>
+                        <span id="examIdVer" class=""><%= exam.id_exam %></span>
+                    </div>
+
+                    <% exam.preguntas.forEach((preg, index) => { %>
+                        <div class="pregunta-card mb-4 p-3" id="pregunta<%= index + 1 %>">
+                            <div class="curso" id="cursoPregunta<%= index + 1 %>">
+                                <%= getMateriaName(preg.id_materia) %> <!-- Mostrar nombre de la materia -->
+                            </div>
+                            <div class="pregunta" id="preguntaTexto<%= index + 1 %>">
+                                <p class="pregunta-texto"><%= preg.texto %></p>
+
+                                <% if (preg.img) { %>
+                                    <div class="pregunta-imagen">
+                                        <img src="/images/preguntas/<%= preg.img %>" alt="Imagen de la pregunta">
+                                    </div>
+                                <% } else { %>
+                                    <p>No hay imagen</p>
+                                <% } %>
+
+                                <div class="alternativas" id="alternativasPregunta<%= index + 1 %>">
+                                    <% preg.alternativas.forEach((alt, altIndex) => { %>
+                                        <label class="option" id="opcion<%= String.fromCharCode(65 + altIndex) %><%= index + 1 %>">
+                                            <input type="radio" name="pregunta<%= index + 1 %>" value="<%= String.fromCharCode(65 + altIndex) %>"> 
+                                            <%= String.fromCharCode(65 + altIndex) %>) <%= alt.texto.trim() %>
+                                        </label>
+                                    <% }); %>
+                                </div>
+                            </div>
+                            <div class="acciones" id="accionesPregunta<%= index + 1 %>">
+                                <a href="/editar_pregunta/<%= preg.id_pregunta %>" class="editar-btn" id="editarBtn<%= index + 1 %>"><i class="fas fa-pencil-alt"></i></a>
+                                <button class="btn-danger eliminar-btn" data-id="<%= preg.id_pregunta %>" data-type="pregunta"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/endPageAdmin.ejs'); %>  
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+          document.querySelectorAll('.eliminar-btn').forEach(button => {
+              button.addEventListener('click', async (event) => {
+                  const preguntaId = event.currentTarget.getAttribute('data-id');
+                  console.log(preguntaId);
+                  const confirmed = confirm("¿Estás seguro de que deseas eliminar esta pregunta?");
+                  if (!confirmed) return;
+      
+                  try {
+                      const response = await fetch(`/preguntas/${preguntaId}`, {
+                          method: 'DELETE',
+                      });
+      
+                      if (response.ok) {
+                          alert("Pregunta eliminada exitosamente");
+                          // Actualiza la vista o redirige según sea necesario
+                          location.reload(); // Opcional: refresca la página para mostrar cambios
+                      } else {
+                          alert("Error al eliminar la pregunta");
+                      }
+                  } catch (error) {
+                      console.error("Error al enviar la solicitud de eliminación:", error);
+                  }
+              });
+          });
+      });
+    </script>
+</body>

@@ -1,0 +1,103 @@
+<% title = 'Examenes' %> <!-- Establecer el título -->
+<% 
+  const examTypeNames = {
+    1: "Fase 1",
+    2: "Fase 2",
+    3: "Cepu Verano 1",
+    4: "Cepu Verano 2",
+    5: "Cepu Otoño 1",
+    6: "Cepu Otoño 2",
+    7: "Cepu Invierno 1",
+    8: "Cepu Invierno 2",
+    
+  };
+
+  const getExamTypeName = (type) => examTypeNames[type] || "Tipo desconocido";
+%>
+
+<%- include('../partials/layoutsAdmin.ejs'); %> 
+<body>
+    <div class="wrapper">
+        <%- include('../partials/sidebarAdmin.ejs'); %> 
+
+        <div id="main-content" class="main p-3">
+
+            <%- include('../partials/header.ejs'); %>
+
+
+            <!-- contenido principal-->
+            <div class="contenedor-dashboard">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="titulo-dashboard" id="tituloExamen">Lista de Exámenes</h1>
+                    <a href="/crear_examen" class="btn1" id="addExamBtn">Añadir examen</a>
+                </div>
+
+                <div class="fondo-dashboard">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Tipo de Examen</th>
+                                <th scope="col">Año</th>
+                                <th scope="col">Canal</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="examList">
+                            <% exams.forEach((exam, index) => { %>
+                              <tr id="examRow<%= exam.id_exam %>">
+                                <th scope="row" id="examNumber<%= index + 1 %>"><%= exam.id_exam %></th>
+                                <td id="examType<%= index + 1 %>"><%= getExamTypeName(exam.exam_type) %></td> <!-- Mostrar el nombre del tipo de examen -->
+                                <td id="examYear<%= index + 1 %>"><%= exam.year %></td>
+                                <td id="examChannel<%= index + 1 %>"><%= exam.canal %></td>
+                                <td id="examActions<%= index + 1 %>">
+                                  <a href="/editar_examen/<%= exam.id_exam %>" class="btn btn-sm btn-warning" id="editExamBtn1">Editar</a>
+                                  <button class="btn btn-sm btn-danger delete-exam-btn" data-id="<%= exam.id_exam %>">Eliminar</button>
+                                </td>
+                              </tr>
+                            <% }); %>
+                          </tbody>
+                          
+                          
+                          
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+          document.querySelectorAll('.delete-exam-btn').forEach(button => {
+              button.addEventListener('click', async (event) => {
+                  const examId = event.target.getAttribute('data-id');
+                  
+                  const confirmed = confirm("¿Estás seguro de que deseas eliminar este examen?");
+                  if (!confirmed) return;
+      
+                  try {
+                      const response = await fetch(`/exams/${examId}`, {
+                          method: 'DELETE',
+                      });
+      
+                      if (response.ok) {
+                          alert("Examen eliminado exitosamente");
+                          // Actualiza la vista o redirige según sea necesario
+                          location.reload(); // Opcional: refresca la página para mostrar cambios
+                      } else {
+                          alert("Error al eliminar el examen");
+                      }
+                  } catch (error) {
+                      console.error("Error al enviar la solicitud de eliminación:", error);
+                  }
+              });
+          });
+      });
+      </script>
+    
+    
+    
+    <%- include('../partials/endPageAdmin.ejs'); %>
+
+
+    

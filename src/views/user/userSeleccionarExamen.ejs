@@ -1,0 +1,63 @@
+<%- include('../partials/layoutsAdmin.ejs'); %> 
+<body>
+    <div class="wrapper">
+        <%- include('../partials/sidebarUser.ejs'); %> 
+
+        <div id="main-content" class="main p-3">
+            <%- include('../partials/header.ejs'); %>
+
+            <!-- Contenido principal -->
+            <div id="dashboard-container" class="contenedor-dashboard">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="titulo-dashboard" id="tituloExamen">
+                        Examenes canal <span id="canalNumero"><!-- Aquí el backend puede insertar el número de canal --></span>
+                    </h1>
+                    <a href="/crear_examen" class="btn1" id="addExamBtn">Iniciar examen aleatorio</a>
+                </div>
+
+                <div class="d-flex flex-column p-2" id="examenes-lista">
+                    <!-- Ejemplos de contenedores de examen -->
+                    <a href="javascript:void(0);" class="contenedor-nombre-examen mb-2" id="examen1" onclick="toggleOptions('examen1')">
+                        <div class="p-3">
+                            <h5 class="titulo-examen">Examen fase 1 2020</h5>
+                        </div>
+                    </a>
+                    <div id="options-examen1" class="options-container" style="display: none;">
+                        <button class="btn1  btn-seleccion">Modo Práctica</button>
+                        <button class="btn1  btn-seleccion">Modo Simulacro</button>
+                    </div>
+
+                    <a href="javascript:void(0);" class="contenedor-nombre-examen mb-2" id="examen2" onclick="toggleOptions('examen2')">
+                        <div class="p-3">
+                            <h5 class="titulo-examen">Examen fase 2 2020</h5>
+                        </div>
+                    </a>
+                    <div id="options-examen2" class="options-container" style="display: none;">
+                        <button class="btn1  btn-seleccion" >Modo Práctica</button>
+                        <button class="btn1  btn-seleccion" >Modo Simulacro</button>
+                        
+                    </div>
+
+                    <!-- Agrega más contenedores según sea necesario -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/endPageAdmin.ejs'); %>
+
+    <script>
+        function toggleOptions(examenId) {
+            const optionsContainer = document.getElementById(`options-${examenId}`);
+            const isDisplayed = optionsContainer.style.display === 'flex';
+            
+            document.querySelectorAll('.options-container').forEach(container => {
+                container.style.display = 'none';
+            });
+
+            optionsContainer.style.display = isDisplayed ? 'none' : 'flex';
+        }
+
+    </script>
+
+</body>

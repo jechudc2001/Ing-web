@@ -1,0 +1,56 @@
+<% title = 'Cursos' %> <!-- Establecer el título -->
+
+<%- include('../partials/layoutsAdmin.ejs'); %> 
+<body>
+    <div class="wrapper">
+        <%- include('../partials/sidebarAdmin.ejs'); %> 
+
+        <div id="main-content" class="main p-3">
+
+            <%- include('../partials/header.ejs'); %>
+
+            <!-- contenido principal -->
+            <div class="contenedor-dashboard">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="titulo-dashboard" id="tituloCurso">Lista de Cursos</h1>
+                    <a href="/crearCurso" class="btn1" id="addCourseBtn">Añadir curso</a>
+                </div>
+
+                <div class="fondo-dashboard">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Curso</th>
+                                <th scope="col">Canal</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="courseList">
+                            <% const courses = [
+                                { id: 1, name: 'Química', channel: '1' },
+                                { id: 2, name: 'Biología', channel: '2' },
+                                { id: 3, name: 'Razonamiento matematico', channel: '1' }
+                            ]; %>
+
+                            <% courses.forEach((course, index) => { %>
+                                <tr id="courseRow<%= course.id %>">
+                                    <th scope="row" id="courseNumber<%= index + 1 %>"><%= course.id %></th>
+                                    <td id="courseName<%= index + 1 %>"><%= course.name %></td>
+                                    <td id="courseChannel<%= index + 1 %>"><%= course.channel %></td>
+                                    <td id="courseActions<%= index + 1 %>">
+                                        <a href="/ver_preguntas/<%= course.id %>" class="btn btn-sm btn-success" id="viewQuestionsBtn<%= course.id %>">Ver preguntas</a>
+                                        <a href="/editarCurso" class="btn btn-sm btn-warning" id="editCourseBtn<%= course.id %>">Editar</a>
+                                        <button class="btn btn-sm btn-danger" data-type="course" data-id="<%= course.id %>" id="deleteCourseBtn<%= course.id %>">Eliminar</button>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/endPageAdmin.ejs'); %>
+</body>

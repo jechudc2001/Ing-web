@@ -1,0 +1,114 @@
+<% title = 'Editar Usuario' %> <!-- Establecer el título -->
+
+<%- include('../partials/layoutsAdmin.ejs'); %>
+
+<body>
+    <div class="wrapper">
+        <%- include('../partials/sidebarAdmin.ejs'); %>
+
+        <div id="main-content" class="main p-3">
+            <%- include('../partials/header.ejs'); %>
+            <!-- contenido principal-->
+            <div class="contenedor-dashboard">
+                <h1 class="titulo-dashboard" id="tituloUsuario">Editar Usuario</h1>
+                <div class="fondo-dashboard">
+                    <form id="editUserForm">
+                        <div class="mb-3">
+                            <label for="userId" class="form-label">ID del Usuario:</label>
+                            <span id="userId"><%= user.id_usuario %></span>
+                            <input type="hidden" id="userIdHidden" value="<%= user.id_usuario %>">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="userName" class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control" id="userName" name="nombre_completo" value="<%= user.nombre_completo %>" placeholder="Ingrese nombre completo del usuario" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="userEmail" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="userEmail" name="email" value="<%= user.email %>" placeholder="Ingrese correo electrónico" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="userRole" class="form-label">Rol</label>
+                            <select class="form-select" id="userRole" name="user_type" required>
+                                <option value="" disabled>Seleccione el rol</option>
+                                <option value="1" <%= user.user_type === 1 ? 'selected' : '' %>>Administrador</option>
+                                <option value="2" <%= user.user_type === 2 ? 'selected' : '' %>>Usuario</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="userPassword" class="form-label">Confirmar Contraseña</label>
+                            <input type="password" class="form-control" id="userPassword" name="confirm_password" placeholder="Confirme nueva contraseña">
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn1" id="saveChangesBtn">Guardar cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/endPageAdmin.ejs'); %>
+
+    <script>
+        // Función fetchRequest para enviar solicitudes
+        async function fetchRequest(url, method, data) {
+            const options = {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            };
+
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('Error en fetchRequest:', error);
+                throw error;
+            }
+        }
+
+        // Manejo del envío del formulario
+        document.getElementById('editUserForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Previene el envío por defecto
+
+            // Recoger valores del formulario
+            const userId = document.getElementById('userIdHidden').value;
+            const nombre_completo = document.getElementById('userName').value;
+            const email = document.getElementById('userEmail').value;
+            const user_type = document.getElementById('userRole').value;
+            const password = document.getElementById('userPassword').value;
+
+            const userData = {
+                nombre_completo,
+                password,
+                email,
+                user_type,
+                
+            };
+
+            try {
+                // Llamada a la función fetchRequest para enviar la actualización
+                const response = await fetchRequest(`/users/${userId}`, 'PUT', userData);
+                console.log('Usuario actualizado:', response);
+                alert('Usuario actualizado exitosamente');
+                window.location.href = '/usuario'; // Redirige a la ruta deseada
+            } catch (error) {
+                console.error('Error al actualizar el usuario:', error);
+                alert('Hubo un error al actualizar el usuario');
+            }
+        });
+    </script>
+</body>
