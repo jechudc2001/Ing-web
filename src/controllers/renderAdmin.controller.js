@@ -29,6 +29,8 @@ export const renderCrearPregunta = (req, res) => {
 };
 
 
+
+
 export const renderCrearUsuario = (req, res) => {
     res.render("admin/crearUsuario", { title: "XD" });
 };

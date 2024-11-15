@@ -1,5 +1,4 @@
-
-<aside id="sidebar" class="expand"> 
+<aside id="sidebar" class="expand">
     <div class="d-flex">
         <button class="toggle-btn" type="button" id="toggleSidebarBtn">
             <i class="lni lni-menu"></i>                
@@ -8,6 +7,7 @@
             <a href="#" id="adminLogo">Simula</a>
         </div>
     </div>
+
     <ul class="sidebar-nav" id="adminSidebarNav">
         <li class="sidebar-item" id="adminExamenes">
             <a href="/examen" class="sidebar-link" id="adminExamenesLink">
@@ -34,7 +34,7 @@
             </a>
         </li>
         <li class="sidebar-item" id="adminReglas">
-            <a href="/reglas" class="sidebar-link" id="adminReglasLink">
+            <a href="/ExamReglas" class="sidebar-link" id="adminReglasLink">
                 <i class="lni lni-ruler"></i>                        
                 <span>Reglas</span>
             </a>
@@ -45,14 +45,18 @@
                 <span>Usuarios</span>
             </a>
         </li>
-        <li class="sidebar-item" id="adminCuenta">
-            <a href="/actualizarAdmin" class="sidebar-link" id="adminCuentaLink">
-                <i class="lni lni-user"></i>
-                <span>Cuenta</span>
+    </ul>
+
+    <div class="sidebar-footer">
+        <li class="sidebar-item" id="userItem">
+            <a href="/actualizarAdmin" class="sidebar-link user-btn" id="userLink">
+                <span>
+                    <div id="userName">Hola, Administrador!</div>
+                    <div id="userEmail">administrador1@gmail.com</div>
+                </span>
             </a>
         </li>
-    </ul>
-    <div class="sidebar-footer">
+        
         <a href="#" class="sidebar-link" id="adminSalirLink">
             <i class="lni lni-exit"></i>
             <span>Salir</span>

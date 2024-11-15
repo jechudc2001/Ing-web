@@ -18,6 +18,21 @@
 
   const getMateriaName = (id) => materiaNames[id] || "Materia desconocida";
 %>
+<% 
+  const examTypeNames = {
+    1: "Fase 1",
+    2: "Fase 2",
+    3: "Cepu Verano 1",
+    4: "Cepu Verano 2",
+    5: "Cepu Otoño 1",
+    6: "Cepu Otoño 2",
+    7: "Cepu Invierno 1",
+    8: "Cepu Invierno 2",
+    
+  };
+
+  const getExamTypeName = (type) => examTypeNames[type] || "Tipo desconocido";
+%>
 
 
 
@@ -38,8 +53,7 @@
 
                 <div class="fondo-preguntas" id="fondoPreguntas">
                     <div class="mb-3">
-                        <label for="examIdVer" class="form-label">Examen: <%= exam.exam_type %> </label>
-                        <span id="examIdVer" class=""><%= exam.id_exam %></span>
+                        <label for="examIdVer" class="form-label">Examen: <%= getExamTypeName(exam.exam_type) %> </label> <!-- Pon el nombre  -->
                     </div>
 
                     <% exam.preguntas.forEach((preg, index) => { %>
@@ -60,12 +74,18 @@
 
                                 <div class="alternativas" id="alternativasPregunta<%= index + 1 %>">
                                     <% preg.alternativas.forEach((alt, altIndex) => { %>
-                                        <label class="option <%= alt.es_correcta ? 'correcta' : '' %>" id="opcion<%= String.fromCharCode(65 + altIndex) %><%= index + 1 %>">
-                                            <input type="radio" name="pregunta<%= index + 1 %>" value="<%= String.fromCharCode(65 + altIndex) %>"> 
-                                            <%= String.fromCharCode(65 + altIndex) %>) <%= alt.texto.trim() %>
+                                        <label class="option" id="opcion<%= String.fromCharCode(65 + altIndex) %><%= index + 1 %>">
+                                            <% if (alt.es_correcta) { %>
+                                                <span class="checkmark correcta"></span>
+                                            <% } else { %>
+                                                <span class="checkmark incorrecta"></span>
+                                            <% } %>
+                                            <span class="texto"><%= String.fromCharCode(65 + altIndex) %>) <%= alt.texto.trim() %></span>
                                         </label>
                                     <% }); %>
                                 </div>
+                                
+                                   
                                 
                             </div>
                             <div class="acciones" id="accionesPregunta<%= index + 1 %>">

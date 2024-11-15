@@ -74,13 +74,75 @@
     margin-bottom: 10px;
 }
 
-.correcta {
-    background-color: #28a745; /* Color verde */
-    color: white;
-    font-weight: bold;
-    padding: 5px;
+/* Estilo base para las alternativas */
+.option {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    margin: 0px 0;
     border-radius: 5px;
+    background-color: transparent; /* Fondo transparente para toda la opción */
+    cursor: default; /* Quitar la sensación de interactividad */
 }
+
+/* Sin efectos de hover */
+.option:hover {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+/* Estilo para el cuadro */
+.checkmark {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    margin-right: 10px;
+    position: relative;
+    border-radius: 3px;
+    font-size: 1rem;
+    text-align: center;
+    line-height: 20px;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+}
+
+/* Cuadro verde con visto para la correcta */
+.correcta {
+    border: 2px solid #28a745; /* Borde verde */
+    background-color: #28a745; /* Fondo verde */
+    color: white; /* Texto blanco */
+    position: relative;
+}
+
+.correcta::after {
+    content: "\2713"; /* Símbolo de visto */
+    font-size: 0.6rem; /* Tamaño más pequeño para el símbolo */
+    position: absolute;
+    top: 50%; /* Alineación vertical */
+    left: 50%; /* Alineación horizontal */
+    transform: translate(-50%, -50%); /* Centrado exacto */
+}
+
+/* Para la opción incorrecta: cuadro gris sin X */
+.incorrecta {
+    border: 2px solid #cacaca; /* Borde gris (plomito) */
+    background-color: #cacaca; /* Fondo transparente */
+    color: transparent; /* No mostrar el texto */
+    position: relative;
+}
+
+.incorrecta::after {
+    content: ""; /* Sin símbolo, no se muestra la "X" */
+}
+
+
+/* Texto de las alternativas */
+.option .texto {
+    color: #333;
+    font-size: 1rem;
+}
+
+
 
 .secondCol{
     margin-top: 30px;

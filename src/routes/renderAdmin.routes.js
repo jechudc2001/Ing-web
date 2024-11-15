@@ -11,7 +11,8 @@ import {
     renderVerPreguntasPage,
     renderCrearPregunta,
     renderManagePreguntasPage,
-    renderEditarPregunta
+    renderEditarPregunta,
+    renderReglas,
 } from '../controllers/renderAdmin.controller.js';
 
 const router = express.Router();
@@ -29,6 +30,7 @@ router.get('/verPreguntasExam/:id', renderVerPreguntasPage);
 router.get("/crearPregunta/:id", renderCrearPregunta);
 router.get("/preguntas_ver/:id", renderManagePreguntasPage);
 router.get("/editar_pregunta/:id", renderEditarPregunta);
+router.get("/ExamReglas", renderReglas);
 
 
 
