@@ -6,58 +6,61 @@
         <div id="main-content" class="main p-3">
             <%- include('../partials/header.ejs'); %>
 
-            <!-- Contenido principal -->
+            <!-- Main content -->
             <div id="dashboard-container" class="contenedor-dashboard">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h1 class="titulo-dashboard" id="tituloExamen">
-                        Examenes canal <span id="canalNumero"><!-- Aquí el backend puede insertar el número de canal --></span>
+                        Examenes canal <span id="canalNumero"><!-- Backend can insert channel number here --></span>
                     </h1>
                     <a href="/crear_examen" class="btn1" id="addExamBtn">Iniciar examen aleatorio</a>
                 </div>
 
                 <div class="d-flex flex-column p-2" id="examenes-lista">
-                    <!-- Ejemplos de contenedores de examen -->
-                    <a href="javascript:void(0);" class="contenedor-nombre-examen mb-2" id="examen1" onclick="toggleOptions('examen1')">
-                        <div class="p-3">
-                            <h5 class="titulo-examen">Examen fase 1 2020</h5>
-                        </div>
-                    </a>
-                    <div id="options-examen1" class="options-container" style="display: none;">
-                        <button class="btn1  btn-seleccion">Modo Práctica</button>
-                        <button class="btn1  btn-seleccion">Modo Simulacro</button>
-                    </div>
+                    <% 
+                    // Definimos el arreglo de examenes directamente aquí
+                    const examenes = [
+                        { id: 1, nombre: 'Fase 1', año: 2020 },
+                        { id: 2, nombre: 'Fase 2', año: 2020 },
+                        { id: 3, nombre: 'Cepu Verano II', año: 2021 },
+                        { id: 4, nombre: 'Cepu Invierno I', año: 2021 },
+                        { id: 5, nombre: 'Cepu Otoño I', año: 2021 },
 
-                    <a href="javascript:void(0);" class="contenedor-nombre-examen mb-2" id="examen2" onclick="toggleOptions('examen2')">
-                        <div class="p-3">
-                            <h5 class="titulo-examen">Examen fase 2 2020</h5>
-                        </div>
-                    </a>
-                    <div id="options-examen2" class="options-container" style="display: none;">
-                        <button class="btn1  btn-seleccion" >Modo Práctica</button>
-                        <button class="btn1  btn-seleccion" >Modo Simulacro</button>
-                        
-                    </div>
+                    ];
+                    %>
 
-                    <!-- Agrega más contenedores según sea necesario -->
+                    <!-- Iterar sobre el arreglo de examenes -->
+                    <% examenes.forEach(examen => { %>
+                        <a href="javascript:void(0);" class="contenedor-nombre-examen mb-2" id="examen<%= examen.id %>" onclick="toggleOptions('examen<%= examen.id %>')">
+                            <div class="p-3">
+                                <h5 class="titulo-examen">Examen <%= examen.nombre %> <%= examen.año %></h5>
+                            </div>
+                        </a>
+                        <div id="options-examen<%= examen.id %>" class="options-container">
+                            <button class="btn1 btn-seleccion" onclick="window.location.href='/userModoPractica';">Modo Práctica</button>
+                            <button class="btn1 btn-seleccion">Modo Simulacro</button>
+                        </div>
+                    <% }) %>
                 </div>
             </div>
         </div>
     </div>
 
     <%- include('../partials/endPageAdmin.ejs'); %>
-
-    <script>
-        function toggleOptions(examenId) {
-            const optionsContainer = document.getElementById(`options-${examenId}`);
-            const isDisplayed = optionsContainer.style.display === 'flex';
-            
-            document.querySelectorAll('.options-container').forEach(container => {
-                container.style.display = 'none';
-            });
-
-            optionsContainer.style.display = isDisplayed ? 'none' : 'flex';
-        }
-
-    </script>
-
 </body>
+
+
+<script>
+    function toggleOptions(examenId) {
+        const optionsContainer = document.getElementById(`options-${examenId}`);
+    
+        // Toggle the 'show' class
+        optionsContainer.classList.toggle('show');
+    
+        // Hide other options when clicking on a new exam
+        document.querySelectorAll('.options-container').forEach(container => {
+            if (container !== optionsContainer) {
+                container.classList.remove('show');
+            }
+        });
+    }
+</script>

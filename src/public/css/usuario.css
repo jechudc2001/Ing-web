@@ -1,11 +1,11 @@
-/* Estilos generales */
+/* General styles */
 .separator-line {
     border: none;
-    border-top: 1px solid var(--blue); /* Cambia el color a azul */
+    border-top: 1px solid var(--blue);
     margin-top: 8px;
     margin-bottom: 8px;
-    width: 40%; /* Mantén el ancho deseado */
-    margin-left: 0; /* Alinea a la izquierda */
+    width: 40%;
+    margin-left: 0;
 }
 
 .titulo-dashboard2 {
@@ -23,54 +23,86 @@
 .lista-cursos {
     font-size: 14px;
     color: var(--blue);
-    list-style: disc !important; /* Cambia a puntitos */
-    padding-left: 30px; /* Ajusta el espaciado a la izquierda si es necesario */
+    list-style: disc !important;
+    padding-left: 30px;
 }
 
 .fondo-dashboard-link {
-    width: 48%; /* Ajusta el ancho de cada enlace a aproximadamente la mitad */
-    margin: 0 1%; /* Agrega un pequeño margen a los lados para separación */
+    width: 48%;
+    margin: 0 1%;
 }
 
 .contenedor-nombre-examen {
-    background-color: var(--pearl); /* Fondo rosado */
-    border-radius: 30px; /* Borde redondeado */
-    text-align: left; /* Alineación a la izquierda */
-    width: 50%; /* Ancho más estrecho */
-    color: #333; /* Color de texto */
-    text-decoration: none; /* Sin subrayado en los enlaces */
-    margin-left: 0; /* Alineado a la izquierda */
-    padding-left: 15px; /* Espacio adicional para separar el texto del borde */
+    background-color: var(--pearl);
+    border-radius: 30px;
+    text-align: left;
+    width: 50%;
+    color: #333;
+    text-decoration: none;
+    margin-left: 0;
+    padding-left: 15px;
 }
 
 .contenedor-nombre-examen h5 {
-    font-size: 16px; /* Texto más pequeño */
+    font-size: 16px;
     margin: 0;
     font-weight: bold;
 }
 
+/* General styles for options container */
 .options-container {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-in-out;
+    display: flex;
+    flex-direction: row; /* Display buttons horizontally */
+    gap: 10px; /* Adds space between buttons */
     margin-left: 20px;
-    display: flex; /* Asegúrate de que el contenedor esté en flex para los botones */
 }
 
-.btn-seleccion{
-    margin-right: 5px;
-    margin-bottom: 10px;
+.options-container.show {
+    max-height: 100px; /* Adjust based on expected content height */
+}
+
+/* Adjust the button style to make them smaller and side by side */
+.btn-seleccion {
+    margin: 0;
     font-size: 15px;
+    padding: 8px 15px; /* Adjust the padding to make the buttons more compact */
+    width: auto; /* Make the button width fit its content */
+    flex-shrink: 0; /* Prevent the buttons from shrinking */
+    margin-bottom: 10px;
 }
 
-/* Ajuste para pantallas pequeñas */
+.correcta {
+    background-color: #28a745; /* Color verde */
+    color: white;
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.secondCol{
+    margin-top: 30px;
+}
+
+
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
     .d-flex.justify-content-between {
-        flex-direction: column; /* Apila los elementos en pantallas pequeñas */
+        flex-direction: column;
     }
 
     .fondo-dashboard-link {
-        width: 100%; /* Asegura que ocupe todo el ancho en móviles */
-        margin-bottom: 20px; /* Agrega espacio entre los contenedores en vista vertical */
+        width: 100%;
+        margin-bottom: 20px;
     }
     .contenedor-nombre-examen {
-        width: 100%; /* 100% de ancho en pantallas pequeñas */
+        width: 100%;
     }
+    .secondCol{
+        margin-top: 0px;
+    }
+    
 }

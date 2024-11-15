@@ -12,6 +12,7 @@ import materiaRoute from "./routes/materia.routes.js";
 import preguntaRoute from "./routes/pregunta.routes.js";
 import reglaRoute from "./routes/regla.routes.js";
 import renderAdminRoute  from "./routes/renderAdmin.routes.js";
+import renderUserRoute from "./routes/renderUser.routes.js";
 import simulationRoute from "./routes/simulation.routes.js";
 import simulationRestultRoute from "./routes/simulationResult.routes.js";
 import userRoute from "./routes/user.routes.js";
@@ -45,6 +46,7 @@ app.use('/simulations', simulationRoute);
 app.use('/simulation-results', simulationRestultRoute);
 app.use('/users', userRoute);
 app.use(renderAdminRoute)
+app.use(renderUserRoute)
 
 
 

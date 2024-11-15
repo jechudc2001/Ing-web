@@ -1,0 +1,102 @@
+<% title = 'Modo Práctica' %> <!-- Establecer el título -->
+
+<%- include('../partials/layoutsAdmin.ejs'); %> 
+<body>
+    <div class="wrapper">
+        <%- include('../partials/sidebarUser.ejs'); %> 
+
+        <div id="main-content" class="main p-3">
+            <%- include('../partials/header.ejs'); %>
+
+            <!-- contenido principal-->
+            <div class="contenedor-dashboard">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="titulo-dashboard" id="tituloDashboard">Modo Práctica</h1>
+                </div>
+
+                <!-- Fondo de las preguntas -->
+                <div class="fondo-preguntas" id="fondoPreguntas">
+                    <!-- Datos simulados de exámenes -->
+                    <% 
+                    const examenes = [
+                        { id: 1, nombre: 'Fase 1', año: 2020 },
+                        { id: 2, nombre: 'Fase 2', año: 2020 },
+                        { id: 3, nombre: 'Cepu Verano II', año: 2021 },
+                        { id: 4, nombre: 'Cepu Invierno I', año: 2021 },
+                        { id: 5, nombre: 'Cepu Otoño I', año: 2021 }
+                    ];
+                
+                    // Seleccionamos un examen (simulamos la selección, por ejemplo el primero)
+                    const exam = examenes[0];  // Seleccionar el examen con id: 1
+                %>
+                
+                <div class="mb-3">
+                    <label for="examIdVer" class="form-label">Examen: <%= exam.nombre %> <%= exam.año %></label> <!-- Mostrar nombre y año del examen -->
+                    <span id="examIdVer" class=""><%= exam.id %></span> <!-- Mostrar ID del examen -->
+                </div>
+                
+
+                    <!-- Arreglo de preguntas simuladas -->
+                    <% 
+                    const pregunta = [
+                        { 
+                            id_pregunta: 1, 
+                            materia: 'Lógica', 
+                            texto: '¿Cuál es la raíz cuadrada de 16?', 
+                            alternativas: '4, 8, 2, 6' 
+                        },
+                        { 
+                            id_pregunta: 2, 
+                            materia: 'Literatura', 
+                            texto: '¿Quién fue el primer presidente de los Estados Unidos?', 
+                            alternativas: 'George Washington, Thomas Jefferson, Abraham Lincoln, John Adams' 
+                        },
+                        { 
+                            id_pregunta: 3, 
+                            materia: 'Literatura', 
+                            texto: '¿Cuál es el río más largo del mundo?', 
+                            alternativas: 'Amazonas, Nilo, Yangtsé, Ganges' 
+                        }
+                    ];
+                    %>
+
+                    <!-- Iterar sobre las preguntas simuladas -->
+                    <% pregunta.forEach((preg, index) => { %>
+                        <div class="pregunta-card mb-4 p-3" id="pregunta<%= index + 1 %>">
+                            <div class="curso" id="cursoPregunta<%= index + 1 %>"><%= preg.materia %></div> <!-- Materia -->
+                            <div class="pregunta" id="preguntaTexto<%= index + 1 %>">
+                                <p class="pregunta-texto"><%= preg.texto %></p> <!-- Texto de la pregunta -->
+                                <div class="alternativas" id="alternativasPregunta<%= index + 1 %>">
+                                    <% 
+                                    // Separar las alternativas por comas y mostrarlas
+                                    const alternativas = preg.alternativas.split(',');
+                                    alternativas.forEach((alt, altIndex) => { 
+                                    %>
+                                        <label class="option" id="opcion<%= String.fromCharCode(65 + altIndex) %><%= index + 1 %>">
+                                            <input type="radio" name="pregunta<%= index + 1 %>" value="<%= String.fromCharCode(65 + altIndex) %>"> 
+                                            <%= String.fromCharCode(65 + altIndex) %>) <%= alt.trim() %> <!-- Alternativa -->
+                                        </label>
+                                    <% }); %>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+
+                    <!-- Botón para enviar respuestas -->
+                    <div class="d-flex justify-content-center mt-4">
+                        <button class="btn1" id="submitAnswers">Enviar respuestas</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/endPageAdmin.ejs'); %>  
+</body>
+
+<script>
+    document.getElementById('submitAnswers').addEventListener('click', function() {
+        // Lógica para enviar las respuestas seleccionadas
+        alert('Respuestas enviadas. ¡Buen trabajo!');
+    });
+</script>

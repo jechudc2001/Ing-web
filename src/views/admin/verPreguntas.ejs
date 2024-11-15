@@ -55,21 +55,25 @@
                                         <img src="/images/preguntas/<%= preg.img %>" alt="Imagen de la pregunta">
                                     </div>
                                 <% } else { %>
-                                    <p>No hay imagen</p>
+                                    <p></p>
                                 <% } %>
 
                                 <div class="alternativas" id="alternativasPregunta<%= index + 1 %>">
                                     <% preg.alternativas.forEach((alt, altIndex) => { %>
-                                        <label class="option" id="opcion<%= String.fromCharCode(65 + altIndex) %><%= index + 1 %>">
+                                        <label class="option <%= alt.es_correcta ? 'correcta' : '' %>" id="opcion<%= String.fromCharCode(65 + altIndex) %><%= index + 1 %>">
                                             <input type="radio" name="pregunta<%= index + 1 %>" value="<%= String.fromCharCode(65 + altIndex) %>"> 
                                             <%= String.fromCharCode(65 + altIndex) %>) <%= alt.texto.trim() %>
                                         </label>
                                     <% }); %>
                                 </div>
+                                
                             </div>
                             <div class="acciones" id="accionesPregunta<%= index + 1 %>">
                                 <a href="/editar_pregunta/<%= preg.id_pregunta %>" class="editar-btn" id="editarBtn<%= index + 1 %>"><i class="fas fa-pencil-alt"></i></a>
-                                <button class="btn-danger eliminar-btn" data-id="<%= preg.id_pregunta %>" data-type="pregunta"><i class="fas fa-trash-alt"></i></button>
+                                <a href="#" class="btn-danger eliminar-btn" data-id="<%= preg.id_pregunta %>" data-type="pregunta">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                                 
                             </div>
                         </div>
                     <% }) %>
