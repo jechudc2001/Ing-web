@@ -1,0 +1,78 @@
+<%- include('../partials/layoutsAdmin.ejs'); %> 
+<body>
+    <div class="wrapper">
+        <%- include('../partials/sidebarUser.ejs'); %> 
+
+        <div id="main-content" class="main p-3">
+            <%- include('../partials/header.ejs'); %>
+
+            <!-- Main content -->
+            <div id="dashboard-container" class="contenedor-dashboard">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="titulo-dashboard" id="tituloCurso">
+                        Cursos canal <span id="canalNumero"><!-- Backend can insert channel number here --></span><br>
+                        <span class="texto-pequeño">Selecciona un curso y elige la cantidad de preguntas con las que deseas practicar.</span>
+                    </h1>
+                    
+                    <a href="/crear_curso" class="btn1" id="addCourseBtn">Iniciar examen aleatorio</a>
+
+                </div>
+
+                <div class="d-flex flex-column p-2" id="cursos-lista">
+                    <% 
+                    // Definimos el arreglo de cursos directamente aquí
+                    const cursos = [
+                        { id: 1, nombre: 'Razonamiento matemático' },
+                        { id: 2, nombre: 'Geometría y trigonometría' },
+                        { id: 3, nombre: 'Lenguaje' },
+                        { id: 4, nombre: 'Biología' },
+                        { id: 5, nombre: 'Razonamiento verbal' },
+                        { id: 6, nombre: 'Aritmética y álgebra' },
+                        { id: 7, nombre: 'Física' },
+                        { id: 8, nombre: 'Química' },
+                        { id: 9, nombre: 'Realidad nacional' }
+                    ];
+                    %>
+
+                    <!-- Iterar sobre el arreglo de cursos -->
+                    <% cursos.forEach(curso => { %>
+                        <a href="javascript:void(0);" class="contenedor-nombre-curso mb-2" id="curso<%= curso.id %>" onclick="toggleOptions('curso<%= curso.id %>')">
+                            <div class="p-3">
+                                <h5 class="titulo-curso"><%= curso.nombre %></h5>
+                            </div>
+                        </a>
+                        <div id="options-curso<%= curso.id %>" class="options-container">
+                            <div class="dropdown">
+                                <select class="form-select custom-width" id="modoPractica<%= curso.id %>" onchange="handlePracticaSelect('<%= curso.id %>')">
+                                    <option value="10">10 preguntas <i class="bi bi-1-circle"></i></option>
+                                    <option value="20">20 preguntas <i class="bi bi-2-circle"></i></option>
+                                    <option value="30">30 preguntas <i class="bi bi-3-circle"></i></option>
+                                </select>
+                            </div>
+                            
+                            <button class="btn1 btn-seleccion">Practicar</button>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/endPageAdmin.ejs'); %>
+</body>
+
+<script>
+    function toggleOptions(cursoId) {
+        const optionsContainer = document.getElementById(`options-${cursoId}`);
+    
+        // Toggle the 'show' class
+        optionsContainer.classList.toggle('show');
+    
+        // Hide other options when clicking on a new course
+        document.querySelectorAll('.options-container').forEach(container => {
+            if (container !== optionsContainer) {
+                container.classList.remove('show');
+            }
+        });
+    }
+</script>
