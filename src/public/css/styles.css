@@ -18,6 +18,11 @@ a {
     border: none;        
 }
 
+.pregunta-imagen img {
+    max-width: 300px; /* Ajusta la imagen al tamaño del contenedor sin deformarla */
+    height: auto;    /* Mantiene la proporción de la imagen */
+    max-height: 300px; /* Limita la altura de la imagen a un máximo de 200px (ajústalo según sea necesario) */
+}
 
 
 /*HEADER*/

@@ -32,7 +32,7 @@
     margin: 0 1%;
 }
 
-.contenedor-nombre-examen {
+.contenedor-nombre-examen, .contenedor-nombre-curso {
     background-color: var(--pearl);
     border-radius: 30px;
     text-align: left;
@@ -43,7 +43,7 @@
     padding-left: 15px;
 }
 
-.contenedor-nombre-examen h5 {
+.contenedor-nombre-examen h5, .contenedor-nombre-curso h5 {
     font-size: 16px;
     margin: 0;
     font-weight: bold;
@@ -135,6 +135,63 @@
     content: ""; /* Sin símbolo, no se muestra la "X" */
 }
 
+/* Estilo para la opción (sin bordes y cuadrada) */
+.option.cuadrada {
+    display: flex;
+    align-items: center;
+    padding: 8px 10px; /* Reduce el padding para hacerlo compacto */
+    margin: 5px 0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%; /* Asegura que la opción ocupe todo el ancho disponible */
+    max-width: 400px; /* Limita el ancho máximo para mantenerlo compacto */
+}
+
+/* Hover sobre las opciones */
+.option.cuadrada:hover {
+    background-color: #f9f9f9;
+}
+
+/* Oculta el radio input */
+.input-alternativa {
+    display: none;
+}
+
+/* Personalización del checkbox */
+/* Personalización del checkbox con bordes redondeados */
+.custom-checkbox {
+    width: 18px; /* Tamaño cuadrado */
+    height: 18px;
+    border: 2px solid #e4e1e1;
+    background-color: #e4e1e1;
+    margin-right: 10px;
+    display: inline-block;
+    position: relative;
+    transition: border-color 0.3s, background-color 0.3s;
+    border-radius: 4px; /* Bordes ligeramente redondeados */
+}
+
+/* Mostrar "X" cuando se selecciona */
+.input-alternativa:checked + .custom-checkbox::after {
+    content: "X"; /* Agrega la "X" */
+    position: absolute;
+    top: -2px; /* Mueve la X un poco más arriba */
+    left: 2px;
+    color: var(--blue); /* Color azul de la X */
+    font-size: 12px; /* Tamaño de la X */
+    font-weight: bold;
+}
+
+
+
+/* Texto compacto */
+.texto {
+    font-size: 14px; /* Fuente más pequeña */
+    color: #333;
+    flex-grow: 1;
+}
+
+
 
 /* Texto de las alternativas */
 .option .texto {
@@ -210,6 +267,16 @@ input[type="checkbox"]:checked + .custom-checkbox-indicator::after {
     cursor: pointer;
 }
 
+/*cantidad preguntas*/
+.custom-width {
+    width: 200px; /* Ajusta el ancho según lo necesites */
+}
+
+.texto-pequeño {
+    margin-top: 5px;
+    font-size: 0.9rem; /* Ajusta este valor según el tamaño que desees */
+}
+
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
@@ -221,11 +288,18 @@ input[type="checkbox"]:checked + .custom-checkbox-indicator::after {
         width: 100%;
         margin-bottom: 20px;
     }
-    .contenedor-nombre-examen {
+    .contenedor-nombre-examen, .contenedor-nombre-curso {
         width: 100%;
     }
     .secondCol{
         margin-top: 0px;
     }
-    
+
+    .options-container {
+        flex-direction: column; /* Stack buttons vertically on smaller screens */
+        margin-left: 0; /* Optional: adjust left margin if needed */
+    }
+    .custom-width {
+        width: 100%; /* Ajusta el ancho según lo necesites */
+    }
 }
