@@ -150,6 +150,67 @@
 
 
 
+/* OPCION MULTIPLE */
+.custom-channel-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-left: 20px;
+}
+
+.custom-checkbox-wrapper {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 8px;
+    position: relative;
+}
+
+input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: all;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.custom-checkbox-indicator {
+    width: 14px;
+    height: 14px;
+    border: 2px solid #bec3c9;
+    background-color: #f8f7f7;
+    margin-right: 8px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    border-radius: 20%; /* Esto redondea los bordes */
+}
+
+input[type="checkbox"]:checked + .custom-checkbox-indicator {
+    background-color: var(--blue);
+    border-color: var(--blue);
+}
+
+input[type="checkbox"]:checked + .custom-checkbox-indicator::after {
+    content: "✔";
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: white;
+    z-index: 1;
+}
+
+
+.custom-checkbox-label {
+    display: inline;
+    font-size: 16px;
+    color: var(--blue);
+    cursor: pointer;
+}
+
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .d-flex.justify-content-between {

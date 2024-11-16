@@ -3,7 +3,6 @@
 <%- include('../partials/layoutsAdmin.ejs'); %> 
 
 <body>
-
     <div class="wrapper"> 
         <%- include('../partials/sidebarAdmin.ejs'); %> 
 
@@ -19,14 +18,31 @@
                             <label for="courseName" class="form-label">Nombre del Curso</label>
                             <input type="text" class="form-control" id="courseName" placeholder="Ingrese nombre del curso" required>
                         </div>
+
                         <div class="mb-3">
-                            <label for="courseChannel" class="form-label">Canal</label>
-                            <select class="form-select" id="courseChannel" required>
-                                <option value="" disabled selected>Seleccione el canal</option>
-                                <option value="1">Canal 1</option>
-                                <option value="2">Canal 2</option>
-                            </select>
+                            <label class="form-label" for="courseChannel">Canal(es) al que pertenece</label>
+                            <div id="courseChannel" class="custom-channel-container">
+                                <!-- Canal 1 -->
+                                <div class="checkbox-container custom-checkbox-container">
+                                    <div class="checkbox-wrapper custom-checkbox-wrapper">
+                                        <input type="checkbox" id="checkbox1" value="1" class="custom-checkbox" />
+                                        <span class="custom-checkbox-indicator"></span>
+                                    </div>
+                                    <label for="checkbox1" class="custom-checkbox-label">Canal 1</label>
+                                </div>
+                        
+                                <!-- Canal 2 -->
+                                <div class="checkbox-container custom-checkbox-container">
+                                    <div class="checkbox-wrapper custom-checkbox-wrapper">
+                                        <input type="checkbox" id="checkbox2" value="2" class="custom-checkbox" />
+                                        <span class="custom-checkbox-indicator"></span>
+                                    </div>
+                                    <label for="checkbox2" class="custom-checkbox-label">Canal 2</label>
+                                </div>
+                            </div>
                         </div>
+                        
+                        
                         <div class="text-center">
                             <button type="submit" class="btn1" id="createCourseBtn">Crear Curso</button>
                         </div>
