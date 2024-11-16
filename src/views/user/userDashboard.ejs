@@ -1,7 +1,7 @@
-<%- include('../partials/layoutsAdmin.ejs'); %> 
+<%- include('../partials/layoutsAdmin.ejs'); %>
 <body>
     <div class="wrapper">
-        <%- include('../partials/sidebarUser.ejs'); %> 
+        <%- include('../partials/sidebarUser.ejs'); %>
 
         <div id="main-content" class="main p-3">
             <%- include('../partials/header.ejs'); %>
@@ -14,45 +14,26 @@
                 </div>
 
                 <div class="d-flex justify-content-between" id="canales-container">
-                    <!-- Contenedor para Canal 1 con clase fondo-dashboard como enlace -->
-                    <a href="/userSeleccionarExamen" class="fondo-dashboard-link" id="canal1Link">
-                        <div class="fondo-dashboard pearl p-4" id="canal1">
-                            <h4 class="titulo-dashboard2" id="canal1Titulo">Canal 1</h4>
-                            <hr class="separator-line" id="canal1Separator">
-                            <p class="subtitle-dashboard" id="canal1Subtitulo">Ciencias de la Salud</p>
-                            <ul class="lista-cursos" id="canal1Cursos">
-                                <li>Razonamiento matemático</li>
-                                <li>Geometría y trigonometría</li>
-                                <li>Lenguaje</li>
-                                <li>Biología</li>
-                                <li>Razonamiento verbal</li>
-                                <li>Aritmética y álgebra</li>
-                                <li>Física</li>
-                                <li>Química</li>
-                                <li>Realidad nacional</li>
-                            </ul>
-                        </div>
-                    </a>
-                
-                    <!-- Contenedor para Canal 2 con clase fondo-dashboard como enlace -->
-                    <a href="/canal2" class="fondo-dashboard-link" id="canal2Link">
-                        <div class="fondo-dashboard pearl p-4" id="canal2">
-                            <h4 class="titulo-dashboard2" id="canal2Titulo">Canal 2</h4>
-                            <hr class="separator-line" id="canal2Separator">
-                            <p class="subtitle-dashboard" id="canal2Subtitulo">Ingenierías</p>
-                            <ul class="lista-cursos" id="canal2Cursos">
-                                <li>Razonamiento matemático</li>
-                                <li>Geometría y trigonometría</li>
-                                <li>Lenguaje</li>
-                                <li>Lógica</li>
-                                <li>Razonamiento verbal</li>
-                                <li>Aritmética y álgebra</li>
-                                <li>Física</li>
-                                <li>Química</li>
-                                <li>Realidad nacional</li>
-                            </ul>
-                        </div>
-                    </a>
+                    <!-- Iterar sobre los canales -->
+                    <% canales.forEach(canal => { %>
+                        <a href="/userSeleccionarExamen/<%= canal.id_canal %>" class="fondo-dashboard-link" id="canal<%= canal.id %>Link">
+                            <div class="fondo-dashboard pearl p-4" id="canal<%= canal.id %>">
+                                <!-- Nombre del Canal -->
+                                <h4 class="titulo-dashboard2" id="canal<%= canal.id %>Titulo"><%= canal.nombre %></h4>
+                                <hr class="separator-line" id="canal<%= canal.id %>Separator">
+                                
+                                <!-- Subtítulo del Canal (usamos un campo como ejemplo o puedes agregarlo al modelo) -->
+                                <p class="subtitle-dashboard" id="canal<%= canal.id %>Subtitulo"></p>
+                                
+                                <!-- Listado de Materias asociadas al Canal -->
+                                <ul class="lista-cursos" id="canal<%= canal.id %>Cursos">
+                                    <% canal.Materia.forEach(materia => { %>
+                                        <li><%= materia.nombre %></li>
+                                    <% }); %>
+                                </ul>
+                            </div>
+                        </a>
+                    <% }); %>
                 </div>
                 
             </div>

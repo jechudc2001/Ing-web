@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../../config/dbConfig.js';
 
+
 const Canal = sequelize.define('Canal', {
   id_canal: {
     type: DataTypes.INTEGER,
@@ -15,7 +16,6 @@ const Canal = sequelize.define('Canal', {
   tableName: 'canal',
   timestamps: false
 });
-
 
 
 

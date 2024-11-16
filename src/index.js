@@ -16,6 +16,7 @@ import renderUserRoute from "./routes/renderUser.routes.js";
 import simulationRoute from "./routes/simulation.routes.js";
 import simulationRestultRoute from "./routes/simulationResult.routes.js";
 import userRoute from "./routes/user.routes.js";
+import canalMateriaRoutes from './routes/canalMateria.routes.js';
 
 
 const app = express();
@@ -47,6 +48,7 @@ app.use('/simulation-results', simulationRestultRoute);
 app.use('/users', userRoute);
 app.use(renderAdminRoute)
 app.use(renderUserRoute)
+app.use('/canal-materias',canalMateriaRoutes)
 
 
 

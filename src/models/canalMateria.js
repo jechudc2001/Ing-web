@@ -1,8 +1,9 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../../config/dbConfig.js';
-import Canal from './canal.js';
-import Materia from './materia.js';
 
+
+import Materia from './materia.js';
+import Canal from './canal.js';
 
 const CanalMateria = sequelize.define('CanalMaterias', {
   
@@ -18,13 +19,18 @@ const CanalMateria = sequelize.define('CanalMaterias', {
 
 
 
+Canal.belongsToMany(Materia, {
+  through: CanalMateria,
+  foreignKey: 'CanalIdCanal', // Clave foránea en la tabla intermedia que apunta a Canal
+  otherKey: 'MateriumIdMateria', // Clave foránea que apunta a Materia
+});
 
+Materia.belongsToMany(Canal, {
+  through: CanalMateria,
+  foreignKey: 'MateriumIdMateria', // Clave foránea en la tabla intermedia que apunta a Materia
+  otherKey: 'CanalIdCanal', // Clave foránea que apunta a Canal
+});
 
-// Relación Many-to-Many con tabla intermedia
-Canal.belongsToMany(Materia, { through: CanalMateria });
-
-
-Materia.belongsToMany(Canal, { through: CanalMateria });
 
 
 export default CanalMateria;

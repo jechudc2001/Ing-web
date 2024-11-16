@@ -1,3 +1,21 @@
+<% 
+  const examTypeNames = {
+    1: "Fase 1",
+    2: "Fase 2",
+    3: "Cepu Verano 1",
+    4: "Cepu Verano 2",
+    5: "Cepu Otoño 1",
+    6: "Cepu Otoño 2",
+    7: "Cepu Invierno 1",
+    8: "Cepu Invierno 2",
+    
+  };
+
+  const getExamTypeName = (type) => examTypeNames[type] || "Tipo desconocido";
+%>
+
+
+
 <%- include('../partials/layoutsAdmin.ejs'); %> 
 <body>
     <div class="wrapper">
@@ -10,36 +28,33 @@
             <div id="dashboard-container" class="contenedor-dashboard">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h1 class="titulo-dashboard" id="tituloExamen">
-                        Examenes canal <span id="canalNumero"><!-- Backend can insert channel number here --></span>
+                        Exámenes canal <span id="canalNumero">
+                            <% if (examenes.length > 0) { %>
+                                <%= examenes[0].canal %>
+                            <% } else { %>
+                                N/A
+                            <% } %>
+                        </span>
                     </h1>
                     <a href="/crear_examen" class="btn1" id="addExamBtn">Iniciar examen aleatorio</a>
                 </div>
 
                 <div class="d-flex flex-column p-2" id="examenes-lista">
-                    <% 
-                    // Definimos el arreglo de examenes directamente aquí
-                    const examenes = [
-                        { id: 1, nombre: 'Fase 1', año: 2020 },
-                        { id: 2, nombre: 'Fase 2', año: 2020 },
-                        { id: 3, nombre: 'Cepu Verano II', año: 2021 },
-                        { id: 4, nombre: 'Cepu Invierno I', año: 2021 },
-                        { id: 5, nombre: 'Cepu Otoño I', año: 2021 },
-
-                    ];
-                    %>
-
-                    <!-- Iterar sobre el arreglo de examenes -->
-                    <% examenes.forEach(examen => { %>
-                        <a href="javascript:void(0);" class="contenedor-nombre-examen mb-2" id="examen<%= examen.id %>" onclick="toggleOptions('examen<%= examen.id %>')">
-                            <div class="p-3">
-                                <h5 class="titulo-examen">Examen <%= examen.nombre %> <%= examen.año %></h5>
+                    <% if (examenes && examenes.length > 0) { %>
+                        <% examenes.forEach(examen => { %>
+                            <a href="javascript:void(0);" class="contenedor-nombre-examen mb-2" id="examen<%= examen.id_exam %>" onclick="toggleOptions('examen<%= examen.id_exam %>')">
+                                <div class="p-3">
+                                    <h5 class="titulo-examen">Examen <%= getExamTypeName(examen.exam_type) %> - <%= examen.year %></h5>
+                                </div>
+                            </a>
+                            <div id="options-examen<%= examen.id_exam %>" class="options-container">
+                                <button class="btn1 btn-seleccion" onclick="window.location.href='/userModoPractica';">Modo Práctica</button>
+                                <button class="btn1 btn-seleccion">Modo Simulacro</button>
                             </div>
-                        </a>
-                        <div id="options-examen<%= examen.id %>" class="options-container">
-                            <button class="btn1 btn-seleccion" onclick="window.location.href='/userModoPractica';">Modo Práctica</button>
-                            <button class="btn1 btn-seleccion">Modo Simulacro</button>
-                        </div>
-                    <% }) %>
+                        <% }) %>
+                    <% } else { %>
+                        <p>No hay exámenes disponibles para este canal.</p>
+                    <% } %>
                 </div>
             </div>
         </div>
@@ -47,7 +62,6 @@
 
     <%- include('../partials/endPageAdmin.ejs'); %>
 </body>
-
 
 <script>
     function toggleOptions(examenId) {

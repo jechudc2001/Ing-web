@@ -11,7 +11,7 @@ import {
 const router = express.Router();
 
 router.get('/userDashboard', renderUserDashboard);
-router.get('/userSeleccionarExamen', renderUserSeleccionarExamen);
+router.get('/userSeleccionarExamen/:id', renderUserSeleccionarExamen);
 router.get('/userCuenta', renderUserCuenta);
 router.get('/userModoPractica', renderUserModoPractica);
 
