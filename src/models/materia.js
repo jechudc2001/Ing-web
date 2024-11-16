@@ -1,6 +1,9 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../../config/dbConfig.js';
 
+
+
+
 const Materia = sequelize.define('Materia', {
   id_materia: {
     type: DataTypes.INTEGER,
@@ -15,5 +18,8 @@ const Materia = sequelize.define('Materia', {
   tableName: 'materia',
   timestamps: false
 });
+
+
+
 
 export default Materia;

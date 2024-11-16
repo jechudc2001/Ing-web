@@ -30,7 +30,7 @@ const Pregunta = sequelize.define('Pregunta', {
     allowNull: true
   },
   img: {
-    type: DataTypes.STRING(255), // La ruta de la imagen (no el archivo binario)
+    type: DataTypes.STRING(255), 
     allowNull: true
   }
 }, {
@@ -42,6 +42,9 @@ const Pregunta = sequelize.define('Pregunta', {
 Pregunta.belongsTo(Exam, { foreignKey: 'id_exam' });
 Exam.hasMany(Pregunta, { foreignKey: 'id_exam', as: 'preguntas' });
 
+
+Pregunta.belongsTo(Materia, { foreignKey: 'id_materia' });
+Materia.hasMany(Pregunta, { foreignKey: 'id_materia', as: 'preguntas' });
 
 export default Pregunta;
 

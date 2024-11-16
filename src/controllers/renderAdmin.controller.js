@@ -34,14 +34,37 @@ export const renderCrearPregunta = (req, res) => {
 export const renderCrearUsuario = (req, res) => {
     res.render("admin/crearUsuario", { title: "XD" });
 };
-// POR COMPLETAR
-export const renderCursos = (req, res) => {
-    res.render("admin/cursos", { title: "XD" });
+
+export const renderCursos = async (req, res) => {
+  try {
+    const cursos = await Materia.findAll();
+    res.render("admin/cursos", { cursos });
+  } catch (error) {
+    console.error("Error al obtener materias:", error);
+    res.status(500).json({ message: "Error al obtener materias" });
+  }
 };
+
+
 // POR COMPLETAR
-export const renderEditarCurso = (req, res) => {
-    res.render("admin/crearUsuario", { title: "XD" });
-};
+export const renderEditarCurso = async (req, res) => {
+  try {
+    const materiaId = req.params.id; 
+    const materia = await Materia.findByPk(materiaId); 
+
+    if (!materia) {
+        return res.status(404).send("materia no encontrado");
+    }
+
+    res.render("admin/editarCurso", { materia, title: "Editar Curso" });
+} catch (error) {
+    console.error("Error al renderizar la página de edición de materia:", error);
+    res.status(500).send("Error interno del servidor");
+}};
+
+
+
+
 export const renderEditarExamen = async (req, res) => {
     try {
         const examId = req.params.id; 
@@ -195,6 +218,33 @@ export const renderManagePreguntasPage = async (req, res) => {
     }    
     // Renderizar la vista 'verPreguntas' y pasar los datos del examen y las preguntas con sus alternativas
     res.render('admin/verPreguntas', { exam, pregunta: exam.preguntas });
+  } catch (error) {
+    console.error("Error al renderizar la página de preguntas:", error);
+    res.status(500).json({ message: "Error al cargar los datos de las preguntas" });
+  }
+};
+
+export const renderVerPreguntasMateria = async (req, res) => {
+  const { id } = req.params; // Obtener el ID del Materia
+
+  try {
+    // Buscar el Materia por ID e incluir las preguntas relacionadas y sus alternativas
+    const materias = await Materia.findByPk(id, {
+      include: {
+        model: Pregunta,
+        as: 'preguntas', // Alias para las preguntas relacionadas
+        include: {
+          model: Alternativa,
+          as: 'alternativas', // Alias para las alternativas relacionadas
+        }
+      },
+    });
+
+    if (!materias) {
+      return res.status(404).json({ message: "Materia no encontrado" });
+    }    
+    // Renderizar la vista 'verPreguntas' y pasar los datos del Materia y las preguntas con sus alternativas
+    res.render('admin/verPreguntasMateria', { materias, pregunta: materias.preguntas });
   } catch (error) {
     console.error("Error al renderizar la página de preguntas:", error);
     res.status(500).json({ message: "Error al cargar los datos de las preguntas" });

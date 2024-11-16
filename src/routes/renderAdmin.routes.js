@@ -13,6 +13,10 @@ import {
     renderManagePreguntasPage,
     renderEditarPregunta,
     renderReglas,
+    renderCursos,
+    renderVerPreguntasMateria,
+    renderCrearCurso,
+    renderEditarCurso,
 } from '../controllers/renderAdmin.controller.js';
 
 const router = express.Router();
@@ -31,6 +35,13 @@ router.get("/crearPregunta/:id", renderCrearPregunta);
 router.get("/preguntas_ver/:id", renderManagePreguntasPage);
 router.get("/editar_pregunta/:id", renderEditarPregunta);
 router.get("/ExamReglas", renderReglas);
+router.get("/cursos",renderCursos);
+router.get("/ver_preguntas/:id", renderVerPreguntasMateria);
+router.get("/crearCurso",renderCrearCurso);
+router.get("/editarCurso/:id",renderEditarCurso);
+
+
+
 
 
 

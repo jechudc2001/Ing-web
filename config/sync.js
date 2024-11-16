@@ -10,6 +10,8 @@ import Materia from '../src/models/materia.js';
 import Simulation from '../src/models/simulation.js';
 import SimulationResult from '../src/models/simulation_result.js';
 import Reglas from '../src/models/reglas.js'; 
+import CanalMaterias from '../src/models/canalMateria.js'; 
+
 
 
 const syncDatabase = async () => {

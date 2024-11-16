@@ -1,3 +1,9 @@
+
+// Este archivo configura el middleware `multer` para manejar la carga de archivos en el servidor.
+// En este caso, está diseñado específicamente para subir imágenes relacionadas con preguntas,
+// almacenándolas en una carpeta específica del proyecto. El nombre del archivo subido se genera 
+// de forma única para evitar conflictos y asegurarse de que no se sobrescriban archivos existentes.
+
 import multer from 'multer';
 import path from 'path';
 

@@ -1,34 +1,33 @@
 <body>
     <% title = 'Editar Curso' %> <!-- Establecer el título -->
-    <%- include('../partials/layoutsAdmin.ejs'); %> 
+    <%- include('../partials/layoutsAdmin.ejs'); %>
 
     <div class="wrapper"> 
-        <%- include('../partials/sidebarAdmin.ejs'); %> 
+        <%- include('../partials/sidebarAdmin.ejs'); %>
 
         <div id="main-content" class="main p-3">
             <%- include('../partials/header.ejs'); %>
-            <!-- contenido principal-->
+        
             <div class="contenedor-dashboard">
                 <h1 class="titulo-dashboard" id="tituloCurso">Editar Curso</h1>
                 <div class="fondo-dashboard">
                     <form id="editCourseForm">
                         <div class="mb-3">
                             <label for="courseId" class="form-label">ID del Curso:</label>
-                            <span id="courseId">[ID del Curso]</span> <!-- Placeholder para el ID del curso -->
-                            <input type="hidden" id="courseIdHidden"> <!-- Input oculto para el ID -->
+                            <span id="courseId"><%= materia.id_materia %></span> <!-- Mostrar el ID del curso -->
+                            <input type="hidden" id="courseIdHidden" value="<%= materia.id_materia %>"> <!-- Input oculto para el ID -->
                         </div>
 
                         <div class="mb-3">
                             <label for="courseName" class="form-label">Nombre del Curso</label>
-                            <input type="text" class="form-control" id="courseName" name="nombre_curso" placeholder="Ingrese el nombre del curso" required>
+                            <input type="text" class="form-control" id="courseName" name="nombre_curso" value="<%= materia.nombre_curso %>" placeholder="Ingrese el nombre del curso" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="courseChannel" class="form-label">Canal</label>
                             <select class="form-select" id="courseChannel" name="canal" required>
-                                <option value="" disabled selected>Seleccione el canal</option>
-                                <option value="1">Canal 1</option>
-                                <option value="2">Canal 2</option>
+                                <option value="1" <%= materia.canal === 1 ? 'selected' : '' %>>Canal 1</option>
+                                <option value="2" <%= materia.canal === 2 ? 'selected' : '' %>>Canal 2</option>
                             </select>
                         </div>
 
@@ -42,4 +41,58 @@
     </div>
 
     <%- include('../partials/endPageAdmin.ejs'); %>
+
+    <script>
+        // Función fetchRequest para manejar las solicitudes
+        async function fetchRequest(url, method, data) {
+            const options = {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            };
+
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('Error en fetchRequest:', error);
+                throw error; // Captura el error a nivel superior
+            }
+        }
+
+        // Manejo del envío del formulario de edición
+        document.getElementById('editCourseForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Previene el envío por defecto
+
+            // Obtener valores de los campos del formulario
+            const courseId = document.getElementById('courseIdHidden').value;
+            const courseName = document.getElementById('courseName').value;
+            const courseChannel = document.getElementById('courseChannel').value;
+
+            const courseData = {
+                nombre_curso: courseName,
+                canal: courseChannel
+            };
+
+            try {
+                // Llamada a fetchRequest con método PUT
+                const response = await fetchRequest(`/cursos/${courseId}`, 'PUT', courseData);
+                console.log('Curso actualizado:', response);
+                // Mensaje de éxito y redirección
+                alert('Curso actualizado exitosamente');
+                window.location.href = '/cursos'; // Redirige a la ruta deseada
+            } catch (error) {
+                console.error('Error al actualizar el curso:', error);
+                alert('Hubo un error al actualizar el curso');
+            }
+        });
+    </script>
 </body>
