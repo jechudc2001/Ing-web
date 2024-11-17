@@ -25,30 +25,30 @@
                         <tbody id="rulesList">
                             <tr>
                                 <td>Respuesta correcta</td>
-                                <td class="editable" data-field="correct">10</td>
+                                <td class="editable" data-field="respuesta_correcta"><%= regla.respuesta_correcta %></td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning edit-btn">Editar</button>
+                                    <button class="btn btn-sm btn-warning edit-btn" data-id="<%= regla.id %>">Editar</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Respuesta incorrecta</td>
-                                <td class="editable" data-field="incorrect">-0.25</td>
+                                <td class="editable" data-field="respuesta_incorrecta"><%= regla.respuesta_incorrecta %></td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning edit-btn">Editar</button>
+                                    <button class="btn btn-sm btn-warning edit-btn" data-id="<%= regla.id %>">Editar</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Sin respuesta</td>
-                                <td class="editable" data-field="no-answer">1</td>
+                                <td class="editable" data-field="sin_respuesta"><%= regla.sin_respuesta %></td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning edit-btn">Editar</button>
+                                    <button class="btn btn-sm btn-warning edit-btn" data-id="<%= regla.id %>">Editar</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Puntaje máximo</td>
-                                <td class="editable" data-field="max-score">600</td>
+                                <td class="editable" data-field="puntaje_maximo"><%= regla.puntaje_maximo %></td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning edit-btn">Editar</button>
+                                    <button class="btn btn-sm btn-warning edit-btn" data-id="<%= regla.id %>">Editar</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -69,9 +69,9 @@
                         <tbody id="durationList">
                             <tr>
                                 <td>Duración total</td>
-                                <td class="editable" data-field="total-time">120</td>
+                                <td class="editable" data-field="tiempo_examen_simulacro"><%= regla.tiempo_examen_simulacro %></td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning edit-btn">Editar</button>
+                                    <button class="btn btn-sm btn-warning edit-btn" data-id="<%= regla.id %>">Editar</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -84,49 +84,62 @@
     <%- include('../partials/endPageAdmin.ejs'); %> 
 
     <script>
-        // Función para activar la edición
+        // Manejador para edición y guardado
         document.querySelectorAll('.edit-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const row = this.closest('tr'); // Obtener la fila del botón
-                const scoreCell = row.querySelector('.editable'); // Obtener la celda editable
-    
-                // Verificar si el botón está en modo de edición
+            button.addEventListener('click', async function () {
+                const row = this.closest('tr');
+                const editableCell = row.querySelector('.editable');
+                const field = editableCell.getAttribute('data-field');
+                const reglaId = this.getAttribute('data-id');
+
                 if (this.innerText === 'Editar') {
-                    const currentValue = scoreCell.innerText; // Obtener el valor actual
-    
-                    // Crear un campo de entrada
+                    const currentValue = editableCell.innerText.trim();
+
                     const input = document.createElement('input');
-                    input.type = 'number'; // Tipo de entrada para números
-                    input.value = currentValue; // Establecer el valor actual
-                    input.className = 'form-control'; // Clase para estilos
-    
-                    // Reemplazar la celda con el campo de entrada
-                    scoreCell.innerHTML = ''; // Limpiar el contenido actual
-                    scoreCell.appendChild(input); // Agregar el campo de entrada
-    
-                    // Cambiar el botón a "Guardar"
+                    input.type = 'number';
+                    input.value = currentValue;
+                    input.className = 'form-control';
+
+                    editableCell.innerHTML = '';
+                    editableCell.appendChild(input);
+
                     this.innerText = 'Guardar';
                     this.classList.remove('btn-warning');
                     this.classList.add('btn-success');
-    
-                    // Cambiar el comportamiento del botón al hacer clic nuevamente
-                    this.addEventListener('click', function save() {
-                        const newValue = input.value; // Obtener el nuevo valor
-                        scoreCell.innerText = newValue; // Reemplazar el campo de entrada con el nuevo valor
-    
-                        // Cambiar el botón de vuelta a "Editar"
+
+                    // Guardar cambios al hacer clic en "Guardar"
+                    this.addEventListener('click', async function save() {
+                        const newValue = input.value.trim();
+                        if (newValue === currentValue || newValue === '') {
+                            editableCell.innerText = currentValue; // Restaurar el valor si no cambia
+                        } else {
+                            try {
+                                const response = await fetch(`/reglas/${reglaId}`, {
+                                    method: 'PUT',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ [field]: newValue }),
+                                });
+
+                                if (!response.ok) throw new Error('Error al actualizar.');
+
+                                editableCell.innerText = newValue; // Actualizar en la tabla
+                            } catch (error) {
+                                console.error(error);
+                                alert('No se pudo guardar el cambio.');
+                                editableCell.innerText = currentValue; // Restaurar el valor original
+                            }
+                        }
+
                         this.innerText = 'Editar';
                         this.classList.remove('btn-success');
                         this.classList.add('btn-warning');
-    
-                        // Quitar el evento 'save' para evitar que se llame nuevamente
+
                         this.removeEventListener('click', save);
-                    }, { once: true }); // Asegúrate de que el evento se elimine después de la primera vez
+                    }, { once: true });
                 }
             });
         });
     </script>
-    
-    
-    
 </body>

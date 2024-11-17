@@ -13,6 +13,7 @@ router.post('/', createRegla);
 router.get('/', getReglas);
 router.get('/:id', getReglaById);
 router.put('/:id', updateRegla);
+
 router.delete('/:id', deleteRegla);
 
 export default router;

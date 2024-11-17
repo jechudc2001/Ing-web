@@ -147,11 +147,26 @@ export const renderVerPreguntasPage = async (req, res) => {
   };
   
 
-// POR COMPLETAR
-export const renderReglas = (req, res) => {
-    res.render("admin/reglas",{ title: "XD" })
-}
+  export const renderReglas = async (req, res) => {
+    try {
+        // Buscar la regla con id = 1
+        const regla = await Reglas.findByPk(1);
 
+        // Verificar si se encontró la regla
+        if (!regla) {
+            return res.status(404).send("Regla no encontrada.");
+        }
+
+        // Renderizar la vista con los datos de la regla
+        res.render("admin/reglas", {
+            title: "Reglas",
+            regla // Enviar la regla encontrada
+        });
+    } catch (error) {
+        console.error("Error al obtener la regla:", error);
+        res.status(500).send("Error interno del servidor.");
+    }
+};
 
 
   
