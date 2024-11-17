@@ -13,43 +13,20 @@
             <div class="contenedor-dashboard">
                 <h1 class="titulo-dashboard" id="tituloCurso">Editar Curso</h1>
                 <div class="fondo-dashboard">
-
-                    <div class="mb-2">
-                        <label for="courseLabel" class="form-label">
-                            Curso: <span id="courseNameDisplay"></span>
-                        </label>
-                    </div>
-                    
-                    
                     <form id="courseForm">
                         <div class="mb-3">
                             <label for="courseName" class="form-label">Nombre del Curso</label>
-                            <input type="text" class="form-control" id="courseName" placeholder="Ingrese nombre del curso" required>
+                            <!-- Cargar dinámicamente el nombre de la materia desde el servidor -->
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="courseName" 
+                                placeholder="Ingrese nombre del curso" 
+                                value="<%= materia.nombre %>" 
+                                required
+                            >
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label" for="courseChannel">Canal(es) al que pertenece</label>
-                            <div id="courseChannel" class="custom-channel-container">
-                                <!-- Canal 1 -->
-                                <div class="checkbox-container custom-checkbox-container">
-                                    <div class="checkbox-wrapper custom-checkbox-wrapper">
-                                        <input type="checkbox" id="checkbox1" value="1" class="custom-checkbox" />
-                                        <span class="custom-checkbox-indicator"></span>
-                                    </div>
-                                    <label for="checkbox1" class="custom-checkbox-label">Canal 1</label>
-                                </div>
-                        
-                                <!-- Canal 2 -->
-                                <div class="checkbox-container custom-checkbox-container">
-                                    <div class="checkbox-wrapper custom-checkbox-wrapper">
-                                        <input type="checkbox" id="checkbox2" value="2" class="custom-checkbox" />
-                                        <span class="custom-checkbox-indicator"></span>
-                                    </div>
-                                    <label for="checkbox2" class="custom-checkbox-label">Canal 2</label>
-                                </div>
-                            </div>
-                        </div>
-                        
                         <div class="text-center">
                             <button type="submit" class="btn1" id="updateCourseBtn">Actualizar Curso</button>
                         </div>
@@ -62,47 +39,35 @@
     <%- include('../partials/endPageAdmin.ejs'); %>
 
     <script>
-        // Datos simulados del curso que normalmente vendrían del backend
-        const courseData = {
-            name: 'Curso de Ejemplo',
-            channels: [1] // Los canales seleccionados (pueden ser [1], [2], [1,2], etc.)
-        };
-
-        // Pre-poblar el formulario con los datos del curso
-        document.getElementById('courseName').value = courseData.name;
-
-        // Pre-seleccionar los checkboxes según los canales del curso
-        if (courseData.channels.includes(1)) {
-            document.getElementById('checkbox1').checked = true;
-        }
-        if (courseData.channels.includes(2)) {
-            document.getElementById('checkbox2').checked = true;
-        }
-
-        // Lógica para manejar el envío del formulario
-        document.getElementById('courseForm').addEventListener('submit', function(event) {
+        document.getElementById('courseForm').addEventListener('submit', async function(event) {
             event.preventDefault();
 
-            // Obtener el nuevo nombre del curso
+            // Obtener el nuevo nombre del curso desde el formulario
             const updatedCourseName = document.getElementById('courseName').value;
 
-            // Obtener los canales seleccionados
-            const selectedChannels = [];
-            if (document.getElementById('checkbox1').checked) {
-                selectedChannels.push(1);
-            }
-            if (document.getElementById('checkbox2').checked) {
-                selectedChannels.push(2);
-            }
+            try {
+                // Enviar los datos al servidor
+                const response = await fetch(`/materias/<%= materia.id_materia %>`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        nombre: updatedCourseName
+                    })
+                });
 
-            // Mostrar los datos del curso actualizado (en la práctica, aquí se enviaría a un servidor)
-            console.log('Curso Actualizado:', {
-                name: updatedCourseName,
-                channels: selectedChannels
-            });
-
-            // Aquí podrías agregar el código para actualizar el curso, por ejemplo, enviarlo a un servidor con fetch() o AJAX.
-            alert('Curso actualizado con éxito!');
+                if (response.ok) {
+                    alert('Curso actualizado con éxito!');
+                    // Redirigir después de actualizar
+                    window.location.href = '/cursos';
+                } else {
+                    alert('Error al actualizar el curso.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al actualizar el curso.');
+            }
         });
     </script>
 </body>

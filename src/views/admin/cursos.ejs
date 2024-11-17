@@ -6,7 +6,6 @@
         <%- include('../partials/sidebarAdmin.ejs'); %> 
 
         <div id="main-content" class="main p-3">
-
             <%- include('../partials/header.ejs'); %>
 
             <!-- contenido principal -->
@@ -26,14 +25,14 @@
                             </tr>
                         </thead>
                         <tbody id="courseList">
-                            <% cursos.forEach((curso, index) => { %> <!-- Iterar sobre los cursos pasados desde el controlador -->
+                            <% cursos.forEach((curso, index) => { %>
                                 <tr id="courseRow<%= curso.id_materia %>">
-                                    <th scope="row" id="courseNumber<%= index + 1 %>"><%= curso.id_materia %></th>
-                                    <td id="courseName<%= index + 1 %>"><%= curso.nombre %></td>
-                                    <td id="courseActions<%= index + 1 %>">
-                                        <a href="/ver_preguntas/<%= curso.id_materia %>" class="btn btn-sm btn-success" id="viewQuestionsBtn<%= curso.id_materia %>">Ver preguntas</a>
-                                        <a href="/editarCurso/<%= curso.id_materia %>" class="btn btn-sm btn-warning" id="editCourseBtn<%= curso.id_materia %>">Editar</a>
-                                        <button class="btn btn-sm btn-danger" data-type="course" data-id="<%= curso.id_materia %>" id="deleteCourseBtn<%= curso.id_materia %>">Eliminar</button>
+                                    <th scope="row"><%= curso.id_materia %></th>
+                                    <td><%= curso.nombre %></td>
+                                    <td>
+                                        <a href="/ver_preguntas/<%= curso.id_materia %>" class="btn btn-sm btn-success">Ver preguntas</a>
+                                        <a href="/editarCurso/<%= curso.id_materia %>" class="btn btn-sm btn-warning">Editar</a>
+                                        <button class="btn btn-sm btn-danger delete-course-btn" data-id="<%= curso.id_materia %>">Eliminar</button>
                                     </td>
                                 </tr>
                             <% }); %>
@@ -43,6 +42,36 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Seleccionar todos los botones de eliminar curso
+            document.querySelectorAll('.delete-course-btn').forEach(button => {
+                button.addEventListener('click', async (event) => {
+                    const courseId = event.target.getAttribute('data-id');
+                    
+                    const confirmed = confirm("¿Estás seguro de que deseas eliminar este curso?");
+                    if (!confirmed) return;
+
+                    try {
+                        const response = await fetch(`/materias/${courseId}`, {
+                            method: 'DELETE',
+                        });
+
+                        if (response.ok) {
+                            alert("Curso eliminado exitosamente");
+                            document.getElementById(`courseRow${courseId}`).remove(); // Eliminar el curso de la tabla sin recargar
+                        } else {
+                            alert("Error al eliminar el curso");
+                        }
+                    } catch (error) {
+                        console.error("Error al enviar la solicitud de eliminación:", error);
+                        alert("Error al intentar eliminar el curso.");
+                    }
+                });
+            });
+        });
+    </script>
 
     <%- include('../partials/endPageAdmin.ejs'); %>
 </body>

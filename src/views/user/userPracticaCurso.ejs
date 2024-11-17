@@ -1,67 +1,26 @@
-<% 
-  const materiaNames = {
-    1: "Razonamiento Verbal",
-    2: "Razonamiento Matemático",
-    3: "Realidad Nacional",
-    4: "Aritmética y Álgebra",
-    5: "Geometría y Trigonometría",
-    6: "Física",
-    7: "Química",
-    8: "Biología",
-    9: "Historia",
-    10: "Economía",
-    11: "Geografía",
-    12: "Literatura",
-    13: "Lenguaje",
-    14: "Lógica"
-  };
-
-  const getMateriaName = (id) => materiaNames[id] || "Materia desconocida";
-
-  const examTypeNames = {
-    1: "Fase 1",
-    2: "Fase 2",
-    3: "Cepu Verano 1",
-    4: "Cepu Verano 2",
-    5: "Cepu Otoño 1",
-    6: "Cepu Otoño 2",
-    7: "Cepu Invierno 1",
-    8: "Cepu Invierno 2",
-  };
-
-  const getExamTypeName = (type) => examTypeNames[type] || "Tipo desconocido";
-
-  // Simulación de datos
-  const exam = {
-    exam_type: 1,
-    preguntas: [
-      {
-        id_materia: 1,
-        texto: "¿Cuál es la capital de Francia?",
-        img: null,
-        alternativas: [
-          { texto: "París", es_correcta: true },
-          { texto: "Madrid", es_correcta: false },
-          { texto: "Berlín", es_correcta: false },
-          { texto: "Londres", es_correcta: false },
-        ],
-      },
-      {
-        id_materia: 2,
-        texto: "¿Cuánto es 2 + 2?",
-        img: "example.png",
-        alternativas: [
-          { texto: "3", es_correcta: false },
-          { texto: "4", es_correcta: true },
-          { texto: "5", es_correcta: false },
-          { texto: "6", es_correcta: false },
-        ],
-      },
-    ],
-  };
-%>
-
 <% title = 'Practicar Preguntas' %>
+<% 
+// Función para obtener el nombre de la materia según el id_materia
+function getMateriaName(idMateria) {
+    const materias = {
+        1: 'Razonamiento Verbal',
+        2: 'Razonamiento Matemático',
+        3: 'Realidad Nacional',
+        4: 'Aritmética y Álgebra',
+        5: 'Geometría y Trigonometría',
+        6: 'Física',
+        7: 'Química',
+        8: 'Biología',
+        9: 'Historia',
+        10: 'Economía',
+        11: 'Geografía',
+        12: 'Literatura',
+        13: 'Lenguaje',
+        14: 'Lógica'
+    };
+    return materias[idMateria] || 'Materia no encontrada'; // Si no se encuentra la materia, devuelve un mensaje por defecto
+}
+%>
 <%- include('../partials/layoutsAdmin.ejs'); %> 
 <body>
     <div class="wrapper">
@@ -72,21 +31,19 @@
 
             <div class="contenedor-practicar">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="titulo-dashboard" id="tituloDashboard">Practicar Preguntas</h1>
+                    <h1 class="titulo-dashboard" id="tituloDashboard">
+                        Practicar Preguntas - <%= getMateriaName(preguntas[0].id_materia) %>
+                    </h1>
                 </div>
 
                 <div class="fondo-preguntas" id="fondoPreguntasUsuario">
-                    <div class="mb-3">
-                        <label for="examIdUsuario" class="form-label">Examen: <%= getExamTypeName(exam.exam_type) %></label>
-                    </div>
-
-                    <% exam.preguntas.forEach((preg, index) => { %>
+                    <% preguntas.forEach((preg, index) => { %>
                         <div class="pregunta-card mb-4 p-3" id="preguntaUsuario<%= index + 1 %>">
                             <div class="curso" id="cursoPreguntaUsuario<%= index + 1 %>">
-                                <%= getMateriaName(preg.id_materia) %>
+                                
                             </div>
                             <div class="pregunta" id="preguntaTextoUsuario<%= index + 1 %>">
-                                <p class="pregunta-texto"><%= preg.texto %></p>
+                                <p class="pregunta-texto"><%= preg.texto %></p>  <!-- Muestra el texto de la pregunta -->
                     
                                 <% if (preg.img) { %>
                                     <div class="pregunta-imagen">
@@ -106,7 +63,7 @@
                                                 data-opcion-id="<%= String.fromCharCode(65 + altIndex) %>"
                                             />
                                             <span class="custom-checkbox"></span>
-                                            <span class="texto"><%= String.fromCharCode(65 + altIndex) %>) <%= alt.texto.trim() %></span>
+                                            <span class="texto"><%= String.fromCharCode(65 + altIndex) %>) <%= alt.texto.trim() %></span>  <!-- Muestra el texto de la alternativa -->
                                         </label>
                                     <% }); %>
                                 </div>
@@ -123,15 +80,14 @@
 </body>
 <script>
     // Manejador de eventos para los inputs de tipo radio
-document.querySelectorAll('.input-alternativa').forEach(input => {
-    input.addEventListener('change', (event) => {
-        const preguntaId = event.target.getAttribute('data-pregunta-id');
-        const opcionId = event.target.getAttribute('data-opcion-id');
-        const textoOpcion = event.target.nextElementSibling.nextElementSibling.textContent.trim(); // Captura el texto de la opción
+    document.querySelectorAll('.input-alternativa').forEach(input => {
+        input.addEventListener('change', (event) => {
+            const preguntaId = event.target.getAttribute('data-pregunta-id');
+            const opcionId = event.target.getAttribute('data-opcion-id');
+            const textoOpcion = event.target.nextElementSibling.nextElementSibling.textContent.trim(); // Captura el texto de la opción
 
-        // Imprimir en consola la pregunta y la opción seleccionada
-        console.log(`Pregunta ${preguntaId}: Opción seleccionada ${opcionId} - ${textoOpcion}`);
+            // Imprimir en consola la pregunta y la opción seleccionada
+            console.log(`Pregunta ${preguntaId}: Opción seleccionada ${opcionId} - ${textoOpcion}`);
+        });
     });
-});
-
 </script>

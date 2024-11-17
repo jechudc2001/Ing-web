@@ -1,4 +1,7 @@
 <%- include('../partials/layoutsAdmin.ejs'); %> 
+
+<!-- Imprimir el arreglo de cursos -->
+
 <body>
     <div class="wrapper">
         <%- include('../partials/sidebarUser.ejs'); %> 
@@ -19,38 +22,26 @@
                 </div>
 
                 <div class="d-flex flex-column p-2" id="cursos-lista">
-                    <% 
-                    // Definimos el arreglo de cursos directamente aquí
-                    const cursos = [
-                        { id: 1, nombre: 'Razonamiento matemático' },
-                        { id: 2, nombre: 'Geometría y trigonometría' },
-                        { id: 3, nombre: 'Lenguaje' },
-                        { id: 4, nombre: 'Biología' },
-                        { id: 5, nombre: 'Razonamiento verbal' },
-                        { id: 6, nombre: 'Aritmética y álgebra' },
-                        { id: 7, nombre: 'Física' },
-                        { id: 8, nombre: 'Química' },
-                        { id: 9, nombre: 'Realidad nacional' }
-                    ];
-                    %>
+                  
 
                     <!-- Iterar sobre el arreglo de cursos -->
                     <% cursos.forEach(curso => { %>
-                        <a href="javascript:void(0);" class="contenedor-nombre-curso mb-2" id="curso<%= curso.id %>" onclick="toggleOptions('curso<%= curso.id %>')">
+                        <a href="javascript:void(0);" class="contenedor-nombre-curso mb-2" id="curso<%= curso.id_materia %>" onclick="toggleOptions('curso<%= curso.id_materia %>')">
                             <div class="p-3">
                                 <h5 class="titulo-curso"><%= curso.nombre %></h5>
                             </div>
                         </a>
-                        <div id="options-curso<%= curso.id %>" class="options-container">
+                        <div id="options-curso<%= curso.id_materia %>" class="options-container">
                             <div class="dropdown">
-                                <select class="form-select custom-width" id="modoPractica<%= curso.id %>" onchange="handlePracticaSelect('<%= curso.id %>')">
+                                <select class="form-select custom-width" id="modoPractica<%= curso.id_materia %>" onchange="handlePracticaSelect('<%= curso.id_materia %>')">
                                     <option value="10">10 preguntas <i class="bi bi-1-circle"></i></option>
                                     <option value="20">20 preguntas <i class="bi bi-2-circle"></i></option>
                                     <option value="30">30 preguntas <i class="bi bi-3-circle"></i></option>
                                 </select>
                             </div>
                             
-                            <button class="btn1 btn-seleccion">Practicar</button>
+                            <button class="btn1 btn-seleccion" onclick="enviarPractica('<%= curso.id_materia %>')">Practicar</button>
+
                         </div>
                     <% }) %>
                 </div>
@@ -75,4 +66,19 @@
             }
         });
     }
+
+    function enviarPractica(cursoId) {
+        // Obtener la cantidad de preguntas seleccionada
+        const cantidad = document.getElementById(`modoPractica${cursoId}`).value;
+        console.log("ID de curso:", cursoId, "Cantidad de preguntas:", cantidad);
+
+        // Construir la URL con los parámetros necesarios
+        const url = `/userModoPracticaCursos/${cursoId}/${cantidad}`;
+
+        // Realizar la solicitud GET y redirigir
+        window.location.href = url;
+    }
 </script>
+
+
+

@@ -42,7 +42,6 @@
                             </div>
                         </div>
                         
-                        
                         <div class="text-center">
                             <button type="submit" class="btn1" id="createCourseBtn">Crear Curso</button>
                         </div>
@@ -51,6 +50,61 @@
             </div>
         </div>
     </div>
+
+    <script>
+        async function fetchRequest(url, method, data) {
+            const options = {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            };
+
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('Error en fetchRequest:', error);
+                throw error;
+            }
+        }
+
+        // Manejo del envío del formulario
+        document.getElementById('courseForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Previene el envío por defecto
+
+            // Recoger valores del formulario
+            const courseName = document.getElementById('courseName').value;
+            const selectedChannels = Array.from(document.querySelectorAll('#courseChannel input:checked')).map(checkbox => checkbox.value);
+
+            // Crear el objeto con los datos del curso
+            const courseData = {
+                nombre: courseName,
+                canales: selectedChannels, // Si tu backend no usa "canales", puedes omitir esto
+            };
+
+            console.log(courseData); // Verifica los datos antes de enviarlos
+            try {
+                // Llamar a la función fetchRequest para enviar los datos al servidor
+                const response = await fetchRequest('/materias', 'POST', courseData);
+                console.log('Curso creado:', response);
+
+                // Mostrar mensaje de éxito
+                alert('Curso creado exitosamente');
+                window.location.href = '/cursos'; // Cambia esta ruta si es necesario
+            } catch (error) {
+                console.error('Error al crear el curso:', error);
+                alert('Hubo un error al crear el curso');
+            }
+        });
+    </script>
 
     <%- include('../partials/endPageAdmin.ejs'); %>
 </body>

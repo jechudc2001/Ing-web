@@ -4,6 +4,8 @@ import {
     renderUserSeleccionarExamen,
     renderUserCuenta,
     renderUserModoPractica,
+    renderUserCursos,
+    renderUserModoPracticaCurso
 
 
 } from '../controllers/renderUser.controller.js';
@@ -14,6 +16,8 @@ router.get('/userDashboard', renderUserDashboard);
 router.get('/userSeleccionarExamen/:id', renderUserSeleccionarExamen);
 router.get('/userCuenta', renderUserCuenta);
 router.get('/userModoPractica', renderUserModoPractica);
+router.get('/userCurso', renderUserCursos);
+router.get('/userModoPracticaCursos/:id/:cantidad', renderUserModoPracticaCurso);
 
 
 
