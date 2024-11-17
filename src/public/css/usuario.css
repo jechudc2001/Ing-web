@@ -277,6 +277,22 @@ input[type="checkbox"]:checked + .custom-checkbox-indicator::after {
     font-size: 0.9rem; /* Ajusta este valor según el tamaño que desees */
 }
 
+/*barra de progreso*/
+.progress-container {
+    position: sticky; /* Hace que el elemento sea pegajoso */
+    top: 0; /* Mantiene el elemento pegado en la parte superior del contenedor padre */
+    z-index: 10; /* Asegura que el elemento esté encima de otros contenidos */
+    padding: 10px; /* Ajusta según sea necesario para darle espacio interno */
+    border: none; /* Asegura que no haya bordes */
+    box-shadow: none; /* Elimina cualquier sombra */
+    background-color: transparent; /* Elimina el fondo si es necesario */
+}
+
+.progress-bar {
+    background-color: var(--blue); /* Cambia el color de la barra al valor definido por la variable --blue */
+}
+
+
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
