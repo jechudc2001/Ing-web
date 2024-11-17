@@ -292,6 +292,20 @@ input[type="checkbox"]:checked + .custom-checkbox-indicator::after {
     background-color: var(--blue); /* Cambia el color de la barra al valor definido por la variable --blue */
 }
 
+/*Modal usuario*/
+.btn-secondary {
+    border-radius: 20px; 
+}
+/* Clase personalizada para mover el modal más hacia arriba */
+.custom-modal-dialog {
+    margin-top: 0%; /* Ajusta este valor según lo que necesites */
+}
+
+/* CSS para cambiar el tamaño de los botones dentro del modal */
+.finalizar-modal .btn1, .finalizar-modal .btn {
+    font-size: 0.8rem ; /* Tamaño más pequeño */
+    font-weight: normal ; /* Negrita */
+}
 
 
 /* Responsive adjustments */

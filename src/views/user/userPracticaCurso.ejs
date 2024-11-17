@@ -86,9 +86,33 @@ function getMateriaName(idMateria) {
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="finalizarModal" tabindex="-1" aria-labelledby="finalizarModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered custom-modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body p-2 text-center">
+                    <p>Obtuviste <strong class="fw-bold">12 respuestas correctas </strong>de un total de 20 preguntas!</p> <!-- Respuestas en negrita -->
+                </div>
+                <div class="modal-footer flex-column align-items-center finalizar-modal">
+                    <button type="button" class="btn1 btn-primary mb-1 fs-11">Ver respuestas correctas</button> <!-- Botón con letra más pequeña -->
+                    <button type="button" class="btn btn-secondary fs-11" data-bs-dismiss="modal">Volver</button> <!-- Botón con letra más pequeña -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
     <%- include('../partials/endPageAdmin.ejs'); %>  
 </body>
+
 <script>
+    // Manejador de eventos para el botón "Finalizar Examen"
+    document.getElementById('finalizarExamen').addEventListener('click', function() {
+        // Mostrar el modal cuando se haga clic en el botón
+        var myModal = new bootstrap.Modal(document.getElementById('finalizarModal'));
+        myModal.show();
+    });
+
     // Manejador de eventos para los inputs de tipo radio
     document.querySelectorAll('.input-alternativa').forEach(input => {
         input.addEventListener('change', (event) => {
