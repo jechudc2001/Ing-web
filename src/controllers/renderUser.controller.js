@@ -151,3 +151,14 @@ export const renderPaginaWeb= (req, res) => {
   res.render("index", { title: "SIMULA UNJBG" }
   );
 };
+
+export const renderUserModoSimulacro= (req, res) => {
+  
+  if (!req.session.user) {
+    return res.status(401).json({ message: 'No estás autenticado' });
+  }
+  // Obtén todos los cursos desde la base de datos
+  const user = req.session.user;
+  res.render("user/userModoSimulacro", { title: "Modo Simulacro",user:user }
+  );
+};

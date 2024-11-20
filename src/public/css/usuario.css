@@ -286,10 +286,19 @@ input[type="checkbox"]:checked + .custom-checkbox-indicator::after {
     border: none; /* Asegura que no haya bordes */
     box-shadow: none; /* Elimina cualquier sombra */
     background-color: transparent; /* Elimina el fondo si es necesario */
+    width: 100%; /* Asegura que el contenedor ocupe todo el ancho disponible */
+
 }
 
 .progress-bar {
     background-color: var(--blue); /* Cambia el color de la barra al valor definido por la variable --blue */
+}
+.tools {
+    position: sticky; /* Hace que el elemento sea pegajoso */
+    top: 0; /* Mantiene el elemento pegado en la parte superior del contenedor padre */
+    z-index: 5; /* Asegura que esté debajo de la barra de progreso */
+    background-color: white; /* Puedes darle un color de fondo si es necesario */
+    padding: 10px; /* Ajusta según sea necesario para darle espacio interno */
 }
 
 /*Modal usuario*/
@@ -307,13 +316,30 @@ input[type="checkbox"]:checked + .custom-checkbox-indicator::after {
     font-weight: normal ; /* Negrita */
 }
 
+/*TEMPORIZADOR*/
+#timer {
+    margin-top: 5px;  /* Ajusta el margen superior para moverlo más arriba */
+    margin-left: 10px;  /* Ajusta el margen superior para moverlo más arriba */
+    margin-right: 10px;  /* Ajusta el margen superior para moverlo más arriba */
+    margin-bottom: 35px; /* Añade más margen inferior si es necesario */
+}
+
+#timerDisplay {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    color: var(--blue); /* Asume que tienes definida una variable CSS 'blue' */
+    font-size: 20px; /* Puedes ajustar el tamaño de la fuente según lo necesites */
+}
+
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .d-flex.justify-content-between {
+   /* .d-flex.justify-content-between {
         flex-direction: column;
-    }
 
+    }*/
+    .tools {
+        flex-direction: column; /* Alinea el texto a la izquierda en pantallas pequeñas */
+    }
     .fondo-dashboard-link {
         width: 100%;
         margin-bottom: 20px;
@@ -332,4 +358,11 @@ input[type="checkbox"]:checked + .custom-checkbox-indicator::after {
     .custom-width {
         width: 100%; /* Ajusta el ancho según lo necesites */
     }
+    #timer {
+        margin-top: 5px;  /* Ajusta el margen superior para moverlo más arriba */
+        margin-left: 0px;  /* Ajusta el margen superior para moverlo más arriba */
+        margin-right: 0px;  /* Ajusta el margen superior para moverlo más arriba */
+        margin-bottom: 0px; /* Añade más margen inferior si es necesario */
+    }
+    
 }

@@ -17,6 +17,7 @@ export const login = async (req, res) => {
         }
         req.session.user = {
             id: user.id_usuario,
+            email:user.email,
             username: user.nombre_completo,
             role: user.user_type === 1 ? 'admin' : 'user', 
         };

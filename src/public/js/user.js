@@ -33,3 +33,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+// Temporizador
+// Temporizador
+function startTimer(duration, display) {
+    let timer = duration, hours, minutes, seconds;
+
+    const interval = setInterval(() => {
+        // Calcula horas, minutos y segundos
+        hours = Math.floor(timer / 3600);
+        minutes = Math.floor((timer % 3600) / 60);
+        seconds = timer % 60;
+
+        // Formatea como HH:MM:SS
+        hours = hours < 10 ? '0' + hours : hours;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+
+        // Actualiza el display
+        display.textContent = `${hours}:${minutes}:${seconds}`;
+
+        if (--timer < 0) {
+            clearInterval(interval);
+            display.textContent = "00:00:00";
+            alert("¡El tiempo se ha agotado!");
+            // Opcional: Deshabilitar preguntas o enviar automáticamente las respuestas
+            document.querySelectorAll('.input-alternativa').forEach(input => input.disabled = true);
+        }
+    }, 1000);
+}
+
+// Inicializa el temporizador al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+    const duration = 2 * 60 * 60; // 2 horas en segundos (7200 segundos)
+    const display = document.getElementById('timerDisplay');
+    startTimer(duration, display);
+});
