@@ -1,9 +1,11 @@
 import express from "express";
 import path from "path"; // Para manejar rutas de archivos
 import { fileURLToPath } from "url";
+import session from "express-session";
 
 
 // Importar rutas
+import authRoutes from "./routes/auth.routes.js";
 import alternativaRoute from "./routes/alternativa.routes.js";
 import canalRoute from "./routes/canal.routes.js";
 import examRoute from "./routes/exam.routes.js";
@@ -35,7 +37,21 @@ app.use(express.json());
 
 
 
+app.use(
+  session({
+    secret: "clave123xdgaea", // Cambia esto por una clave más robusta
+    resave: false, // No guardar la sesión si no se modifica
+    saveUninitialized: false, // No guardar sesiones vacías
+    cookie: {
+      maxAge: 1000 * 60 * 60, // 1 hora en milisegundos
+      httpOnly: true, // Seguridad: solo accesible por HTTP
+    },
+  })
+);
+
+
 // Rutas
+app.use(authRoutes);
 app.use('/alternativas', alternativaRoute);
 app.use('/canales', canalRoute);
 app.use('/exams', examRoute);

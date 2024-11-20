@@ -22,3 +22,42 @@
             </div>
         </div>
     </div>
+
+
+    <script>
+        // Función para manejar el envío del formulario de login
+        document.getElementById('login-form').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevenir el envío tradicional del formulario
+    
+            const email2 = document.getElementById('login-correo').value;
+            const password = document.getElementById('login-contrasena').value;
+            
+            const data = {
+                email: email2,
+                password: password
+            };
+            console.log(data);
+            try {
+                // Hacer la solicitud al backend para autenticar al usuario
+                const response = await fetch('/login', {  // Asegúrate de que esta URL sea la correcta para tu backend
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+    
+                if (response.ok) {
+                    const result = await response.json();
+                    alert('Iniciar sesión exitoso');
+                    window.location.href = '/userDashboard';
+                    // Aquí puedes redirigir o realizar alguna acción adicional
+                } else {
+                    throw new Error('Correo o contraseña incorrectos');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Hubo un error al iniciar sesión');
+            }
+        });
+    </script>

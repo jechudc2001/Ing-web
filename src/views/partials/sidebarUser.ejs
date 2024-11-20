@@ -32,23 +32,20 @@
                 <span>Estadísticas</span>
             </a>
         </li>
-
     </ul>
     <div class="sidebar-footer">
         <li class="sidebar-item" id="userItem">
             <a href="/userCuenta" class="sidebar-link user-btn" id="userLink">
                 <span>
-                    <div id="userName">Hola, Alexandra Valeria!</div>
-                    <div id="userEmail">alva777@gmail.com</div>
+                    <div id="userName">Hola, <%= user.username %>!</div>
+                    <div id="userEmail"><%= user.email %></div>
                 </span>
             </a>
         </li>
-        
-        
-        
-        <a href="#" class="sidebar-link" id="userAdminSalirLink">
+        <!-- Enlace de logout -->
+        <a href="/logout" class="sidebar-link" id="userAdminSalirLink">
             <i class="lni lni-exit"></i>
             <span>Salir</span>
         </a>
-    </div>
+    </div>  
 </aside>

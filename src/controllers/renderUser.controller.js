@@ -15,17 +15,23 @@ import Sequelize from 'sequelize';
 
 export const renderUserDashboard = async (req, res) => {
     try {
+
+        if (!req.session.user) {
+            return res.status(401).json({ message: 'No estás autenticado' });
+        }
+
         // Obtén todos los canales con sus materias correspondientes
         const canales = await Canal.findAll({
             include: Materia ,
         });
         
-        
+        const user = req.session.user;
         
         // Renderiza la vista con los datos procesados
         res.render('user/userDashboard', {
-            title: 'XD',
+            title: 'Panel de usuario',
             canales: canales,
+            user: user, 
         });
     } catch (error) {
         console.error('Error al obtener los canales:', error);
@@ -37,6 +43,9 @@ export const renderUserDashboard = async (req, res) => {
 
 export const renderUserSeleccionarExamen = async (req, res) => {
     try {
+      if (!req.session.user) {
+        return res.status(401).json({ message: 'No estás autenticado' });
+      }
       // Obtén la ID del canal desde los parámetros de la ruta
       const { id } = req.params;
   
@@ -44,11 +53,14 @@ export const renderUserSeleccionarExamen = async (req, res) => {
       const examenes = await Exam.findAll({
         where: { canal: id } // Filtro por el canal correspondiente
       });
-  
+      const user = req.session.user;
+
       // Renderiza la vista, pasando los exámenes como datos
       res.render("user/userSeleccionarExamen", { 
         title: "Seleccionar Examen",
-        examenes 
+        examenes,
+        user: user, 
+
       });
     } catch (error) {
       console.error("Error al obtener los exámenes:", error);
@@ -57,16 +69,29 @@ export const renderUserSeleccionarExamen = async (req, res) => {
   };
 
 export const renderUserCuenta= (req, res) => {
-    res.render("user/userCuenta", { title: "XD" });
+    if (!req.session.user) {
+      return res.status(401).json({ message: 'No estás autenticado' });
+    }
+    const user = req.session.user;
+
+    res.render("user/userCuenta", { title: "Cuenta", user: user,  } );
 };
 
 export const renderUserModoPractica= (req, res) => {
-    res.render("user/userModoPractica", { title: "XD" });
+  if (!req.session.user) {
+    return res.status(401).json({ message: 'No estás autenticado' });
+  }
+  const user = req.session.user;
+
+  res.render("user/userModoPractica", { title: "XD",user: user,  });
 };
 
 
 export const renderUserModoPracticaCurso = async (req, res) => {
   try {
+    if (!req.session.user) {
+      return res.status(401).json({ message: 'No estás autenticado' });
+    }
     // Obtener el ID de la materia y la cantidad de preguntas de los parámetros
     const { id, cantidad } = req.params;
 
@@ -84,11 +109,13 @@ export const renderUserModoPracticaCurso = async (req, res) => {
         required: false // Permite que si no tiene alternativas también se devuelvan las preguntas
       }
     });
+    const user = req.session.user;
 
     // Renderiza la vista con las preguntas y sus alternativas obtenidas
     res.render("user/userPracticaCurso", { 
       title: "Modo de Práctica", 
-      preguntas
+      preguntas,
+      user: user, 
     });
   } catch (error) {
     console.error("Error al obtener las preguntas:", error);
@@ -99,16 +126,28 @@ export const renderUserModoPracticaCurso = async (req, res) => {
 
 export const renderUserCursos = async (req, res) => {
   try {
+    if (!req.session.user) {
+      return res.status(401).json({ message: 'No estás autenticado' });
+    }
     // Obtén todos los cursos desde la base de datos
     const cursos = await Materia.findAll();
+    const user = req.session.user;
 
     // Renderiza la vista, pasando los cursos como datos
     res.render("user/userCursos", {
       title: "Cursos",
-      cursos
+      cursos,
+      user: user, 
     });
   } catch (error) {
     console.error("Error al obtener los cursos:", error);
     res.status(500).send("Error interno del servidor");
   }
+};
+
+export const renderPaginaWeb= (req, res) => {
+  
+
+  res.render("index", { title: "SIMULA UNJBG" }
+  );
 };

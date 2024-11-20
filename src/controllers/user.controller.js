@@ -1,12 +1,26 @@
 import User from '../models/user.js';
+import bcrypt from 'bcryptjs';  // Asegúrate de importar bcrypt
 
-// Crear un nuevo usuario
 export const createUser = async (req, res) => {
   try {
     const { nombre_completo, password, email, user_type } = req.body;
-    const nuevoUser = await User.create({ nombre_completo, password, email, user_type });
+
+    // Hasheamos la contraseña antes de guardarla
+    const salt = await bcrypt.genSalt(10);  // Generamos el salt
+    const hashedPassword = await bcrypt.hash(password, salt);  // Hasheamos la contraseña
+
+    // Ahora creamos el usuario con la contraseña hasheada
+    const nuevoUser = await User.create({
+      nombre_completo,
+      password: hashedPassword,  // Usamos la contraseña hasheada
+      email,
+      user_type
+    });
+
+    // Respondemos con el nuevo usuario creado
     res.status(201).json(nuevoUser);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };
