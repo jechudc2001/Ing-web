@@ -8,6 +8,7 @@ import {
     renderUserModoPracticaCurso,
     renderPaginaWeb,
     renderUserModoSimulacro,
+    renderUserCalificacion,
 
 
 } from '../controllers/renderUser.controller.js';
@@ -22,6 +23,7 @@ router.get('/userCurso', renderUserCursos);
 router.get('/userModoPracticaCursos/:id/:cantidad', renderUserModoPracticaCurso);
 router.get('/', renderPaginaWeb);
 router.get('/userModoSimulacro', renderUserModoSimulacro);
+router.get('/userCalificacion', renderUserCalificacion);
 
 
 

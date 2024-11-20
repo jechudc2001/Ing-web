@@ -232,7 +232,33 @@ export const renderPaginaWeb= (req, res) => {
   );
 };
 
-export const renderUserModoSimulacro= (req, res) => {
+export const renderUserModoSimulacro= async (req, res) => {
+  
+  let user = req.session.user;
+
+      // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
+     
+      if (!user) {
+          user = {
+              id: 0, // ID ficticio
+              email: 'test@example.com',
+              username: 'Usuario Prueba',
+              role: 'user', // O 'admin' según tus necesidades
+          };
+      }
+
+      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
+      if (!user) {
+          return res.status(401).json({ message: 'No estás autenticado' });
+      }
+
+      const reglas = await Reglas.findByPk(1);
+  // Obtén todos los cursos desde la base de datos
+  res.render("user/userModoSimulacro", { title: "Modo Simulacro",user:user, reglas }
+  );
+};
+
+export const renderUserCalificacion= (req, res) => {
   
   let user = req.session.user;
 
@@ -252,6 +278,6 @@ export const renderUserModoSimulacro= (req, res) => {
           return res.status(401).json({ message: 'No estás autenticado' });
       }
   // Obtén todos los cursos desde la base de datos
-  res.render("user/userModoSimulacro", { title: "Modo Simulacro",user:user }
+  res.render("user/userCalificacion", { title: "Calificacion",user:user }
   );
 };

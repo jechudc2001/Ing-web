@@ -316,7 +316,7 @@ input[type="checkbox"]:checked + .custom-checkbox-indicator::after {
     font-weight: normal ; /* Negrita */
 }
 
-/*TEMPORIZADOR*/
+/* TEMPORIZADOR */
 #timer {
     margin-top: 5px;
     margin-left: 10px;
@@ -338,10 +338,60 @@ input[type="checkbox"]:checked + .custom-checkbox-indicator::after {
     border-radius: 10px; /* Bordes redondeados */
     padding: 5px 10px; /* Espaciado interno */
     text-align: center;
-    min-width: 40px; /* Asegura que todos los divs tengan un ancho consistente */
+    width: 50px; /* Ancho fijo para evitar movimientos */
 }
 
+/* Calificación */
+.table {
+    width: 80%; /* Reduce el ancho al 80% del contenedor */
+    margin: 20px auto; /* Centra la tabla horizontalmente */
+    border-collapse: separate; /* Permite bordes redondeados */
+    border-spacing: 0; /* Quita el espacio entre celdas */
+    font-size: 16px;
+    border-radius: 10px; /* Redondea las esquinas de la tabla */
+    overflow: hidden; /* Asegura que el redondeo funcione */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Añade sombra */
+}
 
+.table th, .table td {
+    text-align: center;
+    padding: 10px;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.table-bordered {
+    border: 1px solid #f5f7f8;
+}
+
+.table-bordered th, .table-bordered td {
+    border: 1px solid #fbfbfc;
+}
+
+.table-secondary {
+    background-color: #e9ecef;
+    font-weight: bold;
+}
+
+/* Añade bordes redondeados a los elementos externos */
+.table thead th:first-child {
+    border-top-left-radius: 10px;
+}
+
+.table thead th:last-child {
+    border-top-right-radius: 10px;
+}
+
+.table tfoot td:first-child {
+    border-bottom-left-radius: 10px;
+}
+
+.table tfoot td:last-child {
+    border-bottom-right-radius: 10px;
+}
 
 
 /* Responsive adjustments */

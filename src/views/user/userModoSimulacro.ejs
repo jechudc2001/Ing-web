@@ -155,3 +155,14 @@
 
     <%- include('../partials/endPageAdmin.ejs'); %>  
 </body>
+<script>
+  document.getElementById('finalizarExamen').addEventListener('click', function () {
+    // Simulación de cálculo del puntaje (puedes conectarlo al backend).
+    const puntaje = 435; // Aquí pones el cálculo real o una llamada al backend.
+
+    // Redirigir a la página de finalización con el puntaje.
+    window.location.href = `/userCalificacion?puntaje=${puntaje}`;
+});
+
+
+</script>

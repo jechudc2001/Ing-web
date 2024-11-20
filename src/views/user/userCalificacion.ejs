@@ -1,0 +1,72 @@
+<% title = 'Finalización del examen' %>
+<%- include('../partials/layoutsAdmin.ejs'); %>
+
+<body>
+    <div class="wrapper">
+        <%- include('../partials/sidebarUser.ejs'); %> 
+
+        <div id="main-content" class="main p-3">
+            <%- include('../partials/header.ejs'); %>
+
+            <div class="text-center mt-4 mb-4">
+                <h3 class="titulo-dashboard">¡Examen Finalizado!</h3>
+                <p class="fs-6">Tu puntaje final es: <strong>435</strong></p>
+                
+                <div class="table-responsive m-4">
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Curso</th>
+                                <th>Nro preguntas</th>
+                                <th>Nro de rptas correctas</th>
+                                <th>Nro de rptas incorrectas</th>
+                                <th>Puntaje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Datos simulados -->
+                            <tr>
+                                <td>Raz. Verbal</td>
+                                <td>12</td>
+                                <td>8</td>
+                                <td>4</td>
+                                <td>80</td>
+                            </tr>
+                            <tr>
+                                <td>Raz. Matemático</td>
+                                <td>12</td>
+                                <td>10</td>
+                                <td>2</td>
+                                <td>90</td>
+                            </tr>
+                            <tr>
+                                <td>Cultura General</td>
+                                <td>12</td>
+                                <td>6</td>
+                                <td>6</td>
+                                <td>60</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-secondary">
+                                <td>Total</td>
+                                <td>36</td>
+                                <td>24</td>
+                                <td>12</td>
+                                <td>230</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="mb-4">
+                    <a href="#" class="btn2">Ver respuestas correctas</a>
+                    <br><br>
+                    <a href="/userSeleccionarExamen/1" class="btn1">Volver</a><br><br>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/endPageAdmin.ejs'); %>  
+</body>
