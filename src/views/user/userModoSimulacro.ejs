@@ -57,6 +57,18 @@
           { texto: "6", es_correcta: false },
         ],
       },
+
+      {
+        id_materia: 2,
+        texto: "¿Cuánto es 2 + 2?",
+        img: "example.png",
+        alternativas: [
+          { texto: "3", es_correcta: false },
+          { texto: "4", es_correcta: true },
+          { texto: "5", es_correcta: false },
+          { texto: "6", es_correcta: false },
+        ],
+      },
     ],
   };
 %>
@@ -88,9 +100,14 @@
                             </div>
                             <small id="progressText" class="text-muted">0 de <%= exam.preguntas.length %> preguntas respondidas</small>
                         </div>
-                        <div id="timer" class="text-center text-danger fs-5">
-                            <span id="timerDisplay">00:00</span>
+                        <div id="timer" class="text-center  fs-5 d-flex align-items-center justify-content-center">
+                            <div class="time-box" id="hours">00</div>
+                            <span>:</span>
+                            <div class="time-box" id="minutes">00</div>
+                            <span>:</span>
+                            <div class="time-box" id="seconds">00</div>
                         </div>
+                        
                     </div>
 
                     <% exam.preguntas.forEach((preg, index) => { %>

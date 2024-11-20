@@ -318,17 +318,30 @@ input[type="checkbox"]:checked + .custom-checkbox-indicator::after {
 
 /*TEMPORIZADOR*/
 #timer {
-    margin-top: 5px;  /* Ajusta el margen superior para moverlo más arriba */
-    margin-left: 10px;  /* Ajusta el margen superior para moverlo más arriba */
-    margin-right: 10px;  /* Ajusta el margen superior para moverlo más arriba */
-    margin-bottom: 35px; /* Añade más margen inferior si es necesario */
+    margin-top: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 35px;
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    align-items: center;
 }
 
-#timerDisplay {
+.time-box {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    color: var(--blue); /* Asume que tienes definida una variable CSS 'blue' */
-    font-size: 20px; /* Puedes ajustar el tamaño de la fuente según lo necesites */
+    font-weight: lighter;
+    color: white;
+    font-size: 20px;
+    background-color: var(--blue); /* Color de fondo claro */
+    border: 1px solid var(--blue); /* Borde azul */
+    border-radius: 10px; /* Bordes redondeados */
+    padding: 5px 10px; /* Espaciado interno */
+    text-align: center;
+    min-width: 40px; /* Asegura que todos los divs tengan un ancho consistente */
 }
+
+
 
 
 /* Responsive adjustments */

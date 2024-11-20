@@ -35,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Temporizador
-// Temporizador
 function startTimer(duration, display) {
     let timer = duration, hours, minutes, seconds;
 
@@ -50,13 +49,18 @@ function startTimer(duration, display) {
         minutes = minutes < 10 ? '0' + minutes : minutes;
         seconds = seconds < 10 ? '0' + seconds : seconds;
 
-        // Actualiza el display
-        display.textContent = `${hours}:${minutes}:${seconds}`;
+        // Actualiza los divs individuales
+        document.getElementById('hours').textContent = hours;
+        document.getElementById('minutes').textContent = minutes;
+        document.getElementById('seconds').textContent = seconds;
 
         if (--timer < 0) {
             clearInterval(interval);
-            display.textContent = "00:00:00";
+            document.getElementById('hours').textContent = "00";
+            document.getElementById('minutes').textContent = "00";
+            document.getElementById('seconds').textContent = "00";
             alert("¡El tiempo se ha agotado!");
+            
             // Opcional: Deshabilitar preguntas o enviar automáticamente las respuestas
             document.querySelectorAll('.input-alternativa').forEach(input => input.disabled = true);
         }
@@ -66,6 +70,5 @@ function startTimer(duration, display) {
 // Inicializa el temporizador al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
     const duration = 2 * 60 * 60; // 2 horas en segundos (7200 segundos)
-    const display = document.getElementById('timerDisplay');
-    startTimer(duration, display);
+    startTimer(duration);
 });
