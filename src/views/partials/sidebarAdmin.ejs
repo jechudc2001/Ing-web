@@ -51,13 +51,13 @@
         <li class="sidebar-item" id="userItem">
             <a href="/actualizarAdmin" class="sidebar-link user-btn" id="userLink">
                 <span>
-                    <div id="userName">Hola, Administrador!</div>
-                    <div id="userEmail">administrador1@gmail.com</div>
+                    <div id="userName"> <%= user.username %>!</div>
+                    <div id="userEmail"><%= user.email %></div>
                 </span>
             </a>
         </li>
         
-        <a href="#" class="sidebar-link" id="adminSalirLink">
+        <a href="/logout" class="sidebar-link" id="adminSalirLink">
             <i class="lni lni-exit"></i>
             <span>Salir</span>
         </a>

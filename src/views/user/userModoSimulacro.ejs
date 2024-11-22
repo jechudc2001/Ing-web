@@ -1,3 +1,20 @@
+<% title = 'Practicar Preguntas' %>
+<% 
+  // Mapear nombres de los tipos de examen
+  const examTypeNames = {
+    1: "Fase 1",
+    2: "Fase 2",
+    3: "Cepu Verano 1",
+    4: "Cepu Verano 2",
+    5: "Cepu Otoño 1",
+    6: "Cepu Otoño 2",
+    7: "Cepu Invierno 1",
+    8: "Cepu Invierno 2",
+  };
+
+  const getExamTypeName = (type) => examTypeNames[type] || "Tipo desconocido";
+%>
+
 <% 
   const materiaNames = {
     1: "Razonamiento Verbal",
@@ -17,63 +34,8 @@
   };
 
   const getMateriaName = (id) => materiaNames[id] || "Materia desconocida";
-
-  const examTypeNames = {
-    1: "Fase 1",
-    2: "Fase 2",
-    3: "Cepu Verano 1",
-    4: "Cepu Verano 2",
-    5: "Cepu Otoño 1",
-    6: "Cepu Otoño 2",
-    7: "Cepu Invierno 1",
-    8: "Cepu Invierno 2",
-  };
-
-  const getExamTypeName = (type) => examTypeNames[type] || "Tipo desconocido";
-
-  // Simulación de datos
-  const exam = {
-    exam_type: 1,
-    preguntas: [
-      {
-        id_materia: 1,
-        texto: "¿Cuál es la capital de Francia?",
-        img: null,
-        alternativas: [
-          { texto: "París", es_correcta: true },
-          { texto: "Madrid", es_correcta: false },
-          { texto: "Berlín", es_correcta: false },
-          { texto: "Londres", es_correcta: false },
-        ],
-      },
-      {
-        id_materia: 2,
-        texto: "¿Cuánto es 2 + 2?",
-        img: "example.png",
-        alternativas: [
-          { texto: "3", es_correcta: false },
-          { texto: "4", es_correcta: true },
-          { texto: "5", es_correcta: false },
-          { texto: "6", es_correcta: false },
-        ],
-      },
-
-      {
-        id_materia: 2,
-        texto: "¿Cuánto es 2 + 2?",
-        img: "example.png",
-        alternativas: [
-          { texto: "3", es_correcta: false },
-          { texto: "4", es_correcta: true },
-          { texto: "5", es_correcta: false },
-          { texto: "6", es_correcta: false },
-        ],
-      },
-    ],
-  };
 %>
 
-<% title = 'Practicar Preguntas' %>
 <%- include('../partials/layoutsAdmin.ejs'); %> 
 <body>
     <div class="wrapper">
@@ -92,7 +54,7 @@
                         <label for="examIdUsuario" class="form-label">Examen <%= getExamTypeName(exam.exam_type) %></label>
                     </div>
 
-                    <!-- Nuevo div 'tools' que contiene la barra de progreso y el temporizador -->
+                    <!-- Barra de progreso y temporizador -->
                     <div class="tools d-flex justify-content-between align-items-center mb-1">
                         <div id="progress-container" class="progress-container sticky-top bg-white mb-1" data-total-preguntas="<%= exam.preguntas.length %>">
                             <div class="progress">
@@ -100,14 +62,13 @@
                             </div>
                             <small id="progressText" class="text-muted">0 de <%= exam.preguntas.length %> preguntas respondidas</small>
                         </div>
-                        <div id="timer" class="text-center  fs-5 d-flex align-items-center justify-content-center">
+                        <div id="timer" class="text-center fs-5 d-flex align-items-center justify-content-center">
                             <div class="time-box" id="hours">00</div>
                             <span>:</span>
                             <div class="time-box" id="minutes">00</div>
                             <span>:</span>
                             <div class="time-box" id="seconds">00</div>
                         </div>
-                        
                     </div>
 
                     <% exam.preguntas.forEach((preg, index) => { %>
@@ -117,13 +78,13 @@
                             </div>
                             <div class="pregunta" id="preguntaTextoUsuario<%= index + 1 %>">
                                 <p class="pregunta-texto"><%= preg.texto %></p>
-                    
+
                                 <% if (preg.img) { %>
                                     <div class="pregunta-imagen">
                                         <img src="/images/preguntas/<%= preg.img %>" alt="Imagen de la pregunta">
                                     </div>
                                 <% } %>
-                    
+
                                 <div class="alternativas" id="alternativasPreguntaUsuario<%= index + 1 %>">
                                     <% preg.alternativas.forEach((alt, altIndex) => { %>
                                         <label class="option cuadrada" id="opcionUsuario<%= String.fromCharCode(65 + altIndex) %><%= index + 1 %>">
@@ -143,12 +104,12 @@
                             </div>
                         </div>
                     <% }) %>
-                    
+
                 </div>
                 <div class="text-center mt-4">
                     <button id="finalizarExamen" class="btn1">Finalizar</button>
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -163,6 +124,4 @@
     // Redirigir a la página de finalización con el puntaje.
     window.location.href = `/userCalificacion?puntaje=${puntaje}`;
 });
-
-
 </script>

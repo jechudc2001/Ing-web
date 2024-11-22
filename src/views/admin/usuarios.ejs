@@ -27,7 +27,7 @@
                             </tr>
                         </thead>
                         <tbody id="userList">
-                            <% user.forEach((user, index) => { %>
+                            <% userT.forEach((user, index) => { %>
                               <tr id="userRow<%= user.id_usuario %>">
                                 <th scope="row" id="userNumber<%= index + 1 %>"><%= user.id_usuario %></th>
                                 <td id="userName<%= index + 1 %>"><%= user.nombre_completo %></td> <!-- Actualización aquí -->

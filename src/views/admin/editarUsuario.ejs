@@ -15,32 +15,32 @@
                     <form id="editUserForm">
                         <div class="mb-3">
                             <label for="userId" class="form-label">ID del Usuario:</label>
-                            <span id="userId"><%= user.id_usuario %></span>
-                            <input type="hidden" id="userIdHidden" value="<%= user.id_usuario %>">
+                            <span id="userId"><%= Editaruser.id_usuario %></span>
+                            <input type="hidden" id="userIdHiddenT" value="<%= Editaruser.id_usuario %>">
                         </div>
 
                         <div class="mb-3">
-                            <label for="userName" class="form-label">Nombre Completo</label>
-                            <input type="text" class="form-control" id="userName" name="nombre_completo" value="<%= user.nombre_completo %>" placeholder="Ingrese nombre completo del usuario" required>
+                            <label for="userNameT" class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control" id="userNameT" name="nombre_completo" value="<%= Editaruser.nombre_completo %>" placeholder="Ingrese nombre completo del usuario" required>
                         </div>
 
                         <div class="mb-3">
-                            <label for="userEmail" class="form-label">Correo Electrónico</label>
-                            <input type="email" class="form-control" id="userEmail" name="email" value="<%= user.email %>" placeholder="Ingrese correo electrónico" required>
+                            <label for="userEmailT" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="userEmailT" name="email" value="<%= Editaruser.email %>" placeholder="Ingrese correo electrónico" required>
                         </div>
 
                         <div class="mb-3">
-                            <label for="userRole" class="form-label">Rol</label>
-                            <select class="form-select" id="userRole" name="user_type" required>
+                            <label for="userRoleT" class="form-label">Rol</label>
+                            <select class="form-select" id="userRoleT" name="user_type" required>
                                 <option value="" disabled>Seleccione el rol</option>
-                                <option value="1" <%= user.user_type === 1 ? 'selected' : '' %>>Administrador</option>
-                                <option value="2" <%= user.user_type === 2 ? 'selected' : '' %>>Usuario</option>
+                                <option value="1" <%= Editaruser.user_type === 1 ? 'selected' : '' %>>Administrador</option>
+                                <option value="2" <%= Editaruser.user_type === 2 ? 'selected' : '' %>>Usuario</option>
                             </select>
                         </div>
 
                         <div class="mb-3">
-                            <label for="userPassword" class="form-label">Confirmar Contraseña</label>
-                            <input type="password" class="form-control" id="userPassword" name="confirm_password" placeholder="Confirme nueva contraseña">
+                            <label for="userPasswordT" class="form-label">Confirmar Contraseña</label>
+                            <input type="password" class="form-control" id="userPasswordT" name="confirm_password" placeholder="Confirme nueva contraseña">
                         </div>
 
                         <div class="text-center">
@@ -81,34 +81,37 @@
         }
 
         // Manejo del envío del formulario
-        document.getElementById('editUserForm').addEventListener('submit', async (event) => {
-            event.preventDefault(); // Previene el envío por defecto
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('editUserForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
 
-            // Recoger valores del formulario
-            const userId = document.getElementById('userIdHidden').value;
-            const nombre_completo = document.getElementById('userName').value;
-            const email = document.getElementById('userEmail').value;
-            const user_type = document.getElementById('userRole').value;
-            const password = document.getElementById('userPassword').value;
+                // Recoger valores del formulario
+                const userId = document.getElementById('userIdHiddenT').value;
+                const nombre_completo = document.getElementById('userNameT').value;
+                const email = document.getElementById('userEmailT').value;
+                const user_type = document.getElementById('userRoleT').value;
+                const password = document.getElementById('userPasswordT').value;
 
-            const userData = {
-                nombre_completo,
-                password,
-                email,
-                user_type,
-                
-            };
+                const userData = {
+                    nombre_completo,
+                    password,
+                    email,
+                    user_type,
+                };
 
-            try {
-                // Llamada a la función fetchRequest para enviar la actualización
-                const response = await fetchRequest(`/users/${userId}`, 'PUT', userData);
-                console.log('Usuario actualizado:', response);
-                alert('Usuario actualizado exitosamente');
-                window.location.href = '/usuario'; // Redirige a la ruta deseada
-            } catch (error) {
-                console.error('Error al actualizar el usuario:', error);
-                alert('Hubo un error al actualizar el usuario');
-            }
+               
+
+                try {
+                    const response = await fetchRequest(`/users/${userId}`, 'PUT', userData);
+                    console.log('Usuario actualizado:', response);
+                    alert('Usuario actualizado exitosamente');
+                    window.location.href = '/usuario';
+                } catch (error) {
+                    console.error('Error al actualizar el usuario:', error);
+                    alert('Hubo un error al actualizar el usuario');
+                }
+            });
         });
+
     </script>
 </body>

@@ -18,11 +18,11 @@ const router = express.Router();
 router.get('/userDashboard', renderUserDashboard);
 router.get('/userSeleccionarExamen/:id', renderUserSeleccionarExamen);
 router.get('/userCuenta', renderUserCuenta);
-router.get('/userModoPractica', renderUserModoPractica);
+router.get('/userModoPractica/:id', renderUserModoPractica);
 router.get('/userCurso', renderUserCursos);
 router.get('/userModoPracticaCursos/:id/:cantidad', renderUserModoPracticaCurso);
 router.get('/', renderPaginaWeb);
-router.get('/userModoSimulacro', renderUserModoSimulacro);
+router.get('/userModoSimulacro/:id', renderUserModoSimulacro);
 router.get('/userCalificacion', renderUserCalificacion);
 
 

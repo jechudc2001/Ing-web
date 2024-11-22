@@ -50,14 +50,16 @@
                                 </div>
                             </a>
                             <div id="options-examen<%= examen.id_exam %>" class="options-container">
-                                <button class="btn1 btn-seleccion" onclick="window.location.href='/userModoPractica';">Modo Práctica</button>
-                                <button class="btn1 btn-seleccion" onclick="window.location.href='/userModoSimulacro';">Modo Simulacro</button>
+                                <!-- Incluye la ID del examen en las rutas -->
+                                <button class="btn1 btn-seleccion" onclick="window.location.href='/userModoPractica/<%= examen.id_exam %>';">Modo Práctica</button>
+                                <button class="btn1 btn-seleccion" onclick="window.location.href='/userModoSimulacro/<%= examen.id_exam %>';">Modo Simulacro</button>
                             </div>
                         <% }) %>
                     <% } else { %>
                         <p>No hay exámenes disponibles para este canal.</p>
                     <% } %>
                 </div>
+                
             </div>
         </div>
     </div>

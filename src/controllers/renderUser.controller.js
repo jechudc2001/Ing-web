@@ -118,27 +118,59 @@ export const renderUserCuenta= (req, res) => {
     res.render("user/userCuenta", { title: "Cuenta", user: user,  } );
 };
 
-export const renderUserModoPractica= (req, res) => {
+
+export const renderUserModoPractica = async (req, res) => {
   let user = req.session.user;
 
-  // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
- 
+  // Asignar un usuario de prueba si no hay autenticación y estás en producción
   if (!user) {
-      user = {
-          id: 0, // ID ficticio
-          email: 'test@example.com',
-          username: 'Usuario Prueba',
-          role: 'user', // O 'admin' según tus necesidades
-      };
+    user = {
+      id: 0,
+      email: 'test@example.com',
+      username: 'Usuario Prueba',
+      role: 'user', // Cambia según tus necesidades
+    };
   }
 
-  // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
+  // Verifica nuevamente si no hay usuario
   if (!user) {
-      return res.status(401).json({ message: 'No estás autenticado' });
+    return res.status(401).render('error', { message: 'No estás autenticado' });
   }
 
-  res.render("user/userModoPractica", { title: "XD",user: user,  });
+  // Obtener la ID del examen desde la URL
+  const examId = req.params.id;
+
+  try {
+    // Buscar el examen por ID y sus relaciones
+    const exam = await Exam.findByPk(examId, {
+      include: {
+        model: Pregunta,
+        as: 'preguntas', // Alias configurado en tus asociaciones
+        include: {
+          model: Alternativa,
+          as: 'alternativas', // Alias configurado en tus asociaciones
+        },
+      },
+    });
+
+    // Verificar si el examen existe
+    if (!exam) {
+      return res.status(404).render('error', { message: 'Examen no encontrado' });
+    }
+
+    // Renderizar la página de práctica con los datos del examen
+    res.render('user/userModoPractica', {
+      title: 'Modo Práctica',
+      user: user,
+      exam: exam, // El examen con sus preguntas y alternativas
+    });
+  } catch (error) {
+    // Manejo de errores
+    console.error('Error al cargar el examen:', error);
+    res.status(500).render('error', { message: 'Error al cargar el examen' });
+  }
 };
+
 
 
 export const renderUserModoPracticaCurso = async (req, res) => {
@@ -251,11 +283,40 @@ export const renderUserModoSimulacro= async (req, res) => {
       if (!user) {
           return res.status(401).json({ message: 'No estás autenticado' });
       }
+      const examId = req.params.id;
 
-      const reglas = await Reglas.findByPk(1);
-  // Obtén todos los cursos desde la base de datos
-  res.render("user/userModoSimulacro", { title: "Modo Simulacro",user:user, reglas }
-  );
+      try {
+        const reglas = await Reglas.findByPk(1);
+
+        // Buscar el examen por ID y sus relaciones
+        const exam = await Exam.findByPk(examId, {
+          include: {
+            model: Pregunta,
+            as: 'preguntas', // Alias configurado en tus asociaciones
+            include: {
+              model: Alternativa,
+              as: 'alternativas', // Alias configurado en tus asociaciones
+            },
+          },
+        });
+    
+        // Verificar si el examen existe
+        if (!exam) {
+          return res.status(404).render('error', { message: 'Examen no encontrado' });
+        }
+    
+        // Renderizar la página de práctica con los datos del examen
+        res.render('user/userModoSimulacro', {
+          title: 'Modo Simulacro',
+          user: user,
+          exam: exam,
+          reglas // El examen con sus preguntas y alternativas
+        });
+      } catch (error) {
+        // Manejo de errores
+        console.error('Error al cargar el examen:', error);
+        res.status(500).render('error', { message: 'Error al cargar el examen' });
+      }
 };
 
 export const renderUserCalificacion= (req, res) => {
