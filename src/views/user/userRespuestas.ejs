@@ -1,0 +1,133 @@
+<% title = 'Ver Preguntas' %>
+<%- include('../partials/layoutsAdmin.ejs'); %> 
+<body>
+    <div class="wrapper">
+        <%- include('../partials/sidebarAdmin.ejs'); %> 
+
+        <div id="main-content" class="main p-3">
+            <%- include('../partials/header.ejs'); %>
+
+            <div class="contenedor-dashboard">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="titulo-dashboard" id="tituloDashboard">Respuestas correctas de (Nombre Examen)</h1>
+                </div>
+
+                <div class="fondo-preguntas" id="fondoPreguntas">
+                    <!-- Examen tipo se establece manualmente -->
+                    <div class="mb-3">
+                        <label for="examIdVer" class="form-label">Aca debe salir la calificacion:)</label> 
+                    </div>
+
+                    <div id="preguntas-container">
+                        <!-- Aquí se cargan las preguntas desde el arreglo de preguntas -->
+                    </div>
+                    <div class="d-flex justify-content-center mt-4">
+                        <button class="btn btn1" id="aceptarButton">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/endPageAdmin.ejs'); %>  
+
+    <script>
+        // Definir el arreglo de preguntas en JavaScript
+        const preguntas = [
+            {
+                id_materia: 1,
+                texto: "¿Cuál es el sinónimo de 'rápido'?",
+                img: null,
+                alternativas: [
+                    { texto: "Lento", es_correcta: false },
+                    { texto: "Ágil", es_correcta: true },
+                    { texto: "Estático", es_correcta: false },
+                    { texto: "Tardío", es_correcta: false }
+                ],
+                seleccion_usuario: 1 // Supongamos que el usuario seleccionó la opción B (índice 1)
+            },
+            {
+                id_materia: 2,
+                texto: "¿Cuál es el resultado de 5 + 3?",
+                img: null,
+                alternativas: [
+                    { texto: "6", es_correcta: false },
+                    { texto: "7", es_correcta: false },
+                    { texto: "8", es_correcta: true },
+                    { texto: "9", es_correcta: false }
+                ],
+                seleccion_usuario: 2 // El usuario seleccionó la opción C (índice 2)
+            },
+            {
+                id_materia: 6,
+                texto: "¿Cuál es la unidad de medida de la fuerza?",
+                img: null,
+                alternativas: [
+                    { texto: "Newton", es_correcta: true },
+                    { texto: "Julio", es_correcta: false },
+                    { texto: "Pascal", es_correcta: false },
+                    { texto: "Watt", es_correcta: false }
+                ],
+                seleccion_usuario: 1 // El usuario seleccionó la opción A (índice 0)
+            }
+        ];
+
+        // Funciones para obtener el nombre de la materia
+        const materiaNames = {
+            1: "Razonamiento Verbal",
+            2: "Razonamiento Matemático",
+            3: "Realidad Nacional",
+            4: "Aritmética y Álgebra",
+            5: "Geometría y Trigonometría",
+            6: "Física",
+            7: "Química",
+            8: "Biología",
+            9: "Historia",
+            10: "Economía",
+            11: "Geografía",
+            12: "Literatura",
+            13: "Lenguaje",
+            14: "Lógica"
+        };
+
+        const getMateriaName = (id) => materiaNames[id] || "Materia desconocida";
+
+        // Crear las preguntas dinámicamente
+        document.addEventListener('DOMContentLoaded', function() {
+        const preguntasContainer = document.getElementById('preguntas-container');
+
+        preguntas.forEach((preg, index) => {
+            const preguntaCard = document.createElement('div');
+            preguntaCard.classList.add('pregunta-card', 'mb-4', 'p-3');
+            preguntaCard.innerHTML = `
+                <div class="curso" id="cursoPregunta${index + 1}">
+                    ${getMateriaName(preg.id_materia)}
+                </div>
+                <div class="pregunta" id="preguntaTexto${index + 1}">
+                    <p class="pregunta-texto">${preg.texto}</p>
+                    ${preg.img ? `<div class="pregunta-imagen"><img src="/images/preguntas/${preg.img}" alt="Imagen de la pregunta"></div>` : ''}
+                    <div class="alternativas" id="alternativasPregunta${index + 1}">
+                        ${preg.alternativas.map((alt, altIndex) => {
+                            const seleccionCorrecta = alt.es_correcta;
+                            const seleccionIncorrecta = altIndex === preg.seleccion_usuario && !alt.es_correcta;
+                            const seleccionUsuario = altIndex === preg.seleccion_usuario;
+
+                            return `
+                                <label class="option" id="opcion${String.fromCharCode(65 + altIndex)}${index + 1}">
+                                    <span class="checkmark 
+                                        ${seleccionCorrecta ? 'correcta' : ''}
+                                        ${seleccionIncorrecta ? 'incorrecta' : ''}
+                                    "></span>
+                                    <span class="texto">${String.fromCharCode(65 + altIndex)}) ${alt.texto.trim()}</span>
+                                </label>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+            preguntasContainer.appendChild(preguntaCard);
+        });
+    });
+
+    </script>
+</body>

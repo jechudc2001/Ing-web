@@ -365,3 +365,26 @@ export const renderUserGenerarAleatorio= (req, res) => {
   res.render("user/userGenerarAleatorio", { title: "Calificacion",user:user }
   );
 };
+export const renderUserRespuestas= (req, res) => {
+  
+  let user = req.session.user;
+
+      // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
+     
+      if (!user) {
+          user = {
+              id: 0, // ID ficticio
+              email: 'test@example.com',
+              username: 'Usuario Prueba',
+              role: 'user', // O 'admin' según tus necesidades
+          };
+      }
+
+      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
+      if (!user) {
+          return res.status(401).json({ message: 'No estás autenticado' });
+      }
+  // Obtén todos los cursos desde la base de datos
+  res.render("user/userRespuestas", { title: "Calificacion",user:user }
+  );
+};

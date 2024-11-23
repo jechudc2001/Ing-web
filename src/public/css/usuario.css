@@ -121,21 +121,28 @@
     top: 50%; /* Alineación vertical */
     left: 50%; /* Alineación horizontal */
     transform: translate(-50%, -50%); /* Centrado exacto */
+    color: white;
 }
 
-/* Para la opción incorrecta: cuadro gris sin X */
+/* Para la opción incorrecta: cuadro rojo con X */
 .incorrecta {
-    border: 2px solid #cacaca; /* Borde gris (plomito) */
-    background-color: #cacaca; /* Fondo transparente */
-    color: transparent; /* No mostrar el texto */
+    border: 2px solid #dc3545; /* Borde rojo */
+    background-color: #dc3545; /* Fondo rojo */
+    color: white; /* Texto blanco */
     position: relative;
 }
 
 .incorrecta::after {
-    content: ""; /* Sin símbolo, no se muestra la "X" */
+    content: "\00d7"; /* Símbolo de X */
+    font-size: 0.6rem; /* Tamaño más pequeño para el símbolo */
+    position: absolute;
+    top: 50%; /* Alineación vertical */
+    left: 50%; /* Alineación horizontal */
+    transform: translate(-50%, -50%); /* Centrado exacto */
+        color: white;
+
 }
 
-/* Estilo para la opción (sin bordes y cuadrada) */
 .option.cuadrada {
     display: flex;
     align-items: center;

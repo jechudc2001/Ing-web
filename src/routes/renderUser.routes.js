@@ -10,8 +10,7 @@ import {
     renderUserModoSimulacro,
     renderUserCalificacion,
     renderUserGenerarAleatorio,
-
-
+    renderUserRespuestas,
 
 } from '../controllers/renderUser.controller.js';
 
@@ -27,6 +26,7 @@ router.get('/', renderPaginaWeb);
 router.get('/userModoSimulacro/:id', renderUserModoSimulacro);
 router.get('/userCalificacion', renderUserCalificacion);
 router.get('/userGenerarAleatorio', renderUserGenerarAleatorio);
+router.get('/userRespuestas', renderUserRespuestas);
 
 
 
