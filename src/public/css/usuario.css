@@ -341,57 +341,21 @@ input[type="checkbox"]:checked + .custom-checkbox-indicator::after {
     width: 50px; /* Ancho fijo para evitar movimientos */
 }
 
-/* Calificación */
-.table {
-    width: 80%; /* Reduce el ancho al 80% del contenedor */
-    margin: 20px auto; /* Centra la tabla horizontalmente */
-    border-collapse: separate; /* Permite bordes redondeados */
-    border-spacing: 0; /* Quita el espacio entre celdas */
-    font-size: 16px;
-    border-radius: 10px; /* Redondea las esquinas de la tabla */
-    overflow: hidden; /* Asegura que el redondeo funcione */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Añade sombra */
+/*ALEATORIO*/
+
+/* Contenedor del formulario */
+.form-flex {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
 }
 
-.table th, .table td {
-    text-align: center;
-    padding: 10px;
+.form-flex .mb-3 {
+    flex: 1 1 30%; /* Permite que los elementos ocupen un 30% del ancho en pantallas grandes */
+    min-width: 200px; /* Evita que sean demasiado pequeños en pantallas pequeñas */
 }
 
-.table th {
-    background-color: #f8f9fa;
-    font-weight: bold;
-}
-
-.table-bordered {
-    border: 1px solid #f5f7f8;
-}
-
-.table-bordered th, .table-bordered td {
-    border: 1px solid #fbfbfc;
-}
-
-.table-secondary {
-    background-color: #e9ecef;
-    font-weight: bold;
-}
-
-/* Añade bordes redondeados a los elementos externos */
-.table thead th:first-child {
-    border-top-left-radius: 10px;
-}
-
-.table thead th:last-child {
-    border-top-right-radius: 10px;
-}
-
-.table tfoot td:first-child {
-    border-bottom-left-radius: 10px;
-}
-
-.table tfoot td:last-child {
-    border-bottom-right-radius: 10px;
-}
 
 
 /* Responsive adjustments */
@@ -427,5 +391,7 @@ input[type="checkbox"]:checked + .custom-checkbox-indicator::after {
         margin-right: 0px;  /* Ajusta el margen superior para moverlo más arriba */
         margin-bottom: 0px; /* Añade más margen inferior si es necesario */
     }
-    
+    .form-flex {
+        flex-direction: column; /* Cambia la dirección a columna */
+    }
 }

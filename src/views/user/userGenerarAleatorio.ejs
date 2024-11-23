@@ -1,0 +1,78 @@
+<% title = 'Generar Aleatorio' %> <!-- Establecer el título -->
+
+<%- include('../partials/layoutsAdmin.ejs'); %>
+
+<body>
+    <div class="wrapper">
+        <%- include('../partials/sidebarUser.ejs'); %>
+
+        <div id="main-content" class="main p-3">
+            <%- include('../partials/header.ejs'); %>
+            <!-- contenido principal-->
+            <div class="contenedor-dashboard">
+                <h1 class="titulo-dashboard" id="tituloCurso">
+                    Generar aleatorio<br>
+                    <span class="texto-pequeño">Genera un examen según tus necesidades!</span>
+                </h1>
+                <div class="fondo-dashboard">
+                    <!-- Formulario -->
+                    <form id="randomForm" class="form-flex">
+                        <div class="mb-3">
+                            <label for="channel" class="form-label">Canal</label>
+                            <select class="form-select" id="channel" required>
+                                <option value="" disabled selected>Seleccione el canal</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="type" class="form-label">Tipo</label>
+                            <select class="form-select" id="type" required>
+                                <option value="" disabled>Seleccione el tipo</option>
+                                <option value="fase">Fase</option>
+                                <option value="cepu">Cepu</option>
+                                <option value="ambas" selected>Todos</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="mode" class="form-label">Modo</label>
+                            <select class="form-select" id="mode" required>
+                                <option value="" disabled>Seleccione el modo</option>
+                                <option value="practico">Práctica</option>
+                                <option value="simulacro" selected>Simulacro</option>
+                            </select>
+                        </div>
+                    </form>
+
+                    <!-- Botón fuera del formulario -->
+                    <div class="text-center">
+                        <button type="button" class="btn1" id="generateBtn">Generar Aleatorio</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Manejo del botón "Generar Aleatorio"
+        document.getElementById('generateBtn').addEventListener('click', () => {
+            // Seleccionar los valores del formulario
+            const channel = document.getElementById('channel').value;
+            const type = document.getElementById('type').value;
+            const mode = document.getElementById('mode').value;
+
+            // Validar que todos los campos estén llenos
+            if (!channel || !type || !mode) {
+                alert('Por favor, complete todos los campos antes de generar.');
+                return;
+            }
+
+            // Mostrar los valores seleccionados (puedes sustituir esto por lógica adicional)
+            alert(`Generado con éxito:\nCanal: ${channel}\nTipo: ${type}\nModo: ${mode}`);
+        });
+    </script>
+
+    <%- include('../partials/endPageAdmin.ejs'); %>
+</body>
