@@ -318,30 +318,119 @@ export const renderUserModoSimulacro= async (req, res) => {
         res.status(500).render('error', { message: 'Error al cargar el examen' });
       }
 };
-
-export const renderUserCalificacion= (req, res) => {
-  
+export const renderUserCalificacion = async (req, res) => {
   let user = req.session.user;
 
-      // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
-     
-      if (!user) {
-          user = {
-              id: 0, // ID ficticio
-              email: 'test@example.com',
-              username: 'Usuario Prueba',
-              role: 'user', // O 'admin' según tus necesidades
-          };
+  if (!user) {
+      user = {
+          id: 0,
+          email: 'test@example.com',
+          username: 'Usuario Prueba',
+          role: 'user',
+      };
+  }
+
+  const { id } = req.params; // ID de la simulación pasada en la URL
+
+  try {
+      // Obtener la simulación
+      const simulation = await Simulation.findOne({
+          where: { id_simulation: id },
+          attributes: ['id_simulation', 'puntaje_total']
+      });
+
+      if (!simulation) {
+          return res.status(404).json({ message: 'Simulación no encontrada' });
       }
 
-      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-      if (!user) {
-          return res.status(401).json({ message: 'No estás autenticado' });
-      }
-  // Obtén todos los cursos desde la base de datos
-  res.render("user/userCalificacion", { title: "Calificacion",user:user }
-  );
+      // Obtener resultados de la simulación
+      const results = await SimulationResult.findAll({
+          where: { id_simulation: id },
+          include: [
+              {
+                  model: Pregunta,
+                  attributes: ['id_materia'],
+              },
+          ],
+      });
+
+      console.log(JSON.stringify(results, null, 2));  // Esto te dará una vista detallada de la estructura completa
+
+      // Agrupar por materia y calcular estadísticas
+      const statsByMateria = results.reduce((stats, result) => {
+          const idMateria = result.Preguntum.id_materia;
+          if (!stats[idMateria]) {
+              stats[idMateria] = {
+                  preguntas: 0,
+                  correctas: 0,
+                  incorrectas: 0,
+                  puntaje: 0,  // Asegurémonos de que puntaje se inicie como un número
+              };
+          }
+          stats[idMateria].preguntas += 1;
+
+          // Lógica para ajustar el puntaje
+          if (result.respuesta_seleccionada === null) {
+              // Si no se seleccionó una respuesta
+              stats[idMateria].puntaje += 1;  // Puntaje por no responder
+          } else if (result.es_correcta) {
+              // Si la respuesta es correcta
+              stats[idMateria].correctas += 1;
+              stats[idMateria].puntaje += parseFloat(result.puntaje);  // Aseguramos que el puntaje se maneje como número
+          } else {
+              // Si la respuesta es incorrecta
+              stats[idMateria].incorrectas += 1;
+              stats[idMateria].puntaje -= 1.25;  // Puntaje negativo por incorrecta
+          }
+
+          return stats;
+      }, {});
+
+      // Definir los nombres de las materias
+      const materiaNames = {
+        1: "Razonamiento Verbal",
+        2: "Razonamiento Matemático",
+        3: "Realidad Nacional",
+        4: "Aritmética y Álgebra",
+        5: "Geometría y Trigonometría",
+        6: "Física",
+        7: "Química",
+        8: "Biología",
+        9: "Historia",
+        10: "Economía",
+        11: "Geografía",
+        12: "Literatura",
+        13: "Lenguaje",
+        14: "Lógica"
+      };
+
+      // Función para obtener el nombre de la materia
+      const getMateriaName = (id) => materiaNames[id] || "Materia desconocida";
+
+      // Mapeando los resultados y usando getMateriaName
+      const dataForView = Object.entries(statsByMateria).map(([idMateria, stats]) => ({
+        materia: idMateria,
+        nombreMateria: getMateriaName(idMateria),  // Utilizando la función para obtener el nombre
+        ...stats,
+      }));
+
+      // Renderizar la vista con los datos calculados
+      res.render('user/userCalificacion', {
+          title: "Calificación",
+          user,
+          simulation,
+          dataForView,
+      });
+
+  } catch (error) {
+      console.error('Error al obtener calificaciones:', error);
+      res.status(500).json({ message: 'Error interno del servidor' });
+  }
 };
+
+
+
+
 export const renderUserGenerarAleatorio= (req, res) => {
   
   let user = req.session.user;
@@ -365,26 +454,87 @@ export const renderUserGenerarAleatorio= (req, res) => {
   res.render("user/userGenerarAleatorio", { title: "Calificacion",user:user }
   );
 };
-export const renderUserRespuestas= (req, res) => {
-  
+
+
+
+
+
+export const renderUserRespuestas = async (req, res) => {
   let user = req.session.user;
 
-      // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
-     
-      if (!user) {
-          user = {
-              id: 0, // ID ficticio
-              email: 'test@example.com',
-              username: 'Usuario Prueba',
-              role: 'user', // O 'admin' según tus necesidades
-          };
-      }
+  // Asignar un usuario de prueba si no hay autenticación y estás en producción
+  if (!user) {
+    user = {
+      id: 0,
+      email: 'test@example.com',
+      username: 'Usuario Prueba',
+      role: 'user',
+    };
+  }
 
-      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-      if (!user) {
-          return res.status(401).json({ message: 'No estás autenticado' });
-      }
-  // Obtén todos los cursos desde la base de datos
-  res.render("user/userRespuestas", { title: "Calificacion",user:user }
-  );
+  // Verificar si el usuario está autenticado
+  if (!user) {
+    return res.status(401).render('error', { message: 'No estás autenticado' });
+  }
+
+  // Obtener id_simulation desde los parámetros
+  const { id } = req.params; // ID de la simulación pasada en la URL
+
+  try {
+    // Obtener la simulación
+    const simulation = await Simulation.findByPk(id, {
+      attributes: ['id_simulation', 'id_exam', 'puntaje_total', 'fecha_realizacion'],
+    });
+
+    // Verificar si la simulación existe
+    if (!simulation) {
+      return res.status(404).render('error', { message: 'Simulación no encontrada' });
+
+    }
+
+    // Obtener los resultados de la simulación
+    const results = await SimulationResult.findAll({
+      where: { id_simulation: id },
+      attributes: ['id_simulation_result', 'id_pregunta', 'respuesta_seleccionada', 'es_correcta', 'puntaje'],
+    });
+
+    // Obtener las preguntas y solo las alternativas correctas relacionadas con el examen
+    const examen = await Exam.findByPk(simulation.id_exam, {
+      attributes: ['id_exam', 'canal', 'exam_type', 'year'],
+      include: {
+        model: Pregunta,
+        as: 'preguntas', // Alias configurado en las asociaciones
+        include: {
+          model: Alternativa,
+          as: 'alternativas', // Alias configurado en las asociaciones
+        },
+      },
+    });
+
+    // Verificar si el examen existe
+    if (!examen) {
+      //return res.status(404).render('error', { message: 'Examen no encontrado' });
+      console.log("xdxd");
+    }
+
+    console.log(results);
+    console.log("esta tiene que ser el examen, la cosa de abajo");
+    console.log(examen);
+
+    // Renderizar la página con los datos obtenidos
+    
+    res.render("user/userRespuestas", { 
+      title: "Calificacion",
+      user: user,
+      results: results,
+      examen: examen,
+      simulation: simulation
+      })
+  
+
+
+  } catch (error) {
+    console.error('Error al cargar las respuestas del usuario:', error);
+    res.status(500).render('error', { message: 'Error al cargar las respuestas del usuario' });
+  }
 };

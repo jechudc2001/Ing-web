@@ -31,7 +31,15 @@ const Simulation = sequelize.define('Simulation', {
     defaultValue: DataTypes.NOW
   },
   puntaje_total: {
+    type: DataTypes.DECIMAL(10, 2), 
+    allowNull: true
+},
+  tipoSimulacion: {
     type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  tiempo_simulacion: {
+    type: DataTypes.TIME,
     allowNull: true
   }
 }, {

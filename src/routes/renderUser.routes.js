@@ -24,9 +24,9 @@ router.get('/userCurso', renderUserCursos);
 router.get('/userModoPracticaCursos/:id/:cantidad', renderUserModoPracticaCurso);
 router.get('/', renderPaginaWeb);
 router.get('/userModoSimulacro/:id', renderUserModoSimulacro);
-router.get('/userCalificacion', renderUserCalificacion);
+router.get('/userCalificacion/:id', renderUserCalificacion);
 router.get('/userGenerarAleatorio', renderUserGenerarAleatorio);
-router.get('/userRespuestas', renderUserRespuestas);
+router.get('/userRespuestas/:id', renderUserRespuestas);
 
 
 

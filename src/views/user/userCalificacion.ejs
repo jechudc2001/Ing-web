@@ -10,7 +10,7 @@
 
             <div class="text-center mt-4 mb-4">
                 <h3 class="titulo-dashboard">¡Examen Finalizado!</h3>
-                <p class="fs-6">Tu puntaje final es: <strong>435</strong></p>
+                <p class="fs-6">Tu puntaje final es: <strong><%= simulation.puntaje_total %></strong></p>
                 
                 <div class="fondo-dashboard">
                     <table class="table table-striped">
@@ -24,45 +24,32 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Datos simulados -->
-                            <tr>
-                                <td>Raz. Verbal</td>
-                                <td>12</td>
-                                <td>8</td>
-                                <td>4</td>
-                                <td>80</td>
-                            </tr>
-                            <tr>
-                                <td>Raz. Matemático</td>
-                                <td>12</td>
-                                <td>10</td>
-                                <td>2</td>
-                                <td>90</td>
-                            </tr>
-                            <tr>
-                                <td>Cultura General</td>
-                                <td>12</td>
-                                <td>6</td>
-                                <td>6</td>
-                                <td>60</td>
-                            </tr>
+                            <% dataForView.forEach((materia) => { %>
+                                <tr>
+                                    <td><%= materia.nombreMateria %></td>
+                                    <td><%= materia.preguntas %></td>
+                                    <td><%= materia.correctas %></td>
+                                    <td><%= materia.incorrectas %></td>
+                                    <td><%= materia.puntaje %></td>
+                                </tr>
+                            <% }); %>
                         </tbody>
                         <tfoot>
                             <tr class="table-secondary">
                                 <td>Total</td>
-                                <td>36</td>
-                                <td>24</td>
-                                <td>12</td>
-                                <td>230</td>
+                                <td><%= dataForView.reduce((acc, item) => acc + item.preguntas, 0) %></td>
+                                <td><%= dataForView.reduce((acc, item) => acc + item.correctas, 0) %></td>
+                                <td><%= dataForView.reduce((acc, item) => acc + item.incorrectas, 0) %></td>
+                                <td><%= dataForView.reduce((acc, item) => acc + item.puntaje, 0) %></td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
 
                 <div class="mb-4">
-                    <a href="#" class="btn2">Ver respuestas correctas</a>
+                    <a href="/userRespuestas/<%= simulation.id_simulation %>" class="btn2">Ver respuestas correctas</a>
                     <br><br>
-                    <a href="/userSeleccionarExamen/1" class="btn1">Volver</a><br><br>
+                    <a href="/userDashboard" class="btn1">Volver</a><br><br>
                 </div>
             </div>
         </div>

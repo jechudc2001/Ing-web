@@ -27,19 +27,29 @@ const SimulationResult = sequelize.define('SimulationResult', {
   },
   respuesta_seleccionada: {
     type: DataTypes.CHAR(1),
-    allowNull: false
+    allowNull: true
   },
   es_correcta: {
     type: DataTypes.BOOLEAN,
     allowNull: false
   },
   puntaje: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.DECIMAL(10, 2),
     allowNull: false
   }
 }, {
   tableName: 'simulation_result',
   timestamps: false
 });
+
+
+
+
+SimulationResult.belongsTo(Pregunta, { foreignKey: 'id_pregunta' });
+Pregunta.hasMany(SimulationResult, { foreignKey: 'id_pregunta'});
+
+
+SimulationResult.belongsTo(Simulation, { foreignKey: 'id_simulation' });
+Simulation.hasMany(SimulationResult, { foreignKey: 'id_simulation'});
 
 export default SimulationResult;

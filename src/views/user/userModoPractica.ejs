@@ -1,5 +1,4 @@
 <% title = 'Practicar Preguntas' %>
-
 <% 
   // Mapear nombres de los tipos de examen
   const examTypeNames = {
@@ -37,8 +36,6 @@
   const getMateriaName = (id) => materiaNames[id] || "Materia desconocida";
 %>
 
-
-
 <%- include('../partials/layoutsAdmin.ejs'); %> 
 <body>
     <div class="wrapper">
@@ -51,43 +48,42 @@
                 <div class="d-flex justify-content-between align-items-center mb-1">
                     <h1 class="titulo-dashboard" id="tituloDashboard">Modo Práctica</h1>
                 </div>
+                <input type="hidden" id="idExamen" value="<%= exam.id_exam %>">
 
                 <div class="fondo-preguntas" id="fondoPreguntasUsuario">
-                    <!-- Información del examen -->
                     <div class="mb-1">
-                        <label for="examIdUsuario" class="form-label">Examen: <%= getExamTypeName(exam.exam_type) %></label>
+                        <label for="examIdUsuario" class="form-label">Examen <%= getExamTypeName(exam.exam_type) %></label>
                     </div>
 
-                    <!-- Barra de progreso -->
-                    <div id="progress-container" class="progress-container sticky-top bg-white mb-1" data-total-preguntas="<%= exam.preguntas.length %>">
-                        <div class="progress">
-                            <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="<%= exam.preguntas.length %>"></div>
+                    <!-- Barra de progreso y temporizador -->
+                    <div class="tools d-flex justify-content-between align-items-center mb-1">
+                        <div id="progress-container" class="progress-container sticky-top bg-white mb-1" data-total-preguntas="<%= exam.preguntas.length %>">
+                            <div class="progress">
+                                <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="<%= exam.preguntas.length %>"></div>
+                            </div>
+                            <small id="progressText" class="text-muted">0 de <%= exam.preguntas.length %> preguntas respondidas</small>
                         </div>
-                        <small id="progressText" class="text-muted">0 de <%= exam.preguntas.length %> preguntas respondidas</small>
                     </div>
 
-                    <!-- Renderizar preguntas y alternativas -->
                     <% exam.preguntas.forEach((preg, index) => { %>
+                        <input type="hidden" id="idPreguntaxd" value="<%= preg.id_pregunta %>">
+
                         <div class="pregunta-card mb-4 p-3" id="preguntaUsuario<%= index + 1 %>">
-                            <!-- Materia de la pregunta -->
                             <div class="curso" id="cursoPreguntaUsuario<%= index + 1 %>">
                                 <%= getMateriaName(preg.id_materia) %>
                             </div>
-
-                            <!-- Texto de la pregunta -->
                             <div class="pregunta" id="preguntaTextoUsuario<%= index + 1 %>">
                                 <p class="pregunta-texto"><%= preg.texto %></p>
-                    
+                                
                                 <% if (preg.img) { %>
-                                    <!-- Imagen de la pregunta -->
                                     <div class="pregunta-imagen">
                                         <img src="/images/preguntas/<%= preg.img %>" alt="Imagen de la pregunta">
                                     </div>
                                 <% } %>
-                    
-                                <!-- Alternativas -->
+
                                 <div class="alternativas" id="alternativasPreguntaUsuario<%= index + 1 %>">
                                     <% preg.alternativas.forEach((alt, altIndex) => { %>
+
                                         <label class="option cuadrada" id="opcionUsuario<%= String.fromCharCode(65 + altIndex) %><%= index + 1 %>">
                                             <input 
                                                 type="radio" 
@@ -95,35 +91,105 @@
                                                 class="input-alternativa" 
                                                 id="inputUsuario<%= String.fromCharCode(65 + altIndex) %><%= index + 1 %>" 
                                                 data-pregunta-id="<%= index + 1 %>" 
-                                                data-opcion-id="<%= alt.id %>" <!-- ID de la alternativa -->
+                                                data-opcion-id="<%= String.fromCharCode(65 + altIndex) %>"
+                                                data-id-alternativa="<%= alt.id_alternativa %>" 
+                                            />
                                             <span class="custom-checkbox"></span>
                                             <span class="texto"><%= String.fromCharCode(65 + altIndex) %>) <%= alt.texto.trim() %></span>
                                         </label>
                                     <% }); %>
+                                    
                                 </div>
                             </div>
                         </div>
                     <% }) %>
-                    
-                </div>
 
-                <!-- Botón para finalizar -->
+                </div>
                 <div class="text-center mt-4">
                     <button id="finalizarExamen" class="btn1">Finalizar</button>
                 </div>
+
             </div>
         </div>
     </div>
 
     <%- include('../partials/endPageAdmin.ejs'); %>  
 </body>
+
+
+
 <script>
-    document.getElementById('finalizarExamen').addEventListener('click', function () {
-      // Simulación de cálculo del puntaje (puedes conectarlo al backend).
-      const puntaje = 435; // Aquí pones el cálculo real o una llamada al backend.
-  
-      // Redirigir a la página de finalización con el puntaje.
-      window.location.href = `/userCalificacion?puntaje=${puntaje}`;
-  });
-  
+    let secondsElapsed = 0;
+
+    // Incrementa el contador de tiempo
+    const timerInterval = setInterval(() => {
+        secondsElapsed++;
+    }, 1000);
+
+    document.getElementById('finalizarExamen').addEventListener('click', async function () {
+        // Detén el temporizador
+        clearInterval(timerInterval);
+
+        const id_exam = document.getElementById('idExamen').value; 
+        const tiempoFinal = null; // Tiempo total en segundos
+        const respuestas = [];
+
+        // Obtener todas las preguntas
+        const idsPreguntas = [];
+        document.querySelectorAll('input[type="hidden"][id="idPreguntaxd"]').forEach(input => {
+            idsPreguntas.push(input.value);  // Agregar el id de la pregunta al arreglo
+        });
+
+        // Para cada pregunta, obtener la respuesta seleccionada
+          // Para cada pregunta, obtener la respuesta seleccionada o null si no tiene respuesta
+          document.querySelectorAll('.alternativas').forEach((alternativaContainer, index) => {
+            const idPregunta = idsPreguntas[index]; // Usar el id de la pregunta de los inputs ocultos
+            const alternativaSeleccionada = alternativaContainer.querySelector('input:checked');
+            
+            // Si se seleccionó una alternativa
+            if (alternativaSeleccionada) {
+                const idAlternativa = alternativaSeleccionada.dataset.idAlternativa; // Obtén el id_alternativa
+                respuestas.push({ idPregunta, idAlternativa }); // Guarda como objeto
+            } else {
+                // Si no se seleccionó ninguna alternativa, enviar null para idAlternativa
+                respuestas.push({ idPregunta, idAlternativa: null });
+            }
+        });
+
+        // Datos que se enviarán al servidor
+        const data = {
+            id_exam,
+            respuestas,
+            tiempoFinal
+        };
+        console.log(data);
+
+        // Enviar los datos al servidor mediante POST
+        try {                       
+            const response = await fetch('/calcular', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data), // Enviar los datos como JSON
+            });
+
+            const result = await response.json(); // Supongamos que el servidor responde con un JSON
+            if (response.ok) {
+                console.log('Puntaje calculado con éxito:', result);
+
+                const simulationId = result.simulation.id_simulation; // Asegúrate de que el servidor envíe este dato
+                console.log(simulationId);
+                window.location.href = `/userCalificacion/${simulationId}`;
+
+            } else {
+                console.error('Error al calcular el puntaje:', result);
+            }
+        } catch (error) {
+            console.error('Error en la solicitud al servidor:', error);
+        }
+    });
+
 </script>
+
+  

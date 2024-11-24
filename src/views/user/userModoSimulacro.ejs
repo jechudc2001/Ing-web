@@ -147,14 +147,18 @@
             idsPreguntas.push(input.value);  // Agregar el id de la pregunta al arreglo
         });
 
-        // Para cada pregunta, obtener la respuesta seleccionada
+          // Para cada pregunta, obtener la respuesta seleccionada o null si no tiene respuesta
         document.querySelectorAll('.alternativas').forEach((alternativaContainer, index) => {
             const idPregunta = idsPreguntas[index]; // Usar el id de la pregunta de los inputs ocultos
-            const alternativaSeleccionada = alternativaContainer.querySelector('input:checked'); 
+            const alternativaSeleccionada = alternativaContainer.querySelector('input:checked');
             
+            // Si se seleccionó una alternativa
             if (alternativaSeleccionada) {
                 const idAlternativa = alternativaSeleccionada.dataset.idAlternativa; // Obtén el id_alternativa
                 respuestas.push({ idPregunta, idAlternativa }); // Guarda como objeto
+            } else {
+                // Si no se seleccionó ninguna alternativa, enviar null para idAlternativa
+                respuestas.push({ idPregunta, idAlternativa: null });
             }
         });
 
@@ -179,7 +183,11 @@
             const result = await response.json(); // Supongamos que el servidor responde con un JSON
             if (response.ok) {
                 console.log('Puntaje calculado con éxito:', result);
-                // Aquí puedes manejar la respuesta del servidor, como redirigir o mostrar un mensaje
+
+                const simulationId = result.simulation.id_simulation; // Asegúrate de que el servidor envíe este dato
+                console.log(simulationId);
+                window.location.href = `/userCalificacion/${simulationId}`;
+                
             } else {
                 console.error('Error al calcular el puntaje:', result);
             }
