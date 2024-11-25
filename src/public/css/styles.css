@@ -348,6 +348,17 @@ input {
     border-color: #c0bfbf; /* Cambiar el color del borde al pasar el mouse */
 }
 
+#login-error {
+    margin-bottom: 10px;
+    color: red;
+    font-size: 14px;
+    opacity: 0; /* Oculto inicialmente */
+    transition: opacity 0.5s ease-in-out; /* Transición suave */
+    height: 0; /* Para que no ocupe espacio cuando esté oculto */
+    overflow: hidden;
+}
+
+
 @media (max-width: 768px) {
     .fondo-pearl {
         flex-direction: column;

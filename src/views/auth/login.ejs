@@ -1,63 +1,75 @@
-    <!-- Modal de Iniciar Sesión -->
-    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="loginModalLabel">Iniciar Sesión</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="login-form">
-                        <div class="form-group">
-                            <input type="email"   id="login-correo" name="correo" placeholder="Correo" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="password"   id="login-contrasena" name="contrasena" placeholder="Contraseña" required>
-                        </div>
-                        <button type="submit" class="btn1">Iniciar Sesión</button>
-                    </form>
-                </div>
+<!-- Modal de Iniciar Sesión -->
+<!-- Modal de Iniciar Sesión -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Iniciar Sesión</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="login-form">
+                    <div class="form-group">
+                        <input type="email" id="login-correo" name="correo" placeholder="Correo" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="login-contrasena" name="contrasena" placeholder="Contraseña" required>
+                    </div>
+                    <div id="login-error"></div>
+
+                    <button type="submit" class="btn1">Iniciar Sesión</button>
+                </form>
+                <!-- Contenedor del mensaje de error -->
             </div>
         </div>
     </div>
+</div>
 
 
-    <script>
-        // Función para manejar el envío del formulario de login
-        document.getElementById('login-form').addEventListener('submit', async (event) => {
-            event.preventDefault(); // Prevenir el envío tradicional del formulario
-    
-            const email2 = document.getElementById('login-correo').value;
-            const password = document.getElementById('login-contrasena').value;
-            
-            const data = {
-                email: email2,
-                password: password
-            };
-            console.log(data);
-            try {
-                // Hacer la solicitud al backend para autenticar al usuario
-                const response = await fetch('/login', {  // Asegúrate de que esta URL sea la correcta para tu backend
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data),
-                });
-    
-                if (response.ok) {
-                    const result = await response.json();
-                    alert('Iniciar sesión exitoso');
-                    window.location.href = '/userDashboard';
-                    // Aquí puedes redirigir o realizar alguna acción adicional
-                } else {
-                    throw new Error('Correo o contraseña incorrectos');
-                }
-            } catch (error) {
-                console.error(error);
-                alert('Hubo un error al iniciar sesión');
-            }
+<script>
+// Función para manejar el envío del formulario de login
+document.getElementById('login-form').addEventListener('submit', async (event) => {
+    event.preventDefault(); // Prevenir el envío tradicional del formulario
+
+    const email2 = document.getElementById('login-correo').value;
+    const password = document.getElementById('login-contrasena').value;
+    const errorContainer = document.getElementById('login-error');
+
+    const data = {
+        email: email2,
+        password: password
+    };
+
+    // Limpia el mensaje de error anterior
+    errorContainer.style.opacity = '0';
+    errorContainer.style.height = '0';
+    errorContainer.textContent = '';
+
+    try {
+        // Hacer la solicitud al backend para autenticar al usuario
+        const response = await fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
         });
-    </script>
+
+        if (response.ok) {
+            const result = await response.json();
+            window.location.href = '/userDashboard';
+        } else {
+            throw new Error('Correo o contraseña incorrectos');
+        }
+    } catch (error) {
+        console.error(error);
+        // Muestra el mensaje de error con animación suave
+        errorContainer.textContent = 'Correo o contraseña incorrectos';
+        errorContainer.style.height = 'auto'; // Permite que el contenido sea visible
+        errorContainer.style.opacity = '1'; // Aparece con transición
+    }
+});
+
+</script>

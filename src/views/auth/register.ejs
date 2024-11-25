@@ -12,42 +12,60 @@
         <button type="submit" id="btn-continuar" class="btn1 btn-continuar">Continuar</button>
     </form>
 </div>
+<!-- Modal de Confirmación -->
+<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">¡Éxito!</h5>
+
+            </div>
+            <div class="modal-body">
+                Usuario registrado con éxito. Ahora inicia sesión.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn1" data-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     // Función para manejar el envío del formulario
     document.getElementById('registro-form').addEventListener('submit', async (event) => {
-        event.preventDefault(); // Prevenir el envío tradicional del formulario
-        const apellido = document.getElementById('input-apellido').value;
-        const nombre = document.getElementById('input-nombre').value;
-        const email = document.getElementById('input-correo').value;
-        const password = document.getElementById('input-contrasena').value;
+    event.preventDefault(); // Prevenir el envío tradicional del formulario
+    const apellido = document.getElementById('input-apellido').value;
+    const nombre = document.getElementById('input-nombre').value;
+    const email = document.getElementById('input-correo').value;
+    const password = document.getElementById('input-contrasena').value;
 
-        const data = {
-            nombre_completo: nombre + " " + apellido,
-            email: email,
-            password: password,
-            user_type: 2
-        };
+    const data = {
+        nombre_completo: nombre + " " + apellido,
+        email: email,
+        password: password,
+        user_type: 2
+    };
 
-        try {
-            // Hacer la solicitud al backend
-            const response = await fetch('/users/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
+    try {
+        // Hacer la solicitud al backend
+        const response = await fetch('/users/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
 
-            if (response.ok) {
-                const result = await response.json();
-                alert('Usuario registrado con éxito, ahora inicia sesión'); 
-            } else {
-                throw new Error('Error al registrar el usuario');
-            }
-        } catch (error) {
-            console.error(error);
-            alert('Hubo un error al registrar el usuario');
+        if (response.ok) {
+            // Mostrar el modal de éxito
+            $('#successModal').modal('show');
+        } else {
+            throw new Error('Error al registrar el usuario');
         }
-    });
+    } catch (error) {
+        console.error(error);
+        alert('Hubo un error al registrar el usuario');
+    }
+});
+
 </script>

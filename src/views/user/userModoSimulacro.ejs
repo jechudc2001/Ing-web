@@ -46,7 +46,7 @@
 
             <div class="contenedor-practicar">
                 <div class="d-flex justify-content-between align-items-center mb-1">
-                    <h1 class="titulo-dashboard" id="tituloDashboard">Modo Práctica</h1>
+                    <h1 class="titulo-dashboard" id="tituloDashboard">Modo Simulacro</h1>
                 </div>
                 <input type="hidden" id="idExamen" value="<%= exam.id_exam %>">
 
@@ -117,6 +117,23 @@
                 </div>
 
             </div>
+
+            <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmModalLabel">Confirmar Acción</h5>
+                        </div>
+                        <div class="modal-body">
+                            ¿Estás seguro de que quieres finalizar el examen?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn2" id="cancelBtn">Cancelar</button>
+                            <button type="button" class="btn1" id="confirmBtn">Sí, finalizar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -126,38 +143,87 @@
 
 
 <script>
-    let secondsElapsed = 0;
+    //TEMPORIZADOR
+        // Temporizador
+    function startTimer(duration, display) {
+        let timer = duration, hours, minutes, seconds;
 
-    // Incrementa el contador de tiempo
+        const interval = setInterval(() => {
+            // Calcula horas, minutos y segundos
+            hours = Math.floor(timer / 3600);
+            minutes = Math.floor((timer % 3600) / 60);
+            seconds = timer % 60;
+
+            // Formatea como HH:MM:SS
+            hours = hours < 10 ? '0' + hours : hours;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+            // Actualiza los divs individuales
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('seconds').textContent = seconds;
+
+            if (--timer < 0) {
+                clearInterval(interval);
+                document.getElementById('hours').textContent = "00";
+                document.getElementById('minutes').textContent = "00";
+                document.getElementById('seconds').textContent = "00";
+                alert("¡El tiempo se ha agotado!");
+                
+                // Opcional: Deshabilitar preguntas o enviar automáticamente las respuestas
+                document.querySelectorAll('.input-alternativa').forEach(input => input.disabled = true);
+            }
+        }, 1000);
+    }
+
+    // Inicializa el temporizador al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+        const duration = 2 * 60 * 60; // 2 horas en segundos (7200 segundos)
+        startTimer(duration);
+    });
+
+   let secondsElapsed = 0;
+
+    // Inicia el temporizador
     const timerInterval = setInterval(() => {
         secondsElapsed++;
     }, 1000);
 
-    document.getElementById('finalizarExamen').addEventListener('click', async function () {
-        // Detén el temporizador
+    // Muestra el modal de confirmación al presionar el botón Finalizar
+    document.getElementById('finalizarExamen').addEventListener('click', function () {
+        const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+        confirmModal.show();
+    });
+
+    // Lógica para finalizar el examen al confirmar en el modal
+    document.getElementById('confirmBtn').addEventListener('click', async function () {
+        // Ocultar el modal
+        const confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+        confirmModal.hide();
+
+        // Detener el temporizador
         clearInterval(timerInterval);
 
-        const id_exam = document.getElementById('idExamen').value; 
+        const id_exam = document.getElementById('idExamen').value;
         const tiempoFinal = secondsElapsed; // Tiempo total en segundos
         const respuestas = [];
 
         // Obtener todas las preguntas
         const idsPreguntas = [];
         document.querySelectorAll('input[type="hidden"][id="idPreguntaxd"]').forEach(input => {
-            idsPreguntas.push(input.value);  // Agregar el id de la pregunta al arreglo
+            idsPreguntas.push(input.value); // Agregar el id de la pregunta al arreglo
         });
 
-          // Para cada pregunta, obtener la respuesta seleccionada o null si no tiene respuesta
+        // Para cada pregunta, obtener la respuesta seleccionada o null si no tiene respuesta
         document.querySelectorAll('.alternativas').forEach((alternativaContainer, index) => {
             const idPregunta = idsPreguntas[index]; // Usar el id de la pregunta de los inputs ocultos
             const alternativaSeleccionada = alternativaContainer.querySelector('input:checked');
-            
-            // Si se seleccionó una alternativa
+
             if (alternativaSeleccionada) {
                 const idAlternativa = alternativaSeleccionada.dataset.idAlternativa; // Obtén el id_alternativa
                 respuestas.push({ idPregunta, idAlternativa }); // Guarda como objeto
             } else {
-                // Si no se seleccionó ninguna alternativa, enviar null para idAlternativa
                 respuestas.push({ idPregunta, idAlternativa: null });
             }
         });
@@ -168,10 +234,9 @@
             respuestas,
             tiempoFinal
         };
-        console.log(data);
 
         // Enviar los datos al servidor mediante POST
-        try {                       
+        try {
             const response = await fetch('/calcular', {
                 method: 'POST',
                 headers: {
@@ -185,15 +250,19 @@
                 console.log('Puntaje calculado con éxito:', result);
 
                 const simulationId = result.simulation.id_simulation; // Asegúrate de que el servidor envíe este dato
-                console.log(simulationId);
                 window.location.href = `/userCalificacion/${simulationId}`;
-                
             } else {
                 console.error('Error al calcular el puntaje:', result);
             }
         } catch (error) {
             console.error('Error en la solicitud al servidor:', error);
         }
+    });
+
+    // Lógica para cerrar el modal al presionar "Cancelar"
+    document.getElementById('cancelBtn').addEventListener('click', function () {
+        const confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+        confirmModal.hide();
     });
 
 </script>

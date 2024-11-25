@@ -110,6 +110,23 @@
                 </div>
 
             </div>
+            <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmModalLabel">Confirmar Acción</h5>
+                        </div>
+                        <div class="modal-body">
+                            ¿Estás seguro de que quieres finalizar el examen?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn2" id="cancelBtn">Cancelar</button>
+                            <button type="button" class="btn1" id="confirmBtn">Sí, finalizar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         </div>
     </div>
 
@@ -125,63 +142,62 @@
     const timerInterval = setInterval(() => {
         secondsElapsed++;
     }, 1000);
+    document.getElementById('cancelBtn').addEventListener('click', function () {
+        const confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+        confirmModal.hide();
+    });
 
-    document.getElementById('finalizarExamen').addEventListener('click', async function () {
-        // Detén el temporizador
+    document.getElementById('finalizarExamen').addEventListener('click', function () {
+        const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+        confirmModal.show();
+    });
+
+    document.getElementById('confirmBtn').addEventListener('click', async function () {
+        // Ocultar el modal al confirmar
+        const confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+        confirmModal.hide();
+
+        // Lógica para finalizar el examen
         clearInterval(timerInterval);
 
         const id_exam = document.getElementById('idExamen').value; 
-        const tiempoFinal = null; // Tiempo total en segundos
+        const tiempoFinal = null; 
         const respuestas = [];
 
-        // Obtener todas las preguntas
         const idsPreguntas = [];
         document.querySelectorAll('input[type="hidden"][id="idPreguntaxd"]').forEach(input => {
-            idsPreguntas.push(input.value);  // Agregar el id de la pregunta al arreglo
+            idsPreguntas.push(input.value); 
         });
 
-        // Para cada pregunta, obtener la respuesta seleccionada
-          // Para cada pregunta, obtener la respuesta seleccionada o null si no tiene respuesta
-          document.querySelectorAll('.alternativas').forEach((alternativaContainer, index) => {
-            const idPregunta = idsPreguntas[index]; // Usar el id de la pregunta de los inputs ocultos
+        document.querySelectorAll('.alternativas').forEach((alternativaContainer, index) => {
+            const idPregunta = idsPreguntas[index];
             const alternativaSeleccionada = alternativaContainer.querySelector('input:checked');
-            
-            // Si se seleccionó una alternativa
+
             if (alternativaSeleccionada) {
-                const idAlternativa = alternativaSeleccionada.dataset.idAlternativa; // Obtén el id_alternativa
-                respuestas.push({ idPregunta, idAlternativa }); // Guarda como objeto
+                const idAlternativa = alternativaSeleccionada.dataset.idAlternativa;
+                respuestas.push({ idPregunta, idAlternativa });
             } else {
-                // Si no se seleccionó ninguna alternativa, enviar null para idAlternativa
                 respuestas.push({ idPregunta, idAlternativa: null });
             }
         });
 
-        // Datos que se enviarán al servidor
         const data = {
             id_exam,
             respuestas,
             tiempoFinal
         };
-        console.log(data);
 
-        // Enviar los datos al servidor mediante POST
-        try {                       
+        try {
             const response = await fetch('/calcular', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data), // Enviar los datos como JSON
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
             });
 
-            const result = await response.json(); // Supongamos que el servidor responde con un JSON
+            const result = await response.json();
             if (response.ok) {
-                console.log('Puntaje calculado con éxito:', result);
-
-                const simulationId = result.simulation.id_simulation; // Asegúrate de que el servidor envíe este dato
-                console.log(simulationId);
+                const simulationId = result.simulation.id_simulation;
                 window.location.href = `/userCalificacion/${simulationId}`;
-
             } else {
                 console.error('Error al calcular el puntaje:', result);
             }
@@ -189,6 +205,7 @@
             console.error('Error en la solicitud al servidor:', error);
         }
     });
+
 
 </script>
 
