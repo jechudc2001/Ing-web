@@ -59,6 +59,23 @@
                     </form>
                 </div>
             </div>
+
+            <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="successModalLabel">Cambios Guardados</h5>
+                        </div>
+                        <div class="modal-body text-center">
+                            <!-- Green Check Icon -->
+                            <p>¡Examen creado con éxito!</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn1" data-bs-dismiss="modal">Aceptar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -106,8 +123,12 @@
                 const response = await fetchRequest('/exams', 'POST', examData);
                 console.log('Examen creado:', response);
                 // Redireccionar o mostrar mensaje de éxito
-                alert('Examen creado exitosamente');
-                window.location.href = '/examen'; // Redirige a la ruta deseada
+                $('#successModal').modal('show');
+
+                setTimeout(() => {
+                    window.location.href = '/Examen'; // Redirige a la ruta deseada
+                }, 2000);
+
             } catch (error) {
                 console.error('Error al crear el examen:', error);
                 alert('Hubo un error al crear el examen');

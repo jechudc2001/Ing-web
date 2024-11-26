@@ -99,37 +99,65 @@
                     <% }) %>
                 </div>
             </div>
+            <!-- Modal de confirmación -->
+            <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmModalLabel">Confirmar Eliminación</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            ¿Estás seguro de que deseas eliminar esta pregunta?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn2" id="cancelBtn" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn1" id="confirmDeleteBtn">Eliminar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <%- include('../partials/endPageAdmin.ejs'); %>  
 
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-          document.querySelectorAll('.eliminar-btn').forEach(button => {
-              button.addEventListener('click', async (event) => {
-                  const preguntaId = event.currentTarget.getAttribute('data-id');
-                  console.log(preguntaId);
-                  const confirmed = confirm("¿Estás seguro de que deseas eliminar esta pregunta?");
-                  if (!confirmed) return;
-      
-                  try {
-                      const response = await fetch(`/preguntas/${preguntaId}`, {
-                          method: 'DELETE',
-                      });
-      
-                      if (response.ok) {
-                          alert("Pregunta eliminada exitosamente");
-                          // Actualiza la vista o redirige según sea necesario
-                          location.reload(); // Opcional: refresca la página para mostrar cambios
-                      } else {
-                          alert("Error al eliminar la pregunta");
-                      }
-                  } catch (error) {
-                      console.error("Error al enviar la solicitud de eliminación:", error);
-                  }
-              });
-          });
-      });
+        document.addEventListener("DOMContentLoaded", function () {
+            const confirmModal = new bootstrap.Modal(document.getElementById("confirmModal"));
+            const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+            let preguntaIdSeleccionada = null;
+    
+            // Abrir modal al hacer clic en eliminar
+            document.querySelectorAll('.eliminar-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    preguntaIdSeleccionada = event.currentTarget.getAttribute('data-id');
+                    confirmModal.show();
+                });
+            });
+    
+            // Confirmar eliminación dentro del modal
+            confirmDeleteBtn.addEventListener("click", async () => {
+                if (!preguntaIdSeleccionada) return;
+    
+                try {
+                    const response = await fetch(`/preguntas/${preguntaIdSeleccionada}`, {
+                        method: 'DELETE',
+                    });
+    
+                    if (response.ok) {
+                        location.reload(); // Refresca la página
+                    } else {
+                        alert("Error al eliminar la pregunta");
+                    }
+                } catch (error) {
+                    console.error("Error al eliminar la pregunta:", error);
+                } finally {
+                    confirmModal.hide(); // Oculta el modal
+                }
+            });
+        });
     </script>
+    
 </body>

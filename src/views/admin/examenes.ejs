@@ -63,37 +63,74 @@
                     </table>
                 </div>
             </div>
+            
+            <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmModalLabel">Confirmar Eliminación</h5>
+                        </div>
+                        <div class="modal-body">
+                            ¿Estás seguro que deseas eliminar este examen?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn2" id="cancelBtn" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn1" id="confirmDeleteBtn">Eliminar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
         </div>
     </div>
 
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-          document.querySelectorAll('.delete-exam-btn').forEach(button => {
-              button.addEventListener('click', async (event) => {
-                  const examId = event.target.getAttribute('data-id');
-                  
-                  const confirmed = confirm("¿Estás seguro de que deseas eliminar este examen?");
-                  if (!confirmed) return;
-      
-                  try {
-                      const response = await fetch(`/exams/${examId}`, {
-                          method: 'DELETE',
-                      });
-      
-                      if (response.ok) {
-                          alert("Examen eliminado exitosamente");
-                          // Actualiza la vista o redirige según sea necesario
-                          location.reload(); // Opcional: refresca la página para mostrar cambios
-                      } else {
-                          alert("Error al eliminar el examen");
-                      }
-                  } catch (error) {
-                      console.error("Error al enviar la solicitud de eliminación:", error);
-                  }
-              });
-          });
-      });
-      </script>
+        document.addEventListener("DOMContentLoaded", function () {
+        let examIdToDelete = null; // Variable para almacenar el ID del examen a eliminar
+
+        // Añade eventos a todos los botones de eliminación
+        document.querySelectorAll('.delete-exam-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                // Obtiene el ID del examen
+                examIdToDelete = event.target.getAttribute('data-id');
+
+                // Muestra el modal de confirmación
+                const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+                confirmModal.show();
+            });
+        });
+
+        // Maneja la confirmación en el modal
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+            if (!examIdToDelete) return;
+
+            try {
+                const response = await fetch(`/exams/${examIdToDelete}`, {
+                    method: 'DELETE',
+                });
+
+                if (response.ok) {
+                    // Opcional: elimina el examen visualmente sin recargar la página
+                    document.getElementById(`examRow${examIdToDelete}`).remove();
+                } else {
+                    alert("Error al eliminar el examen");
+                }
+            } catch (error) {
+                console.error("Error al enviar la solicitud de eliminación:", error);
+            }
+
+            // Cierra el modal después de confirmar
+            const confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+            confirmModal.hide();
+        });
+    });
+    document.getElementById('cancelBtn').addEventListener('click', function () {
+        const confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+        confirmModal.hide();
+    });
+
+    </script>
     
     
     

@@ -28,9 +28,27 @@
                         </div>
 
                         <div class="text-center">
-                            <button type="submit" class="btn1" id="updateCourseBtn">Actualizar Curso</button>
+                            <button type="button" class="btn1" id="openConfirmModalBtn">Actualizar Curso</button>
                         </div>
                     </form>
+                </div>
+            </div>
+            
+            <!-- Modal de confirmación -->
+            <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmModalLabel">Confirmar Guardar</h5>
+                        </div>
+                        <div class="modal-body">
+                            ¿Estás seguro de que deseas guardar los cambios?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn2" id="cancelBtn" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn1" id="confirmSaveBtn">Guardar</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -39,11 +57,23 @@
     <%- include('../partials/endPageAdmin.ejs'); %>
 
     <script>
-        document.getElementById('courseForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
+        const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal')); // Inicializar el modal
+        const openConfirmModalBtn = document.getElementById('openConfirmModalBtn');
+        const confirmSaveBtn = document.getElementById('confirmSaveBtn');
+        const courseForm = document.getElementById('courseForm');
 
-            // Obtener el nuevo nombre del curso desde el formulario
-            const updatedCourseName = document.getElementById('courseName').value;
+        let updatedCourseName; // Variable para almacenar el nombre del curso
+
+        // Mostrar el modal cuando se haga clic en "Actualizar Curso"
+        openConfirmModalBtn.addEventListener('click', (event) => {
+            event.preventDefault(); // Prevenir el envío del formulario
+            updatedCourseName = document.getElementById('courseName').value; // Obtener el valor del campo
+            confirmModal.show(); // Mostrar el modal
+        });
+
+        // Manejo del botón "Guardar" dentro del modal
+        confirmSaveBtn.addEventListener('click', async () => {
+            confirmModal.hide(); // Cerrar el modal
 
             try {
                 // Enviar los datos al servidor
@@ -58,7 +88,6 @@
                 });
 
                 if (response.ok) {
-                    alert('Curso actualizado con éxito!');
                     // Redirigir después de actualizar
                     window.location.href = '/cursos';
                 } else {

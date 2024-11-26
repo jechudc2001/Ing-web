@@ -49,6 +49,23 @@
                     </form>
                 </div>
             </div>
+            <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmModalLabel">Confirmar Guardado</h5>
+                        </div>
+                        <div class="modal-body">
+                            ¿Estás seguro de que deseas guardar los cambios de este usuario?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn2" id="cancelBtn" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn1" id="confirmSaveBtn">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         </div>
     </div>
 
@@ -63,11 +80,11 @@
                     'Content-Type': 'application/json',
                 },
             };
-
+    
             if (data) {
                 options.body = JSON.stringify(data);
             }
-
+    
             try {
                 const response = await fetch(url, options);
                 if (!response.ok) {
@@ -79,32 +96,42 @@
                 throw error;
             }
         }
-
+    
         // Manejo del envío del formulario
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('editUserForm').addEventListener('submit', async (event) => {
+            const form = document.getElementById('editUserForm');
+            const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal')); // Inicializa el modal
+            const confirmSaveBtn = document.getElementById('confirmSaveBtn'); // Botón de confirmar guardar
+    
+            let formData = {}; // Variable para guardar datos del formulario temporalmente
+    
+            // Mostrar el modal al intentar enviar el formulario
+            form.addEventListener('submit', (event) => {
                 event.preventDefault();
-
+    
                 // Recoger valores del formulario
-                const userId = document.getElementById('userIdHiddenT').value;
-                const nombre_completo = document.getElementById('userNameT').value;
-                const email = document.getElementById('userEmailT').value;
-                const user_type = document.getElementById('userRoleT').value;
-                const password = document.getElementById('userPasswordT').value;
-
-                const userData = {
-                    nombre_completo,
-                    password,
-                    email,
-                    user_type,
+                formData = {
+                    userId: document.getElementById('userIdHiddenT').value,
+                    nombre_completo: document.getElementById('userNameT').value,
+                    email: document.getElementById('userEmailT').value,
+                    user_type: document.getElementById('userRoleT').value,
+                    password: document.getElementById('userPasswordT').value,
                 };
-
-               
-
+    
+                // Mostrar el modal de confirmación
+                confirmModal.show();
+            });
+    
+            // Confirmar y guardar los datos al servidor
+            confirmSaveBtn.addEventListener('click', async () => {
                 try {
-                    const response = await fetchRequest(`/users/${userId}`, 'PUT', userData);
+                    const response = await fetchRequest(`/users/${formData.userId}`, 'PUT', {
+                        nombre_completo: formData.nombre_completo,
+                        password: formData.password,
+                        email: formData.email,
+                        user_type: formData.user_type,
+                    });
                     console.log('Usuario actualizado:', response);
-                    alert('Usuario actualizado exitosamente');
                     window.location.href = '/usuario';
                 } catch (error) {
                     console.error('Error al actualizar el usuario:', error);
@@ -112,6 +139,6 @@
                 }
             });
         });
-
     </script>
+    
 </body>

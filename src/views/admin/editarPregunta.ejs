@@ -14,6 +14,7 @@
                     <form id="editarPreguntaForm" action="/pregunta/<%= pregunta.id_pregunta %>" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="_method" value="PUT"> <!-- Método para actualizar -->
                         <input type="hidden" id="preguntaIdHidden" value="<%= pregunta.id_pregunta %>"> <!-- Input oculto para el ID -->
+                        <input type="hidden" id="examenIdHidden" value="<%= pregunta.id_exam %>"> <!-- Input oculto para el ID -->
                         <div class="mb-3">
                             <label for="cursoEditar" class="form-label">Curso</label>
                             <select class="form-select" name="id_materia" id="cursoEditar" required>
@@ -62,21 +63,24 @@
                             <div class="col-md-6">
                                 <label for="respuestaAEditar" class="form-label">Opciones de respuesta</label>
                                 <input type="text" class="form-control mb-2" name="alternativas[0][texto]" value="<%= pregunta.alternativas[0].texto %>" required>
-                                <input type="text" class="form-control mb-2" name="alternativas[1][texto]" value="<%= pregunta.alternativas[1].texto %>" required>
+                                <input type="text" class="form-control mb-2" name="alternativas[2][texto]" value="<%= pregunta.alternativas[2].texto %>" required>
+                                <input type="text" class="form-control mb-2" name="alternativas[4][texto]" value="<%= pregunta.alternativas[4].texto %>" required>
+
                             </div>
                             <div class="col-md-6 secondCol" >
-                                <input type="text" class="form-control mb-2" name="alternativas[2][texto]" value="<%= pregunta.alternativas[2].texto %>" required>
+                                <input type="text" class="form-control mb-2" name="alternativas[1][texto]" value="<%= pregunta.alternativas[1].texto %>" required>
                                 <input type="text" class="form-control mb-2" name="alternativas[3][texto]" value="<%= pregunta.alternativas[3].texto %>" required>
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="respuestaCorrectaEditar" class="form-label">Seleccione la respuesta correcta</label>
-                            <select class="form-select" name="alternativas[0][es_correcta]" required>
+                            <select class="form-select" name="respuesta_correcta" required>
                                 <option value="A" <%= pregunta.alternativas[0].es_correcta ? 'selected' : '' %>>A</option>
                                 <option value="B" <%= pregunta.alternativas[1].es_correcta ? 'selected' : '' %>>B</option>
                                 <option value="C" <%= pregunta.alternativas[2].es_correcta ? 'selected' : '' %>>C</option>
                                 <option value="D" <%= pregunta.alternativas[3].es_correcta ? 'selected' : '' %>>D</option>
+                                <option value="E" <%= pregunta.alternativas[4]?.es_correcta ? 'selected' : '' %>>E</option>
                             </select>
                         </div>
 
@@ -86,11 +90,36 @@
                     </form>
                 </div>
             </div>
+
+            <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmModalLabel">Confirmar Guardar</h5>
+                        </div>
+                        <div class="modal-body">
+                            ¿Estás seguro de que deseas guardar los cambios?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn2" id="cancelBtn" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn1" id="confirmSaveBtn">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         </div>
         <%- include('../partials/endPageAdmin.ejs'); %>
     </div>
 
     <script>
+
+        document.getElementById('editarPreguntaForm').addEventListener('submit', (event) => {
+            event.preventDefault(); // Evitar el envío inmediato del formulario
+            const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+            confirmModal.show(); // Mostrar el modal de confirmación
+        });
+
         // Aquí puedes agregar el mismo código JavaScript que tenías en 'crearPregunta', adaptado para editar.
         async function fetchRequest(url, method, data) {
             const options = { method };
@@ -110,55 +139,58 @@
             }
         }
 
-        document.getElementById('editarPreguntaForm').addEventListener('submit', async (event) => {
-            event.preventDefault();
+        confirmSaveBtn.addEventListener('click', async () => {
+        const idPregunta = document.getElementById('preguntaIdHidden').value;
+        const idExamen = document.getElementById('examenIdHidden').value;
 
-            const idPregunta = document.getElementById('preguntaIdHidden').value;
-            const idMateria = document.getElementById('cursoEditar').value;
-            const preguntaTexto = document.getElementById('preguntaTextoEditar').value;
-            const imagenPregunta = document.getElementById('imagenPregunta').files[0]; // Si se seleccionó una imagen
-            const alternativaA = document.querySelector('[name="alternativas[0][texto]"]').value;
-            const alternativaB = document.querySelector('[name="alternativas[1][texto]"]').value;
-            const alternativaC = document.querySelector('[name="alternativas[2][texto]"]').value;
-            const alternativaD = document.querySelector('[name="alternativas[3][texto]"]').value;
-            const respuestaCorrecta = document.querySelector('[name="alternativas[0][es_correcta]"]').value;
+        const idMateria = document.getElementById('cursoEditar').value;
+        const preguntaTexto = document.getElementById('preguntaTextoEditar').value;
+        const imagenPregunta = document.getElementById('imagenPregunta').files[0];
+        const alternativas = [
+            document.querySelector('[name="alternativas[0][texto]"]').value,
+            document.querySelector('[name="alternativas[1][texto]"]').value,
+            document.querySelector('[name="alternativas[2][texto]"]').value,
+            document.querySelector('[name="alternativas[3][texto]"]').value,
+            document.querySelector('[name="alternativas[4][texto]"]').value,
+        ];
+        const respuestaCorrecta = document.querySelector('[name="respuesta_correcta"]').value;
 
-            const preguntaData = {
-                id_pregunta: idPregunta,
-                id_materia: idMateria,
-                texto: preguntaTexto,
-                img: imagenPregunta ? imagenPregunta.name : null, 
-                alternativas: [
-                    { texto: alternativaA, es_correcta: (respuestaCorrecta === 'A') ? 1 : 0 },
-                    { texto: alternativaB, es_correcta: (respuestaCorrecta === 'B') ? 1 : 0 },
-                    { texto: alternativaC, es_correcta: (respuestaCorrecta === 'C') ? 1 : 0 },
-                    { texto: alternativaD, es_correcta: (respuestaCorrecta === 'D') ? 1 : 0 }
-                ]
-            };
+        const preguntaData = {
+            id_pregunta: idPregunta,
+            id_materia: idMateria,
+            texto: preguntaTexto,
+            img: imagenPregunta ? imagenPregunta.name : null,
+            alternativas: alternativas.map((texto, index) => ({
+                texto,
+                es_correcta: respuestaCorrecta === String.fromCharCode(65 + index) ? 1 : 0,
+            })),
+        };
 
-            console.log(preguntaData);
+        console.log(preguntaData);
 
-            try {
-                const formData = new FormData();
-                formData.append('id_pregunta', preguntaData.id_pregunta);
-                formData.append('id_materia', preguntaData.id_materia);
-                formData.append('texto', preguntaData.texto);
-                if (preguntaData.img) {
-                    formData.append('img', imagenPregunta);
-                }
-
-                preguntaData.alternativas.forEach((alternativa, index) => {
-                    formData.append(`alternativas[${index}][texto]`, alternativa.texto);
-                    formData.append(`alternativas[${index}][es_correcta]`, alternativa.es_correcta);
-                });
-                
-                const response = await fetchRequest(`/preguntas/${idPregunta}`, 'PUT', formData);
-                console.log('Pregunta editada:', response);
-                alert('Pregunta editada exitosamente');
-            } catch (error) {
-                console.error('Error al editar la pregunta:', error);
-                alert('Hubo un error al editar la pregunta');
+        try {
+            const formData = new FormData();
+            formData.append('id_pregunta', preguntaData.id_pregunta);
+            formData.append('id_materia', preguntaData.id_materia);
+            formData.append('texto', preguntaData.texto);
+            if (preguntaData.img) {
+                formData.append('img', imagenPregunta);
             }
-        });
+
+            preguntaData.alternativas.forEach((alternativa, index) => {
+                formData.append(`alternativas[${index}][texto]`, alternativa.texto);
+                formData.append(`alternativas[${index}][es_correcta]`, alternativa.es_correcta);
+            });
+
+            const response = await fetchRequest(`/preguntas/${idPregunta}`, 'PUT', formData);
+            console.log('Pregunta editada:', response);
+            window.location.href = `/preguntas_ver/${idExamen}`;
+        } catch (error) {
+            console.error('Error al editar la pregunta:', error);
+            alert('Hubo un error al editar la pregunta');
+        }
+    });
+
     </script>
 </body>
+

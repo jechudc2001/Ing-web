@@ -43,36 +43,68 @@
                     </table>
                 </div>
             </div>
+            <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmModalLabel">Confirmar Eliminación</h5>
+                        </div>
+                        <div class="modal-body">
+                            ¿Estás seguro de que deseas eliminar este usuario?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn2" id="cancelBtn" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn1" id="confirmDeleteBtn">Eliminar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         </div>
     </div>
     <%- include('../partials/endPageAdmin.ejs'); %>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll('.delete-user-btn').forEach(button => {
-                button.addEventListener('click', async (event) => {
-                    const userId = event.target.getAttribute('data-id');
-                    
-                    const confirmed = confirm("¿Estás seguro de que deseas eliminar este usuario?");
-                    if (!confirmed) return;
-        
-                    try {
-                        const response = await fetch(`/users/${userId}`, {
-                            method: 'DELETE',
-                        });
-        
-                        if (response.ok) {
-                            alert("Usuario eliminado exitosamente");
-                            // Eliminar la fila del usuario de la tabla sin recargar la página
-                            document.getElementById(`userRow${userId}`).remove();
-                        } else {
-                            alert("Error al eliminar el usuario");
-                        }
-                    } catch (error) {
-                        console.error("Error al enviar la solicitud de eliminación:", error);
-                        alert("Hubo un problema al intentar eliminar el usuario.");
-                    }
-                });
+       document.addEventListener("DOMContentLoaded", function () {
+        let userIdToDelete = null; // Variable para guardar el ID del usuario a eliminar
+
+        document.querySelectorAll('.delete-user-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                // Obtener el ID del usuario desde el botón
+                userIdToDelete = event.target.getAttribute('data-id');
+                // Mostrar el modal
+                const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+                confirmModal.show();
             });
         });
+
+        // Manejar la confirmación de eliminación
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+            if (!userIdToDelete) return;
+
+            try {
+                const response = await fetch(`/users/${userIdToDelete}`, {
+                    method: 'DELETE',
+                });
+
+                if (response.ok) {
+                    // Eliminar la fila del usuario de la tabla
+                    document.getElementById(`userRow${userIdToDelete}`).remove();
+                } else {
+                    alert("Error al eliminar el usuario");
+                }
+            } catch (error) {
+                console.error("Error al enviar la solicitud de eliminación:", error);
+                alert("Hubo un problema al intentar eliminar el usuario.");
+            }
+
+            // Ocultar el modal
+            const confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+            confirmModal.hide();
+
+            // Resetear la variable
+            userIdToDelete = null;
+        });
+    });
+
     </script>
