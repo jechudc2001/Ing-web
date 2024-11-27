@@ -1,5 +1,6 @@
 import Sequelize from 'sequelize';
 import dotenv from 'dotenv';
+import mysql2 from 'mysql2'; // Needed to fix sequelize issues with WebPack
 
 // Carga las variables de entorno desde el archivo .env
 dotenv.config();
@@ -12,7 +13,8 @@ const sequelize = new Sequelize(
   {
     host: process.env.DB_HOST, // Host de la base de datos
     port: process.env.DB_PORT, // Puerto de la base de datos
-    dialect: 'mysql',          // Tipo de base de datos
+    dialect: 'mysql', 
+    dialectModule: mysql2, // Needed to fix sequelize issues with WebPack
   }
 );
 
