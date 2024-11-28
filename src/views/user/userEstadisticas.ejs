@@ -1,0 +1,174 @@
+<%- include('../partials/layoutsAdmin.ejs'); %>
+<body>
+    <div class="wrapper">
+        <%- include('../partials/sidebarUser.ejs'); %> 
+
+        <div id="main-content" class="main p-3">
+            <%- include('../partials/header.ejs'); %>
+
+            <!-- contenido principal-->
+            <h2 class="titulo-dashboard">Estadísticas de Usuario</h2>
+
+            <div class="contenedor-dashboard d-flex flex-column flex-lg-row">
+                <!-- Gráfico de barras de rendimiento por curso -->
+                <div class="chart-container col-12 col-lg-6 mb-4 mb-lg-0" style="padding-right: 20px;">
+                    <div class="fondo-dashboard">
+                        <h6 style="font-weight: bold;">Rendimiento por Curso (%)</h6>
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Gráfico de barras con porcentaje de aprobados y desaprobados -->
+                <div class="chart-container col-12 col-lg-6 mb-4 mb-lg-0" style="padding-left: 20px;">
+                    <div class="fondo-dashboard">
+                        <h6 style="font-weight: bold;">Exámenes Aprobados</h6>
+                        <canvas id="examStatsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Historial de exámenes debajo de los gráficos -->
+            <h6 class="titulo-dashboard">Historial de Exámenes</h6>
+
+            <div class="table-container">
+                <div class="fondo-dashboard">
+
+                    <table class="table table-striped" id="tablaExamenes">
+                        <thead>
+                            <tr>
+                                <th scope="col">Examen</th>
+                                <th scope="col">Canal</th>
+                                <th scope="col">Modo</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Nota</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Las filas se llenarán con JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Incluir Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    // Datos para el gráfico de barras (Rendimiento por curso)
+    const cursos = ['Matemáticas', 'Física', 'Historia', 'Biología']; // Ejemplo de cursos
+    const rendimientos = [85, 70, 95, 80]; // Porcentaje de rendimiento en los cursos
+    const colores = ['#007bff', '#28a745', '#ffc107', '#dc3545']; // Colores personalizados para cada barra
+
+    // Crear gráfico de barras para rendimiento por curso
+    var ctxBar = document.getElementById('barChart').getContext('2d');
+    var barChart = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: cursos,
+            datasets: [{
+                label: 'Rendimiento por Curso (%)',
+                data: rendimientos,
+                backgroundColor: colores, // Asigna un color diferente a cada barra
+                borderColor: '#0056b3', // Color de borde
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100 // Mostrar porcentaje de 0 a 100
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+        // Datos de exámenes para el gráfico de barras (Aprobados vs Desaprobados)
+        const examenesAprobados = 70; // Porcentaje de aprobados
+        const examenesDesaprobados = 30; // Porcentaje de desaprobados
+
+        // Crear gráfico de barras para estadísticas de exámenes
+        var ctxBarStats = document.getElementById('examStatsChart').getContext('2d');
+        var examStatsChart = new Chart(ctxBarStats, {
+            type: 'bar',
+            data: {
+                labels: ['Aprobados', 'Desaprobados'],
+                datasets: [{
+                    label: 'Estadísticas de Exámenes',
+                    data: [examenesAprobados, examenesDesaprobados],
+                    backgroundColor: ['#28a745', '#dc3545'], // Verde para aprobados, rojo para desaprobados
+                    borderColor: ['#fff', '#fff'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100 // Mostrar porcentajes de 0 a 100
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Arreglo de exámenes
+        const examenes = [
+            { examen: 'Cepu Otoño 1 2023', canal: 1, modo: 'Práctica', fecha: '12/02/2024', nota: '92' },
+            { examen: 'Cepu Verano 1 2023', canal: 2, modo: 'Práctica', fecha: '25/11/2023', nota: '78' },
+            { examen: 'Fase 2 2023', canal: 1, modo: 'Simulacro', fecha: '15/07/2023', nota: '90' },
+            { examen: 'Fase 1 2023', canal: 2, modo: 'Simulacro', fecha: '10/03/2023', nota: '185' }
+        ];
+
+        // Función para llenar la tabla de exámenes
+        function cargarTablaExamenes() {
+            const tbody = document.getElementById('tablaExamenes').getElementsByTagName('tbody')[0];
+            
+            // Limpiar cualquier fila existente
+            tbody.innerHTML = '';
+            
+            // Recorrer el arreglo de exámenes y agregar las filas
+            examenes.forEach(examen => {
+                const fila = document.createElement('tr');
+                
+                const celdaExamen = document.createElement('td');
+                celdaExamen.textContent = examen.examen;
+                fila.appendChild(celdaExamen);
+                
+                const celdaCanal = document.createElement('td');
+                celdaCanal.textContent = examen.canal === 1 ? '1' : '2'; // Mostrar "Canal 1" o "Canal 2"
+                fila.appendChild(celdaCanal);
+                
+                const celdaModo = document.createElement('td');
+                celdaModo.textContent = examen.modo; // Mostrar "Práctica" o "Simulacro"
+                fila.appendChild(celdaModo);
+                
+                const celdaFecha = document.createElement('td');
+                celdaFecha.textContent = examen.fecha;
+                fila.appendChild(celdaFecha);
+                
+                const celdaNota = document.createElement('td');
+                celdaNota.textContent = examen.nota;
+                fila.appendChild(celdaNota);
+                
+                tbody.appendChild(fila);
+            });
+        }
+
+        // Llamar la función para llenar la tabla
+        cargarTablaExamenes();
+    </script>
+
+    <%- include('../partials/endPageAdmin.ejs'); %>
+</body>

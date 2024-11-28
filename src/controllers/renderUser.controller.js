@@ -538,3 +538,27 @@ export const renderUserRespuestas = async (req, res) => {
     res.status(500).render('error', { message: 'Error al cargar las respuestas del usuario' });
   }
 };
+
+export const renderUserEstadisticas= (req, res) => {
+  
+  let user = req.session.user;
+
+      // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
+     
+      if (!user) {
+          user = {
+              id: 0, // ID ficticio
+              email: 'test@example.com',
+              username: 'Usuario Prueba',
+              role: 'user', // O 'admin' según tus necesidades
+          };
+      }
+
+      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
+      if (!user) {
+          return res.status(401).json({ message: 'No estás autenticado' });
+      }
+  // Obtén todos los cursos desde la base de datos
+  res.render("user/userEstadisticas", { title: "Estadisticas",user:user }
+  );
+};

@@ -1,5 +1,3 @@
-<% title = 'Editar Examen' %> <!-- Establecer el título -->
-
 <%- include('../partials/layoutsAdmin.ejs'); %> 
 
 <body>
@@ -30,7 +28,7 @@
                             <% userT.forEach((user, index) => { %>
                               <tr id="userRow<%= user.id_usuario %>">
                                 <th scope="row" id="userNumber<%= index + 1 %>"><%= user.id_usuario %></th>
-                                <td id="userName<%= index + 1 %>"><%= user.nombre_completo %></td> <!-- Actualización aquí -->
+                                <td id="userName<%= index + 1 %>"><%= user.nombre_completo %></td>
                                 <td id="userEmail<%= index + 1 %>"><%= user.email %></td>
                                 <td id="userRole<%= index + 1 %>"><%= user.user_type %></td>
                                 <td id="userActions<%= index + 1 %>">
@@ -41,8 +39,37 @@
                             <% }); %>
                         </tbody>
                     </table>
+                    
+                    <!-- Tabla para cantidad de usuarios y admins -->
+                    
                 </div>
+                <div class="fondo-dashboard">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Rol</th>
+                                <th scope="col">Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Estudiantes</td>
+                                <td><%= userT.filter(user => user.user_type === 2).length %></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Administradores</td>
+                                <td><%= userT.filter(user => user.user_type === 1).length %></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
             </div>
+            
+            <!-- Modal de confirmación -->
             <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -59,9 +86,9 @@
                     </div>
                 </div>
             </div>
-            
         </div>
     </div>
+
     <%- include('../partials/endPageAdmin.ejs'); %>
 
     <script>
@@ -106,5 +133,5 @@
             userIdToDelete = null;
         });
     });
-
     </script>
+</body>

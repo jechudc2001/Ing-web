@@ -11,6 +11,7 @@ import {
     renderUserCalificacion,
     renderUserGenerarAleatorio,
     renderUserRespuestas,
+    renderUserEstadisticas,
 
 } from '../controllers/renderUser.controller.js';
 
@@ -27,6 +28,7 @@ router.get('/userModoSimulacro/:id', renderUserModoSimulacro);
 router.get('/userCalificacion/:id', renderUserCalificacion);
 router.get('/userGenerarAleatorio', renderUserGenerarAleatorio);
 router.get('/userRespuestas/:id', renderUserRespuestas);
+router.get('/userEstadisticas', renderUserEstadisticas);
 
 
 

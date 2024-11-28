@@ -680,3 +680,27 @@ export const renderEditarPregunta = async (req, res) => {
 
 
 
+export const renderAdminEstadisticas = (req, res) => {
+  let user = req.session.user;
+
+  // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
+ 
+  if (!user) {
+      user = {
+          id: 0, // ID ficticio
+          email: 'test@example.com',
+          username: 'Admin Prueba',
+          role: 'admin', // O 'admin' según tus necesidades
+      };
+  }
+  
+  // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
+  if (!user) {
+      return res.status(401).json({ message: 'No estás autenticado' });
+  }
+/*
+  if (user.role == 'user') {
+    return res.status(401).json({ message: 'No tienes acceso a esta interfaz de administrador' });
+  }*/
+    res.render("admin/adminEstadisticas", { title: "Actualizar datos", user: user });
+};
