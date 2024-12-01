@@ -51,7 +51,7 @@
                             </select>
                         </div>
 
-                        <a href="/editar_examen" class="optionLink" id="addQuestion">Agregar Preguntas</a>
+                        <a href="#" class="optionLink" id="addQuestion">Agregar Preguntas</a>
                     
                         <div class="text-center">
                             <button type="submit" class="btn1" id="createExamBtn">Crear Examen</button>
@@ -134,6 +134,41 @@
                 alert('Hubo un error al crear el examen');
             }
         });
+
+
+
+        document.getElementById('addQuestion').addEventListener('click', async (event) => {
+            event.preventDefault(); // Previene el comportamiento predeterminado del enlace
+
+            // Recoger valores del formulario
+            const examType = document.getElementById('examType').value;
+            const year = document.getElementById('year').value;
+            const channel = document.getElementById('channel').value;
+
+            const examData = {
+                exam_type: examType,
+                year: year,
+                canal: channel
+            };
+
+            console.log(examData);
+            try {
+                // Llamada a la función fetchRequest para enviar el formulario
+                const response = await fetchRequest('/exams', 'POST', examData);
+                console.log('Examen creado:', response);
+
+                // Redireccionar al formulario de agregar preguntas con la ID del examen creado
+                if (response && response.id) {
+                    window.location.href = `/crearPregunta/${response.id}`;
+                } else {
+                    alert('No se pudo obtener la ID del examen creado.');
+                }
+            } catch (error) {
+                console.error('Error al crear el examen:', error);
+                alert('Hubo un error al crear el examen');
+            }
+        });
+
     </script>
 
     <%- include('../partials/endPageAdmin.ejs'); %>

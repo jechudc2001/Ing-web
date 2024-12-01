@@ -49,6 +49,7 @@
                     <h1 class="titulo-dashboard" id="tituloDashboard">Modo Simulacro</h1>
                 </div>
                 <input type="hidden" id="idExamen" value="<%= exam.id_exam %>">
+                <input type="hidden" id="tiempoExamSim" value="<%= reglas.tiempo_examen_simulacro %>">
 
                 <div class="fondo-preguntas" id="fondoPreguntasUsuario">
                     <div class="mb-1">
@@ -170,6 +171,8 @@
                 document.getElementById('minutes').textContent = "00";
                 document.getElementById('seconds').textContent = "00";
                 alert("¡El tiempo se ha agotado!");
+
+                //quiero q se envie el examen aqui 
                 
                 // Opcional: Deshabilitar preguntas o enviar automáticamente las respuestas
                 document.querySelectorAll('.input-alternativa').forEach(input => input.disabled = true);
@@ -179,7 +182,8 @@
 
     // Inicializa el temporizador al cargar la página
     document.addEventListener('DOMContentLoaded', () => {
-        const duration = 2 * 60 * 60; // 2 horas en segundos (7200 segundos)
+        tiempoMin = document.getElementById('tiempoExamSim').value;
+        const duration = tiempoMin * 60; // 2 horas en segundos (7200 segundos)
         startTimer(duration);
     });
 
@@ -264,6 +268,98 @@
         const confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
         confirmModal.hide();
     });
+
+
+    function startTimer(duration, display) {
+    let timer = duration, hours, minutes, seconds;
+
+    const interval = setInterval(() => {
+        // Calcula horas, minutos y segundos
+        hours = Math.floor(timer / 3600);
+        minutes = Math.floor((timer % 3600) / 60);
+        seconds = timer % 60;
+
+        // Formatea como HH:MM:SS
+        hours = hours < 10 ? '0' + hours : hours;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+
+        // Actualiza los divs individuales
+        document.getElementById('hours').textContent = hours;
+        document.getElementById('minutes').textContent = minutes;
+        document.getElementById('seconds').textContent = seconds;
+
+        if (--timer < 0) {
+            clearInterval(interval);
+            document.getElementById('hours').textContent = "00";
+            document.getElementById('minutes').textContent = "00";
+            document.getElementById('seconds').textContent = "00";
+            alert("¡El tiempo se ha agotado!");
+            
+            // Enviar el examen automáticamente cuando el tiempo se acaba
+            enviarExamenAutomaticamente();
+        }
+    }, 1000);
+}
+
+    // Función que se llama cuando el tiempo se acaba
+    async function enviarExamenAutomaticamente() {
+        // Detener el temporizador
+        clearInterval(timerInterval);
+
+        const id_exam = document.getElementById('idExamen').value;
+        const tiempoFinal = secondsElapsed; // Tiempo total en segundos
+        const respuestas = [];
+
+        // Obtener todas las preguntas
+        const idsPreguntas = [];
+        document.querySelectorAll('input[type="hidden"][id="idPreguntaxd"]').forEach(input => {
+            idsPreguntas.push(input.value); // Agregar el id de la pregunta al arreglo
+        });
+
+        // Para cada pregunta, obtener la respuesta seleccionada o null si no tiene respuesta
+        document.querySelectorAll('.alternativas').forEach((alternativaContainer, index) => {
+            const idPregunta = idsPreguntas[index]; // Usar el id de la pregunta de los inputs ocultos
+            const alternativaSeleccionada = alternativaContainer.querySelector('input:checked');
+
+            if (alternativaSeleccionada) {
+                const idAlternativa = alternativaSeleccionada.dataset.idAlternativa; // Obtén el id_alternativa
+                respuestas.push({ idPregunta, idAlternativa }); // Guarda como objeto
+            } else {
+                respuestas.push({ idPregunta, idAlternativa: null });
+            }
+        });
+
+        // Datos que se enviarán al servidor
+        const data = {
+            id_exam,
+            respuestas,
+            tiempoFinal
+        };
+
+        // Enviar los datos al servidor mediante POST
+        try {
+            const response = await fetch('/calcular', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data), // Enviar los datos como JSON
+            });
+
+            const result = await response.json(); // Supongamos que el servidor responde con un JSON
+            if (response.ok) {
+                console.log('Puntaje calculado con éxito:', result);
+
+                const simulationId = result.simulation.id_simulation; // Asegúrate de que el servidor envíe este dato
+                window.location.href = `/userCalificacion/${simulationId}`;
+            } else {
+                console.error('Error al calcular el puntaje:', result);
+            }
+        } catch (error) {
+            console.error('Error en la solicitud al servidor:', error);
+        }
+    }
 
 </script>
 

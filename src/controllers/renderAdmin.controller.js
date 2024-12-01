@@ -8,6 +8,7 @@ import Simulation from '../models/simulation.js';
 import SimulationResult from '../models/simulation_result.js';
 import User from '../models/user.js';
 import Alternativa from '../models/alternativa.js';
+import sequelize from '../../config/dbConfig.js';
 
 
 export const renderActualizarAdmin = (req, res) => {
@@ -23,6 +24,7 @@ export const renderActualizarAdmin = (req, res) => {
           role: 'admin', // O 'admin' según tus necesidades
       };
   }
+  
   
   // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
   if (!user) {
@@ -679,28 +681,65 @@ export const renderEditarPregunta = async (req, res) => {
 };
 
 
-
-export const renderAdminEstadisticas = (req, res) => {
+export const renderAdminEstadisticas = async (req, res) => {
   let user = req.session.user;
 
   // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
- 
   if (!user) {
       user = {
           id: 0, // ID ficticio
           email: 'test@example.com',
           username: 'Admin Prueba',
-          role: 'admin', // O 'admin' según tus necesidades
+          role: 'admin',
       };
   }
-  
-  // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
+
+  // Verifica nuevamente si no hay usuario
   if (!user) {
       return res.status(401).json({ message: 'No estás autenticado' });
   }
-/*
-  if (user.role == 'user') {
-    return res.status(401).json({ message: 'No tienes acceso a esta interfaz de administrador' });
-  }*/
-    res.render("admin/adminEstadisticas", { title: "Actualizar datos", user: user });
+
+  try {
+      // Consulta a las vistas
+      const [aprobadosDesaprobadosResult] = await sequelize.query(
+          'SELECT * FROM vista_aprobados_desaprobados', 
+          {
+              type: sequelize.QueryTypes.SELECT,
+          }
+      );
+
+      const [distribucionClasificacionesResult] = await sequelize.query(
+          'SELECT * FROM vista_distribucion_clasificaciones', 
+          {
+              type: sequelize.QueryTypes.SELECT,
+          }
+      );
+
+      const [simulacionesResult] = await sequelize.query(
+          'SELECT * FROM vista_simulaciones', 
+          {
+              type: sequelize.QueryTypes.ROW,
+          }
+      );
+
+     
+     console.log(aprobadosDesaprobadosResult)
+     console.log(distribucionClasificacionesResult)
+     console.log(simulacionesResult)
+
+      
+      // Pasa los datos a la vista
+      res.render("admin/adminEstadisticas", {
+          title: "Actualizar datos",
+          user: user,
+          aprobadosDesaprobadosResult,
+          distribucionClasificacionesResult,
+          simulaciones: simulacionesResult,
+      });
+
+  } catch (error) {
+      console.error("Error ejecutando las consultas:", error);
+      res.status(500).json({ message: 'Error al obtener los datos' });
+  }
 };
+

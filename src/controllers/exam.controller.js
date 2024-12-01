@@ -6,10 +6,19 @@ import ExamType from '../models/examType.js';
 export const createExam = async (req, res) => {
   try {
     const { canal, exam_type, year } = req.body;
+
+    // Crear el examen
     const nuevoExam = await Exam.create({ canal, exam_type, year });
-    res.status(201).json(nuevoExam);
+    console.log(nuevoExam);
+    // Responder con un mensaje y la ID del examen creado
+    res.status(201).json({ 
+      message: 'Examen creado con éxito', 
+      id: nuevoExam.id_exam
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    // Manejo de errores
+    console.error('Error al crear el examen:', error);
+    res.status(500).json({ message: 'Error al crear el examen' });
   }
 };
 

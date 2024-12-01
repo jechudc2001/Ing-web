@@ -12,6 +12,9 @@ import canalMateria from '../models/canalMateria.js';
 import Sequelize from 'sequelize';
 
 
+import sequelize from '../../config/dbConfig.js';
+
+
 
 export const renderUserDashboard = async (req, res) => {
     try {
@@ -539,26 +542,57 @@ export const renderUserRespuestas = async (req, res) => {
   }
 };
 
-export const renderUserEstadisticas= (req, res) => {
-  
+export const renderUserEstadisticas = async (req, res) => {
   let user = req.session.user;
 
-      // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
-     
-      if (!user) {
-          user = {
-              id: 0, // ID ficticio
-              email: 'test@example.com',
-              username: 'Usuario Prueba',
-              role: 'user', // O 'admin' según tus necesidades
-          };
-      }
+  // If no user is authenticated and you're in production, assign a test user
+  if (!user) {
+      user = {
+          id: 0, // Fictitious ID
+          email: 'test@example.com',
+          username: 'Usuario Prueba',
+          role: 'user', // Or 'admin' based on your needs
+      };
+  }
 
-      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-      if (!user) {
-          return res.status(401).json({ message: 'No estás autenticado' });
-      }
-  // Obtén todos los cursos desde la base de datos
-  res.render("user/userEstadisticas", { title: "Estadisticas",user:user }
-  );
+  // If there's still no user, return an unauthorized status
+  if (!user) {
+      return res.status(401).json({ message: 'No estás autenticado' });
+  }
+
+  try {
+      // Call the stored procedures and get the results
+      const [estadisticasResult] = await sequelize.query('CALL obtener_estadisticas_por_usuario(:p_id_usuario)', {
+          replacements: { p_id_usuario: user.id },
+          type: sequelize.QueryTypes.SELECT,
+      });
+
+      const [aprobadosDesaprobadosResult] = await sequelize.query('CALL sp_aprobados_desaprobados(:user_id)', {
+          replacements: { user_id: user.id },
+          type: sequelize.QueryTypes.RAW,
+      });
+
+      const [simulacionesResult] = await sequelize.query('CALL sp_simulaciones_por_usuario(:user_id)', {
+          replacements: { user_id: user.id },
+          type: sequelize.QueryTypes.SELECT,
+      });
+
+      //console.log( estadisticasResult );
+      //console.log(aprobadosDesaprobadosResult);
+      //console.log(simulacionesResult);
+
+      // Render the user statistics page and pass the data from the stored procedures
+      res.render("user/userEstadisticas", {
+          title: "Estadisticas",
+          user: user,
+          estadisticas: estadisticasResult,
+          aprobadosDesaprobados: aprobadosDesaprobadosResult,
+          simulaciones: simulacionesResult
+      });
+
+  } catch (error) {
+      console.error('Error fetching user statistics:', error);
+      res.status(500).json({ message: 'Error en el servidor' });
+  }
 };
+

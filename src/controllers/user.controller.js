@@ -69,6 +69,72 @@ export const updateUser = async (req, res) => {
   }
 };
 
+
+// Actualizar un usuario (excepto user_type y password)
+export const updateUserBasic = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nombre_completo, email } = req.body;
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    // Actualizar solo los campos permitidos
+    if (nombre_completo) user.nombre_completo = nombre_completo;
+    if (email) user.email = email;
+
+    await user.save();
+
+     
+    if (req.session.user && req.session.user.id === parseInt(id)) {
+      req.session.user.username = nombre_completo || req.session.user.nombre_completo;
+      req.session.user.email = email || req.session.user.email;
+    }
+
+    console.log(req.session.user);
+    console.log(nombre_completo);
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+// Actualizar solo la contraseña de un usuario
+export const updatePassword = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { password } = req.body;
+
+    if (!password) {
+      return res.status(400).json({ message: 'La contraseña es requerida' });
+    }
+
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    // Generar un nuevo hash para la contraseña
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Actualizar solo la contraseña
+    user.password = hashedPassword;
+
+    await user.save();
+
+    res.status(200).json({ message: 'Contraseña actualizada exitosamente' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+
 // Eliminar un usuario
 export const deleteUser = async (req, res) => {
   try {

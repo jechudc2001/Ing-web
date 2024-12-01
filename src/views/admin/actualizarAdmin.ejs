@@ -1,4 +1,4 @@
-<% title = 'Actualizar Datos y Cambiar Contraseña' %> <!-- Establecer el título -->
+<% title = 'Actualizar Datos y Cambiar Contraseña' %> 
 <%- include('../partials/layoutsAdmin.ejs'); %>
 
 <body>
@@ -13,38 +13,34 @@
                 <button type="button" class="btn-seccion btn-secondary" onclick="showSection('changePassword', this)">Cambiar Contraseña</button>
             </div>
             
-            
-
+            <!-- Sección para actualizar datos -->
             <div id="updateData" class="contenedor-dashboard" style="display: block;">
                 <h1 class="titulo-dashboard">Actualizar Datos</h1>
                 <div class="fondo-dashboard">
-                    <form id="updateUserForm" method="POST">
+                    <input type="hidden" id="userIdHidden" value="<%= user.id %>">
+                    <form id="updateUserForm">
                         <div class="mb-3">
-                            <label for="userFirstName" class="form-label">Nombres</label>
-                            <input type="text" class="form-control" id="userFirstName" name="nombres" placeholder="Ingrese nombres del usuario" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="userLastName" class="form-label">Apellidos</label>
-                            <input type="text" class="form-control" id="userLastName" name="apellidos" placeholder="Ingrese apellidos del usuario" required>
+                            <label for="userFirstName" class="form-label">Nombres y apellidos</label>
+                            <input type="text" class="form-control" id="userFirstName" name="nombres" value="<%= user.username %>" placeholder="Ingrese nombres del usuario" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="userEmail" class="form-label">Correo Electrónico</label>
-                            <input type="email" class="form-control" id="userEmail" name="email" placeholder="Ingrese correo electrónico" required>
+                            <input type="email" class="form-control" id="userEmail" name="email" value="<%= user.email %>" placeholder="Ingrese correo electrónico" required>
                         </div>
 
                         <div class="text-center">
-                            <button type="submit" class="btn1" id="saveChangesBtn">Guardar cambios</button>
+                            <button type="button" class="btn1" id="saveChangesBtn" onclick="updateUser()">Guardar cambios</button>
                         </div>
                     </form>
                 </div>
             </div>
 
+            <!-- Sección para cambiar contraseña -->
             <div id="changePassword" class="contenedor-dashboard" style="display: none;">
                 <h1 class="titulo-dashboard">Cambiar Contraseña</h1>
                 <div class="fondo-dashboard">
-                    <form id="changePasswordForm" method="POST">
+                    <form id="changePasswordForm">
                         <div class="mb-3">
                             <label for="newPassword" class="form-label">Nueva Contraseña</label>
                             <input type="password" class="form-control" id="newPassword" name="new_password" placeholder="Ingrese nueva contraseña" minlength="6" required>
@@ -56,12 +52,11 @@
                         </div>
 
                         <div class="text-center">
-                            <button type="submit" class="btn1" id="savePasswordBtn">Guardar contraseña</button>
+                            <button type="button" class="btn1" id="savePasswordBtn" onclick="changePassword()">Guardar contraseña</button>
                         </div>
                     </form>
                 </div>
             </div>
-
         </div>
     </div>
     <%- include('../partials/endPageAdmin.ejs'); %>
@@ -85,6 +80,63 @@
             // Agregar la clase active al botón que se clicó
             button.classList.add('active');
         }
+
+        async function updateUser() {
+            const userId = document.getElementById('userIdHidden').value;
+            const nombre_completo = document.getElementById('userFirstName').value;
+            const email = document.getElementById('userEmail').value;
+
+            try {
+                const response = await fetch(`/users/${userId}/basic`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ nombre_completo, email }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al actualizar los datos');
+                }
+
+                alert('Datos actualizados correctamente');
+            } catch (error) {
+                console.error(error);
+                alert('Error al actualizar los datos');
+            }
+        }
+
+        async function changePassword() {
+            const userId = document.getElementById('userIdHidden').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+            if (newPassword !== confirmNewPassword) {
+                alert('Las contraseñas no coinciden');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/users/${userId}/password`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ password: newPassword }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al cambiar la contraseña');
+                }
+
+                alert('Contraseña cambiada correctamente');
+            } catch (error) {
+                console.error(error);
+                alert('Error al cambiar la contraseña');
+            }
+        }
+
+
     </script>
     
 </body>

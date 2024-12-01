@@ -73,6 +73,7 @@ export const calcularPuntaje = async (req, res) => {
                 return {
                     id_simulation,
                     id_pregunta: idPregunta,
+                    id_usuario: user.id,
                     respuesta_seleccionada: idAlternativa ? String.fromCharCode(65 + (idAlternativa % 5)) : null, // Ejemplo: A, B, C...
                     es_correcta: esCorrecta,
                     puntaje
