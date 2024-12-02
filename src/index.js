@@ -3,7 +3,7 @@ import path from "path"; // Para manejar rutas de archivos
 import { fileURLToPath } from "url";
 import session from "express-session";
 import redis from "redis";
-import * as connectRedis from 'connect-redis';
+import connectRedis from "connect-redis";
 
 const app = express();
 
@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 
 // Crear el cliente Redis
-const RedisStore = connectRedis(session);
+const RedisStore = connectRedis(session);  // Correctly use the RedisStore constructor
 const redisClient = redis.createClient({
   host: 'localhost',  // Cambiar si el servidor Redis está en otro lugar
   port: 6379,         // Puerto de Redis
