@@ -44,7 +44,8 @@ export const calcularPuntaje = async (req, res) => {
         });
 
         const id_simulation = simulation.id_simulation;
-
+        console.log("xdxd")
+        console.log(respuestas);
         let puntajeTotal = 0;
 
         // Procesar respuestas y calcular el puntaje
@@ -74,7 +75,7 @@ export const calcularPuntaje = async (req, res) => {
                     id_simulation,
                     id_pregunta: idPregunta,
                     id_usuario: user.id,
-                    respuesta_seleccionada: idAlternativa ? String.fromCharCode(65 + (idAlternativa % 5)) : null, // Ejemplo: A, B, C...
+                    respuesta_seleccionada: idAlternativa ? String.fromCharCode(65 + ((idAlternativa - 493) % 5)) : null, // A, B, C... empezando desde 493
                     es_correcta: esCorrecta,
                     puntaje
                 };
