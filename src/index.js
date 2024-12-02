@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import session from "express-session";
 import memoryStore from "memorystore"; 
 
+export const maxDuration = 300;
 
 // Importar rutas
 import authRoutes from "./routes/auth.routes.js";
@@ -36,6 +37,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Middleware para analizar cuerpos JSON
 app.use(express.json());
+
 
 
 const MemoryStore = memoryStore(session);
