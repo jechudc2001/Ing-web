@@ -62,7 +62,7 @@
                                 <%= getMateriaName(preg.id_materia) %> <!-- Mostrar nombre de la materia -->
                             </div>
                             <div class="pregunta" id="preguntaTexto<%= index + 1 %>">
-                                <p class="pregunta-texto"><%= preg.texto %></p>
+                                <p class="pregunta-texto" style="white-space: pre-wrap;"><%= preg.texto %></p>
 
                                 <% if (preg.img) { %>
                                     <div class="pregunta-imagen">
@@ -80,7 +80,7 @@
                                             <% } else { %>
                                                 <span class="checkmark incorrecta"></span>
                                             <% } %>
-                                            <span class="texto"><%= String.fromCharCode(65 + altIndex) %>) <%= alt.texto.trim() %></span>
+                                            <span class="texto" style="white-space: pre-wrap;"><%= String.fromCharCode(65 + altIndex) %>) <%= alt.texto %></span>
                                         </label>
                                     <% }); %>
                                 </div>

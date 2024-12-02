@@ -253,6 +253,9 @@ input[type="checkbox"]:checked + .custom-checkbox-indicator {
     background-color: var(--blue);
     border-color: var(--blue);
 }
+.texto {
+    white-space: pre-wrap;
+}
 
 input[type="checkbox"]:checked + .custom-checkbox-indicator::after {
     content: "✔";
