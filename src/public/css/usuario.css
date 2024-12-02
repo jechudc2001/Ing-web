@@ -165,8 +165,7 @@
 }
 
 /* Personalización del checkbox */
-/* Personalización del checkbox con bordes redondeados */
-.custom-checkbox {
+ .custom-checkbox {
     width: 18px; /* Tamaño cuadrado */
     height: 18px;
     border: 2px solid #e4e1e1;
@@ -247,7 +246,7 @@ input[type="checkbox"] {
     cursor: pointer;
     position: relative;
     z-index: 0;
-    border-radius: 20%; /* Esto redondea los bordes */
+    border-radius: 20%;  
 }
 
 input[type="checkbox"]:checked + .custom-checkbox-indicator {
@@ -395,10 +394,14 @@ input[type="checkbox"]:checked + .custom-checkbox-indicator::after {
     #timer {
         margin-top: 5px;  /* Ajusta el margen superior para moverlo más arriba */
         margin-left: 0px;  /* Ajusta el margen superior para moverlo más arriba */
-        margin-right: 0px;  /* Ajusta el margen superior para moverlo más arriba */
-        margin-bottom: 0px; /* Añade más margen inferior si es necesario */
+        margin-right: 0px;   
+        margin-bottom: 0px;  
     }
     .form-flex {
-        flex-direction: column; /* Cambia la dirección a columna */
+        flex-direction: column;  
+    }
+    .d-flex {
+        flex-direction: column;   
+        align-items: flex-start; 
     }
 }

@@ -187,3 +187,13 @@ header {
     color: #d1d1d191; 
 }
 
+/* Media Query para pantallas pequeñas (ajusta el ancho según tus necesidades) */
+@media (max-width: 768px) {
+    #sidebar {
+        width: 70px; /* Mantén el sidebar pequeño por defecto en pantallas pequeñas */
+        min-width: 70px;
+    }
+    #sidebar.expand {
+        width: 260px;
+    }
+}
