@@ -5,7 +5,7 @@ import sequelize from '../../config/dbConfig.js';
 import Materia from './materia.js';
 import Canal from './canal.js';
 
-const CanalMateria = sequelize.define('CanalMaterias', {
+const CanalMateria = sequelize.define('Canalmateria', {
   
   cantidadPreguntas: {
     type: DataTypes.INTEGER, // Tipo entero
@@ -13,7 +13,7 @@ const CanalMateria = sequelize.define('CanalMaterias', {
     defaultValue: 0, // Valor predeterminado, si lo deseas
   }
 }, {
-  tableName: 'canalMateria', // Cambia esto si el nombre de tu tabla es diferente
+  tableName: 'canalmateria', // Cambia esto si el nombre de tu tabla es diferente
   timestamps: false,
 });
 
@@ -30,6 +30,7 @@ Materia.belongsToMany(Canal, {
   foreignKey: 'MateriumIdMateria', // Clave foránea en la tabla intermedia que apunta a Materia
   otherKey: 'CanalIdCanal', // Clave foránea que apunta a Canal
 });
+
 
 
 
