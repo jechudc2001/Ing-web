@@ -1,6 +1,20 @@
 <% title = 'Editar Examen' %> <!-- Título de la página -->
 <%- include('../partials/layoutsAdmin.ejs'); %>
+<% 
+  const examTypeNames = {
+    1: "Fase 1",
+    2: "Fase 2",
+    3: "Cepu Verano 1",
+    4: "Cepu Verano 2",
+    5: "Cepu Otoño 1",
+    6: "Cepu Otoño 2",
+    7: "Cepu Invierno 1",
+    8: "Cepu Invierno 2",
+    
+  };
 
+  const getExamTypeName = (type) => examTypeNames[type] || "Tipo desconocido";
+%>
 <body>
     <div class="wrapper">
         <%- include('../partials/sidebarAdmin.ejs'); %>
@@ -13,8 +27,8 @@
                 <div class="fondo-dashboard">
                     <form id="editExamForm">
                         <div class="mb-3">
-                            <label for="examId" class="form-label">ID del Examen:</label>
-                            <span id="examId"><%= exam.id_exam %></span>
+                            <label for="examId" class="form-label">Examen:</label>
+                            <span id="examId"><%= getExamTypeName(exam.id_exam) %></span>
                             <input type="hidden" id="examIdHidden" value="<%= exam.id_exam %>">
                         </div>
                     

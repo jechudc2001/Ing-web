@@ -20,6 +20,7 @@ import simulationRestultRoute from "./routes/simulationResult.routes.js";
 import userRoute from "./routes/user.routes.js";
 import canalMateriaRoutes from './routes/canalMateria.routes.js';
 import calificacion from './routes/calificacion.routes.js';
+import vistasYprocedimientos from './routes/vistas.routes.js';
 
 const app = express();
 
@@ -62,10 +63,11 @@ app.use('/reglas', reglaRoute);
 app.use('/simulations', simulationRoute);
 app.use('/simulation-results', simulationRestultRoute);
 app.use('/users', userRoute);
-app.use(renderAdminRoute)
-app.use(renderUserRoute)
-app.use('/canal-materias',canalMateriaRoutes)
-app.use(calificacion)
+app.use(renderAdminRoute);
+app.use(renderUserRoute);
+app.use('/canal-materias',canalMateriaRoutes);
+app.use(calificacion);
+app.use(vistasYprocedimientos);
 
 
 

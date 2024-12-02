@@ -53,7 +53,8 @@
 
                 <div class="fondo-preguntas" id="fondoPreguntas">
                     <div class="mb-3">
-                        <label for="examIdVer" class="form-label">Examen: <%= getExamTypeName(exam.exam_type) %> </label> <!-- Pon el nombre  -->
+                        <label for="examIdVer" class="form-label">Examen: <%= getExamTypeName(exam.exam_type) %>  ---   Canal: <%= exam.canal %> </label> <!-- Pon el nombre  -->
+                        
                     </div>
 
                     <% exam.preguntas.forEach((preg, index) => { %>

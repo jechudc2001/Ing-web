@@ -8,6 +8,7 @@
 
             <!-- contenido principal-->
             <h2 class="titulo-dashboard">Estadísticas de Usuario</h2>
+            <input type="hidden" id="idUser" value="<%= user.id %>">
 
             <div class="contenedor-dashboard d-flex flex-column flex-lg-row">
                 <!-- Gráfico de barras de rendimiento por curso -->
@@ -55,120 +56,151 @@
     <!-- Incluir Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-    // Datos para el gráfico de barras (Rendimiento por curso)
-    const cursos = ['Matemáticas', 'Física', 'Historia', 'Biología']; // Ejemplo de cursos
-    const rendimientos = [85, 70, 95, 80]; // Porcentaje de rendimiento en los cursos
-    const colores = ['#007bff', '#28a745', '#ffc107', '#dc3545']; // Colores personalizados para cada barra
-
-    // Crear gráfico de barras para rendimiento por curso
-    var ctxBar = document.getElementById('barChart').getContext('2d');
-    var barChart = new Chart(ctxBar, {
-        type: 'bar',
-        data: {
-            labels: cursos,
-            datasets: [{
-                label: 'Rendimiento por Curso (%)',
-                data: rendimientos,
-                backgroundColor: colores, // Asigna un color diferente a cada barra
-                borderColor: '#0056b3', // Color de borde
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 100 // Mostrar porcentaje de 0 a 100
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false
-                }
-            }
-        }
-    });
-
-        // Datos de exámenes para el gráfico de barras (Aprobados vs Desaprobados)
-        const examenesAprobados = 70; // Porcentaje de aprobados
-        const examenesDesaprobados = 30; // Porcentaje de desaprobados
-
-        // Crear gráfico de barras para estadísticas de exámenes
-        var ctxBarStats = document.getElementById('examStatsChart').getContext('2d');
-        var examStatsChart = new Chart(ctxBarStats, {
-            type: 'bar',
-            data: {
-                labels: ['Aprobados', 'Desaprobados'],
-                datasets: [{
-                    label: 'Estadísticas de Exámenes',
-                    data: [examenesAprobados, examenesDesaprobados],
-                    backgroundColor: ['#28a745', '#dc3545'], // Verde para aprobados, rojo para desaprobados
-                    borderColor: ['#fff', '#fff'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100 // Mostrar porcentajes de 0 a 100
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                }
+        document.addEventListener("DOMContentLoaded", async () => {
+            const idUser = document.getElementById("idUser").value;
+            console.log(idUser);
+            try {
+                // Fetch para obtener las estadísticas por usuario
+                const estadisticasResponse = await fetch(`/estadisticas_usuario/${idUser}`);
+                const estadisticas = await estadisticasResponse.json();
+    
+                // Fetch para obtener los datos de aprobados y desaprobados
+                const aprobadosResponse = await fetch(`/aprobados_desaprobados/${idUser}`);
+                const aprobadosData = await aprobadosResponse.json();
+    
+                // Fetch para obtener el historial de simulaciones del usuario
+                const simulacionesResponse = await fetch(`/simulaciones_usuario/${idUser}`);
+                const simulaciones = await simulacionesResponse.json();
+    
+                // Actualizar gráfico de barras: Rendimiento por Curso
+                const cursos = estadisticas.map(item => item.nombre_materia);
+                const rendimientos = estadisticas.map(item => parseFloat(item.porcentaje_acierto));
+                actualizarGraficoRendimiento(cursos, rendimientos);
+    
+                // Actualizar gráfico de barras: Aprobados vs Desaprobados
+                const examenesAprobados = parseInt(aprobadosData[0].aprobados);
+                const examenesDesaprobados = parseInt(aprobadosData[0].desaprobados);
+                actualizarGraficoAprobadosDesaprobados(examenesAprobados, examenesDesaprobados);
+    
+                // Actualizar tabla de historial de exámenes
+                actualizarTablaHistorial(simulaciones);
+    
+            } catch (error) {
+                console.error("Error al cargar datos:", error);
             }
         });
+    
+        // Función para actualizar el gráfico de rendimiento por curso
+        function actualizarGraficoRendimiento(cursos, rendimientos) {
+            // Crear un arreglo de objetos para combinar cursos y rendimientos
+            const data = cursos.map((curso, index) => ({
+                curso,
+                rendimiento: rendimientos[index]
+            }));
 
-        // Arreglo de exámenes
-        const examenes = [
-            { examen: 'Cepu Otoño 1 2023', canal: 1, modo: 'Práctica', fecha: '12/02/2024', nota: '92' },
-            { examen: 'Cepu Verano 1 2023', canal: 2, modo: 'Práctica', fecha: '25/11/2023', nota: '78' },
-            { examen: 'Fase 2 2023', canal: 1, modo: 'Simulacro', fecha: '15/07/2023', nota: '90' },
-            { examen: 'Fase 1 2023', canal: 2, modo: 'Simulacro', fecha: '10/03/2023', nota: '185' }
-        ];
+            // Ordenar por rendimiento de mayor a menor
+            data.sort((a, b) => b.rendimiento - a.rendimiento);
 
-        // Función para llenar la tabla de exámenes
-        function cargarTablaExamenes() {
+            // Tomar los 5 primeros elementos
+            const top5 = data.slice(0, 5);
+
+            // Extraer los cursos y rendimientos de los top 5
+            const topCursos = top5.map(item => item.curso);
+            const topRendimientos = top5.map(item => item.rendimiento);
+
+            // Crear el gráfico con los datos limitados a 5
+            const ctxBar = document.getElementById('barChart').getContext('2d');
+            new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: topCursos,
+                    datasets: [{
+                        label: 'Rendimiento por Curso (%)',
+                        data: topRendimientos,
+                        backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1'], // Colores de ejemplo
+                        borderColor: '#0056b3',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100 // Máximo porcentaje
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+    
+        // Función para actualizar el gráfico de aprobados vs desaprobados
+        function actualizarGraficoAprobadosDesaprobados(aprobados, desaprobados) {
+            const ctxBarStats = document.getElementById('examStatsChart').getContext('2d');
+            new Chart(ctxBarStats, {
+                type: 'bar',
+                data: {
+                    labels: ['Aprobados', 'Desaprobados'],
+                    datasets: [{
+                        label: 'Estadísticas de Exámenes',
+                        data: [aprobados, desaprobados],
+                        backgroundColor: ['#28a745', '#dc3545'],
+                        borderColor: ['#fff', '#fff'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: Math.max(aprobados, desaprobados) + 10 // Ajustar el rango dinámicamente
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+    
+        // Función para actualizar la tabla de historial de exámenes
+        function actualizarTablaHistorial(simulaciones) {
             const tbody = document.getElementById('tablaExamenes').getElementsByTagName('tbody')[0];
-            
-            // Limpiar cualquier fila existente
-            tbody.innerHTML = '';
-            
-            // Recorrer el arreglo de exámenes y agregar las filas
-            examenes.forEach(examen => {
+            tbody.innerHTML = ''; // Limpiar cualquier contenido previo
+    
+            simulaciones.forEach(simulacion => {
                 const fila = document.createElement('tr');
-                
+    
                 const celdaExamen = document.createElement('td');
-                celdaExamen.textContent = examen.examen;
+                celdaExamen.textContent = simulacion.Examen;
                 fila.appendChild(celdaExamen);
-                
+    
                 const celdaCanal = document.createElement('td');
-                celdaCanal.textContent = examen.canal === 1 ? '1' : '2'; // Mostrar "Canal 1" o "Canal 2"
+                celdaCanal.textContent = simulacion.Canal;
                 fila.appendChild(celdaCanal);
-                
+    
                 const celdaModo = document.createElement('td');
-                celdaModo.textContent = examen.modo; // Mostrar "Práctica" o "Simulacro"
+                celdaModo.textContent = simulacion.Modo;
                 fila.appendChild(celdaModo);
-                
+    
                 const celdaFecha = document.createElement('td');
-                celdaFecha.textContent = examen.fecha;
+                const fecha = new Date(simulacion.Fecha);
+                celdaFecha.textContent = fecha.toLocaleDateString(); // Formato de fecha local
                 fila.appendChild(celdaFecha);
-                
+    
                 const celdaNota = document.createElement('td');
-                celdaNota.textContent = examen.nota;
+                celdaNota.textContent = simulacion.Nota;
                 fila.appendChild(celdaNota);
-                
+    
                 tbody.appendChild(fila);
             });
         }
-
-        // Llamar la función para llenar la tabla
-        cargarTablaExamenes();
     </script>
+    
 
     <%- include('../partials/endPageAdmin.ejs'); %>
 </body>

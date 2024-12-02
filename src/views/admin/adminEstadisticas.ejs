@@ -55,125 +55,76 @@
     <!-- Incluir Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Datos de exámenes para gráfico de aprobados vs desaprobados
-        const examenesAprobados = 70; // Porcentaje de aprobados
-        const examenesDesaprobados = 30; // Porcentaje de desaprobados
-
-        // Crear gráfico de barras para exámenes aprobados vs desaprobados
-        var ctxExamStats = document.getElementById('examApprovedStatsChart').getContext('2d');
-        var examApprovedStatsChart = new Chart(ctxExamStats, {
-            type: 'bar',
-            data: {
-                labels: ['Aprobados', 'Desaprobados'],
-                datasets: [{
-                    label: 'Estadísticas de Exámenes',
-                    data: [examenesAprobados, examenesDesaprobados],
-                    backgroundColor: ['#28a745', '#dc3545'], // Verde para aprobados, rojo para desaprobados
-                    borderColor: ['#fff', '#fff'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100 // Mostrar porcentajes de 0 a 100
-                    }
+        // Función para obtener datos de las vistas
+        async function fetchData(route) {
+            const response = await fetch(route);
+            return await response.json();
+        }
+    
+        // Cargar datos dinámicos
+        async function cargarEstadisticas() {
+            // Datos de exámenes aprobados/desaprobados
+            const aprobadosData = await fetchData('/vista_aprobados_desaprobados');
+            const aprobados = parseInt(aprobadosData[0].aprobados);
+            const desaprobados = parseInt(aprobadosData[0].desaprobados);
+    
+            // Crear gráfico de aprobados/desaprobados
+            new Chart(document.getElementById('examApprovedStatsChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Aprobados', 'Desaprobados'],
+                    datasets: [{
+                        label: 'Exámenes',
+                        data: [aprobados, desaprobados],
+                        backgroundColor: ['#28a745', '#dc3545']
+                    }]
                 },
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                }
-            }
-        });
-
-        // Datos para gráfico de distribución de calificaciones
-        const calificaciones = [50, 150, 300, 450, 600]; // Ejemplo de calificaciones
-        const rangosCalificaciones = ['0-200', '200-400', '400-600']; // Rango de calificaciones
-
-        // Calcular cuántas calificaciones caen en cada rango
-        const calificacionesPorRango = [
-            calificaciones.filter(calificacion => calificacion <= 200).length, // 0-200
-            calificaciones.filter(calificacion => calificacion > 200 && calificacion <= 400).length, // 200-400
-            calificaciones.filter(calificacion => calificacion > 400).length // 400-600
-        ];
-
-        // Crear gráfico de barras para distribución de calificaciones
-        var ctxGradeDistribution = document.getElementById('gradeDistributionChart').getContext('2d');
-        var gradeDistributionChart = new Chart(ctxGradeDistribution, {
-            type: 'bar',
-            data: {
-                labels: rangosCalificaciones,
-                datasets: [{
-                    label: 'Distribución de Calificaciones',
-                    data: calificacionesPorRango,
-                    backgroundColor: ['#17a2b8', '#ffc107', '#28a745'], // Colores para cada rango
-                    borderColor: ['#fff', '#fff', '#fff'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+                options: { responsive: true, plugins: { legend: { display: false } } }
+            });
+    
+            // Datos de distribución de calificaciones
+            const distribucionData = await fetchData('/vista_distribucion_clasificaciones');
+            const distribucion = distribucionData[0];
+            const calificaciones = [
+                parseInt(distribucion["0_200"]),
+                parseInt(distribucion["200_400"]),
+                parseInt(distribucion["400_600"])
+            ];
+    
+            // Crear gráfico de distribución
+            new Chart(document.getElementById('gradeDistributionChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['0-200', '200-400', '400-600'],
+                    datasets: [{
+                        label: 'Rangos de Calificaciones',
+                        data: calificaciones,
+                        backgroundColor: ['#17a2b8', '#ffc107', '#28a745']
+                    }]
                 },
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                }
-            }
-        });
-
-        // Arreglo de exámenes
-        const examenes = [
-            { examen: 'Cepu Otoño 1 2023', canal: 1, modo: 'Práctica', fecha: '12/02/2024', nota: '92' },
-            { examen: 'Cepu Verano 1 2023', canal: 2, modo: 'Práctica', fecha: '25/11/2023', nota: '78' },
-            { examen: 'Fase 2 2023', canal: 1, modo: 'Simulacro', fecha: '15/07/2023', nota: '90' },
-            { examen: 'Fase 1 2023', canal: 2, modo: 'Simulacro', fecha: '10/03/2023', nota: '185' }
-        ];
-
-        // Función para llenar la tabla de exámenes
-        function cargarTablaExamenes() {
-            const tbody = document.getElementById('tablaExamenes').getElementsByTagName('tbody')[0];
-            
-            // Limpiar cualquier fila existente
+                options: { responsive: true, plugins: { legend: { display: false } } }
+            });
+    
+            // Datos de simulaciones
+            const simulacionesData = await fetchData('/vista_simulaciones');
+            const tbody = document.querySelector('#tablaExamenes tbody');
             tbody.innerHTML = '';
-            
-            // Recorrer el arreglo de exámenes y agregar las filas
-            examenes.forEach(examen => {
+    
+            simulacionesData.forEach(simulacion => {
                 const fila = document.createElement('tr');
-                
-                const celdaExamen = document.createElement('td');
-                celdaExamen.textContent = examen.examen;
-                fila.appendChild(celdaExamen);
-                
-                const celdaCanal = document.createElement('td');
-                celdaCanal.textContent = examen.canal === 1 ? '1' : '2'; // Mostrar "Canal 1" o "Canal 2"
-                fila.appendChild(celdaCanal);
-                
-                const celdaModo = document.createElement('td');
-                celdaModo.textContent = examen.modo; // Mostrar "Práctica" o "Simulacro"
-                fila.appendChild(celdaModo);
-                
-                const celdaFecha = document.createElement('td');
-                celdaFecha.textContent = examen.fecha;
-                fila.appendChild(celdaFecha);
-                
-                const celdaNota = document.createElement('td');
-                celdaNota.textContent = examen.nota;
-                fila.appendChild(celdaNota);
-                
+                fila.innerHTML = `
+                    <td>${simulacion.Examen}</td>
+                    <td>${simulacion.Canal}</td>
+                    <td>${simulacion.Modo}</td>
+                    <td>${new Date(simulacion.Fecha).toLocaleDateString()}</td>
+                    <td>${simulacion.Nota}</td>
+                `;
                 tbody.appendChild(fila);
             });
         }
-
-        // Llamar la función para llenar la tabla
-        cargarTablaExamenes();
+    
+        // Ejecutar carga de estadísticas
+        cargarEstadisticas();
     </script>
 
     <%- include('../partials/endPageAdmin.ejs'); %>
