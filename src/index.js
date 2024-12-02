@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path"; // Para manejar rutas de archivos
 import { fileURLToPath } from "url";
-import session from "express-session";
+import session from 'cookie-session';
 
 
 // Importar rutas
@@ -35,6 +35,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Middleware para analizar cuerpos JSON
 app.use(express.json());
+
+app.set("trust proxy", 1);
 
 
 
