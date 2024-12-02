@@ -21,20 +21,8 @@ export const renderUserDashboard = async (req, res) => {
 
       let user = req.session.user;
 
-      // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
-     
       if (!user) {
-          user = {
-              id: 0, // ID ficticio
-              email: 'test@example.com',
-              username: 'Usuario Prueba',
-              role: 'user', // O 'admin' según tus necesidades
-          };
-      }
-
-      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-      if (!user) {
-          return res.status(401).json({ message: 'No estás autenticado' });
+        return res.redirect('/'); // Redirige a la ruta raíz
       }
 
         // Obtén todos los canales con sus materias correspondientes
@@ -63,21 +51,11 @@ export const renderUserSeleccionarExamen = async (req, res) => {
 
       let user = req.session.user;
 
-      // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
      
       if (!user) {
-          user = {
-              id: 0, // ID ficticio
-              email: 'test@example.com',
-              username: 'Usuario Prueba',
-              role: 'user', // O 'admin' según tus necesidades
-          };
+        return res.redirect('/'); // Redirige a la ruta raíz
       }
 
-      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-      if (!user) {
-          return res.status(401).json({ message: 'No estás autenticado' });
-      }
       // Obtén la ID del canal desde los parámetros de la ruta
       const { id } = req.params;
   
@@ -102,20 +80,8 @@ export const renderUserSeleccionarExamen = async (req, res) => {
 export const renderUserCuenta= (req, res) => {
   let user = req.session.user;
 
-  // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
- 
   if (!user) {
-      user = {
-          id: 0, // ID ficticio
-          email: 'test@example.com',
-          username: 'Usuario Prueba',
-          role: 'user', // O 'admin' según tus necesidades
-      };
-  }
-
-  // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-  if (!user) {
-      return res.status(401).json({ message: 'No estás autenticado' });
+    return res.redirect('/'); // Redirige a la ruta raíz
   }
 
     res.render("user/userCuenta", { title: "Cuenta", user: user,  } );
@@ -125,19 +91,8 @@ export const renderUserCuenta= (req, res) => {
 export const renderUserModoPractica = async (req, res) => {
   let user = req.session.user;
 
-  // Asignar un usuario de prueba si no hay autenticación y estás en producción
   if (!user) {
-    user = {
-      id: 0,
-      email: 'test@example.com',
-      username: 'Usuario Prueba',
-      role: 'user', // Cambia según tus necesidades
-    };
-  }
-
-  // Verifica nuevamente si no hay usuario
-  if (!user) {
-    return res.status(401).render('error', { message: 'No estás autenticado' });
+    return res.redirect('/'); // Redirige a la ruta raíz
   }
 
   // Obtener la ID del examen desde la URL
@@ -183,17 +138,7 @@ export const renderUserModoPracticaCurso = async (req, res) => {
       // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
      
       if (!user) {
-          user = {
-              id: 0, // ID ficticio
-              email: 'test@example.com',
-              username: 'Usuario Prueba',
-              role: 'user', // O 'admin' según tus necesidades
-          };
-      }
-
-      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-      if (!user) {
-          return res.status(401).json({ message: 'No estás autenticado' });
+        return res.redirect('/'); // Redirige a la ruta raíz
       }
     // Obtener el ID de la materia y la cantidad de preguntas de los parámetros
     const { id, cantidad } = req.params;
@@ -230,21 +175,10 @@ export const renderUserCursos = async (req, res) => {
   try {
     let user = req.session.user;
 
-      // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
-     
-      if (!user) {
-          user = {
-              id: 0, // ID ficticio
-              email: 'test@example.com',
-              username: 'Usuario Prueba',
-              role: 'user', // O 'admin' según tus necesidades
-          };
-      }
+    if (!user) {
+      return res.redirect('/'); // Redirige a la ruta raíz
+    }
 
-      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-      if (!user) {
-          return res.status(401).json({ message: 'No estás autenticado' });
-      }
     // Obtén todos los cursos desde la base de datos
     const cursos = await Materia.findAll();
 
@@ -273,19 +207,10 @@ export const renderUserModoSimulacro= async (req, res) => {
 
       // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
      
-      if (!user) {
-          user = {
-              id: 0, // ID ficticio
-              email: 'test@example.com',
-              username: 'Usuario Prueba',
-              role: 'user', // O 'admin' según tus necesidades
-          };
+     if (!user) {
+        return res.redirect('/'); // Redirige a la ruta raíz
       }
 
-      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-      if (!user) {
-          return res.status(401).json({ message: 'No estás autenticado' });
-      }
       const examId = req.params.id;
 
       try {
@@ -325,14 +250,8 @@ export const renderUserCalificacion = async (req, res) => {
   let user = req.session.user;
 
   if (!user) {
-      user = {
-          id: 0,
-          email: 'test@example.com',
-          username: 'Usuario Prueba',
-          role: 'user',
-      };
+    return res.redirect('/'); // Redirige a la ruta raíz
   }
-
   const { id } = req.params; // ID de la simulación pasada en la URL
 
   try {
@@ -441,18 +360,9 @@ export const renderUserGenerarAleatorio= (req, res) => {
       // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
      
       if (!user) {
-          user = {
-              id: 0, // ID ficticio
-              email: 'test@example.com',
-              username: 'Usuario Prueba',
-              role: 'user', // O 'admin' según tus necesidades
-          };
+        return res.redirect('/'); // Redirige a la ruta raíz
       }
 
-      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-      if (!user) {
-          return res.status(401).json({ message: 'No estás autenticado' });
-      }
   // Obtén todos los cursos desde la base de datos
   res.render("user/userGenerarAleatorio", { title: "Calificacion",user:user }
   );
@@ -465,20 +375,9 @@ export const renderUserGenerarAleatorio= (req, res) => {
 export const renderUserRespuestas = async (req, res) => {
   let user = req.session.user;
 
-  // Asignar un usuario de prueba si no hay autenticación y estás en producción
   if (!user) {
-    user = {
-      id: 0,
-      email: 'test@example.com',
-      username: 'Usuario Prueba',
-      role: 'user',
-    };
-  }
-
-  // Verificar si el usuario está autenticado
-  if (!user) {
-    return res.status(401).render('error', { message: 'No estás autenticado' });
-  }
+        return res.redirect('/'); // Redirige a la ruta raíz
+      }
 
   // Obtener id_simulation desde los parámetros
   const { id } = req.params; // ID de la simulación pasada en la URL
@@ -545,19 +444,8 @@ export const renderUserRespuestas = async (req, res) => {
 export const renderUserEstadisticas = async (req, res) => {
   let user = req.session.user;
 
-  // If no user is authenticated and you're in production, assign a test user
   if (!user) {
-      user = {
-          id: 0, // Fictitious ID
-          email: 'test@example.com',
-          username: 'Usuario Prueba',
-          role: 'user', // Or 'admin' based on your needs
-      };
-  }
-
-  // If there's still no user, return an unauthorized status
-  if (!user) {
-      return res.status(401).json({ message: 'No estás autenticado' });
+    return res.redirect('/'); // Redirige a la ruta raíz
   }
 
   try {

@@ -13,77 +13,37 @@ import sequelize from '../../config/dbConfig.js';
 
 export const renderActualizarAdmin = (req, res) => {
   let user = req.session.user;
-
-  // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
- 
-  if (!user) {
-      user = {
-          id: 0, // ID ficticio
-          email: 'test@example.com',
-          username: 'Admin Prueba',
-          role: 'admin', // O 'admin' según tus necesidades
-      };
-  }
   
-  
-  // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
   if (!user) {
-      return res.status(401).json({ message: 'No estás autenticado' });
+    return res.redirect('/'); // Redirige a la ruta raíz
   }
-/*
   if (user.role == 'user') {
-    return res.status(401).json({ message: 'No tienes acceso a esta interfaz de administrador' });
-  }*/
+    return res.redirect('/'); // Redirige a la ruta raíz
+  }
     res.render("admin/actualizarAdmin", { title: "Actualizar datos", user: user });
 };
 
 export const renderCrearCurso = (req, res) => {
   let user = req.session.user;
 
-  // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
- 
   if (!user) {
-      user = {
-          id: 0, // ID ficticio
-          email: 'test@example.com',
-          username: 'Admin prueba',
-          role: 'admin', // O 'admin' según tus necesidades
-      };
+    return res.redirect('/'); // Redirige a la ruta raíz
   }
-  
-  // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-  if (!user) {
-      return res.status(401).json({ message: 'No estás autenticado' });
-  }
-/*
   if (user.role == 'user') {
-    return res.status(401).json({ message: 'No tienes acceso a esta interfaz de administrador' });
-  }*/
+    return res.redirect('/'); // Redirige a la ruta raíz
+  }
     res.render("admin/crearCurso", { title: "Crear curso", user: user });
 };
 
 export const renderCrearExamenPage = (req, res) => {
   let user = req.session.user;
 
-  // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
- 
   if (!user) {
-      user = {
-          id: 0, // ID ficticio
-          email: 'test@example.com',
-          username: 'Admin prueba',
-          role: 'admin', // O 'admin' según tus necesidades
-      };
+    return res.redirect('/'); // Redirige a la ruta raíz
   }
-  
-  // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-  if (!user) {
-      return res.status(401).json({ message: 'No estás autenticado' });
-  }
-/*
   if (user.role == 'user') {
-    return res.status(401).json({ message: 'No tienes acceso a esta interfaz de administrador' });
-  }*/
+    return res.redirect('/'); // Redirige a la ruta raíz
+  }
     res.render("admin/crearExamen", { title: "Crear examen", user: user });
 };
 
@@ -94,22 +54,11 @@ export const renderCrearPregunta = (req, res) => {
   // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
  
   if (!user) {
-      user = {
-          id: 0, // ID ficticio
-          email: 'test@example.com',
-          username: 'Admin prueba',
-          role: 'admin', // O 'admin' según tus necesidades
-      };
+    return res.redirect('/'); // Redirige a la ruta raíz
   }
-  
-  // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-  if (!user) {
-      return res.status(401).json({ message: 'No estás autenticado' });
-  }
-/*
   if (user.role == 'user') {
-    return res.status(401).json({ message: 'No tienes acceso a esta interfaz de administrador' });
-  }*/
+    return res.redirect('/'); // Redirige a la ruta raíz
+  }
   const id = req.params.id; // Obtiene el ID de los parámetros de la ruta
   res.render('admin/crearPregunta', { id, user: user }); // Pasa el ID a la vista
 };
@@ -120,25 +69,12 @@ export const renderCrearPregunta = (req, res) => {
 export const renderCrearUsuario = (req, res) => {
   let user = req.session.user;
 
-  // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
- 
   if (!user) {
-      user = {
-          id: 0, // ID ficticio
-          email: 'test@example.com',
-          username: 'Admin prueba',
-          role: 'admin', // O 'admin' según tus necesidades
-      };
+    return res.redirect('/'); // Redirige a la ruta raíz
   }
-  
-  // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-  if (!user) {
-      return res.status(401).json({ message: 'No estás autenticado' });
-  }
-/*
   if (user.role == 'user') {
-    return res.status(401).json({ message: 'No tienes acceso a esta interfaz de administrador' });
-  }*/
+    return res.redirect('/'); // Redirige a la ruta raíz
+  }
     res.render("admin/crearUsuario", { title: "Crear usuario", user: user });
 };
 
@@ -146,25 +82,12 @@ export const renderCursos = async (req, res) => {
   try {
     let user = req.session.user;
 
-    // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
-   
     if (!user) {
-        user = {
-            id: 0, // ID ficticio
-            email: 'test@example.com',
-            username: 'Admin prueba',
-            role: 'admin', // O 'admin' según tus necesidades
-        };
+      return res.redirect('/'); // Redirige a la ruta raíz
     }
-    
-    // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-    if (!user) {
-        return res.status(401).json({ message: 'No estás autenticado' });
-    }
-/*
     if (user.role == 'user') {
-      return res.status(401).json({ message: 'No tienes acceso a esta interfaz de administrador' });
-    }*/
+      return res.redirect('/'); // Redirige a la ruta raíz
+    }
     const cursos = await Materia.findAll();
     res.render("admin/cursos", { cursos, user: user });
   } catch (error) {
@@ -179,25 +102,12 @@ export const renderEditarCurso = async (req, res) => {
   try {
     let user = req.session.user;
 
-    // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
-   
     if (!user) {
-        user = {
-            id: 0, // ID ficticio
-            email: 'test@example.com',
-            username: 'Admin prueba',
-            role: 'admin', // O 'admin' según tus necesidades
-        };
+      return res.redirect('/'); // Redirige a la ruta raíz
     }
-    
-    // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-    if (!user) {
-        return res.status(401).json({ message: 'No estás autenticado' });
-    }
-/*
     if (user.role == 'user') {
-      return res.status(401).json({ message: 'No tienes acceso a esta interfaz de administrador' });
-    }*/
+      return res.redirect('/'); // Redirige a la ruta raíz
+    }
     const materiaId = req.params.id; 
     const materia = await Materia.findByPk(materiaId); 
 
@@ -218,25 +128,12 @@ export const renderEditarExamen = async (req, res) => {
     try {
       let user = req.session.user;
 
-      // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
-     
       if (!user) {
-          user = {
-              id: 0, // ID ficticio
-              email: 'test@example.com',
-              username: 'Admin prueba',
-              role: 'admin', // O 'admin' según tus necesidades
-          };
+        return res.redirect('/'); // Redirige a la ruta raíz
       }
-      
-      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-      if (!user) {
-          return res.status(401).json({ message: 'No estás autenticado' });
-      }
-/*
       if (user.role == 'user') {
-        return res.status(401).json({ message: 'No tienes acceso a esta interfaz de administrador' });
-      }*/
+        return res.redirect('/'); // Redirige a la ruta raíz
+      }
         const examId = req.params.id; 
         const exam = await Exam.findByPk(examId); 
 
@@ -256,25 +153,13 @@ export const renderEditarUsuario = async (req, res) => {
     try {
       let user = req.session.user;
 
-      // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
-     
       if (!user) {
-        user = {
-              id: 0, // ID ficticio
-              email: 'test@example.com',
-              username: 'Admin prueba',
-              role: 'admin', // O 'admin' según tus necesidades
-          };
+        return res.redirect('/'); // Redirige a la ruta raíz
       }
-      
-      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-      if (!user) {
-          return res.status(401).json({ message: 'No estás autenticado' });
-      }
-/*
       if (user.role == 'user') {
-        return res.status(401).json({ message: 'No tienes acceso a esta interfaz de administrador' });
-      }*/
+        return res.redirect('/'); // Redirige a la ruta raíz
+      }
+
         const userId = req.params.id; 
         const Editaruser = await User.findByPk(userId); 
         
@@ -293,25 +178,12 @@ export const renderExamenes = async (req, res) => {
     try {
       let user = req.session.user;
 
-      // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
-     
-      if (!user) {
-          user = {
-              id: 0, // ID ficticio
-              email: 'test@example.com',
-              username: 'Admin prueba',
-              role: 'admin', // O 'admin' según tus necesidades
-          };
-      }
-      
-      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-      if (!user) {
-          return res.status(401).json({ message: 'No estás autenticado' });
-      }
-/*
-      if (user.role == 'user') {
-        return res.status(401).json({ message: 'No tienes acceso a esta interfaz de administrador' });
-      }*/
+       if (!user) {
+    return res.redirect('/'); // Redirige a la ruta raíz
+  }
+  if (user.role == 'user') {
+    return res.redirect('/'); // Redirige a la ruta raíz
+  }
       
       const exams = await Exam.findAll(); // Obtener todos los exámenes
       res.render('admin/examenes', { exams, user: user }); // Renderizar la vista y pasar los datos
@@ -326,25 +198,13 @@ export const renderPreguntasPage = async (req, res) => {
     try {
       let user = req.session.user;
 
-      // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
-     
       if (!user) {
-          user = {
-              id: 0, // ID ficticio
-              email: 'test@example.com',
-              username: 'Admin prueba',
-              role: 'admin', // O 'admin' según tus necesidades
-          };
+        return res.redirect('/'); // Redirige a la ruta raíz
       }
-      
-      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-      if (!user) {
-          return res.status(401).json({ message: 'No estás autenticado' });
-      }
-/*
       if (user.role == 'user') {
-        return res.status(401).json({ message: 'No tienes acceso a esta interfaz de administrador' });
-      }*/
+        return res.redirect('/'); // Redirige a la ruta raíz
+      }
+
       const exams = await Exam.findAll(); // Obtener todos los exámenes
       res.render('admin/preguntas', { exams, user: user }); // Renderizar la vista y pasar los datos
     } catch (error) {
@@ -359,25 +219,12 @@ export const renderVerPreguntasPage = async (req, res) => {
     try {
       let user = req.session.user;
 
-      // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
-     
-      if (!user) {
-          user = {
-              id: 0, // ID ficticio
-              email: 'test@example.com',
-              username: 'Admin prueba',
-              role: 'admin', // O 'admin' según tus necesidades
-          };
-      }
-      
-      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-      if (!user) {
-          return res.status(401).json({ message: 'No estás autenticado' });
-      }
-/*
-      if (user.role == 'user') {
-        return res.status(401).json({ message: 'No tienes acceso a esta interfaz de administrador' });
-      }*/
+       if (!user) {
+    return res.redirect('/'); // Redirige a la ruta raíz
+  }
+  if (user.role == 'user') {
+    return res.redirect('/'); // Redirige a la ruta raíz
+  }
      
   
       // Buscar el examen por ID e incluir las preguntas relacionadas
@@ -408,25 +255,12 @@ export const renderVerPreguntasPage = async (req, res) => {
 
       let user = req.session.user;
 
-      // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
-     
       if (!user) {
-          user = {
-              id: 0, // ID ficticio
-              email: 'test@example.com',
-              username: 'Admin prueba',
-              role: 'user', // O 'admin' según tus necesidades
-          };
+        return res.redirect('/'); // Redirige a la ruta raíz
       }
-      
-      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-      if (!user) {
-          return res.status(401).json({ message: 'No estás autenticado' });
-      }
-/*
       if (user.role == 'user') {
-        return res.status(401).json({ message: 'No tienes acceso a esta interfaz de administrador' });
-      }*/
+        return res.redirect('/'); // Redirige a la ruta raíz
+      }
 
 
         // Buscar la regla con id = 1
@@ -459,25 +293,13 @@ export const renderEditExamPage = async (req, res) => {
     try {
       let user = req.session.user;
 
-      // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
-     
       if (!user) {
-          user = {
-              id: 0, // ID ficticio
-              email: 'test@example.com',
-              username: 'Admin prueba',
-              role: 'user', // O 'admin' según tus necesidades
-          };
+        return res.redirect('/'); // Redirige a la ruta raíz
       }
-      
-      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-      if (!user) {
-          return res.status(401).json({ message: 'No estás autenticado' });
-      }
-/*
       if (user.role == 'user') {
-        return res.status(401).json({ message: 'No tienes acceso a esta interfaz de administrador' });
-      }*/
+        return res.redirect('/'); // Redirige a la ruta raíz
+      }
+
         const exam = await Exam.findByPk(id); // Buscar el examen por ID
         if (!exam) return res.status(404).json({ message: "Examen no encontrado" });
   
@@ -492,25 +314,13 @@ export const renderUsuario = async (req, res) => {
     try {
       let user = req.session.user;
 
-      // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
-     
-      if (!user) {
-        user = {
-              id: 0, // ID ficticio
-              email: 'test@example.com',
-              username: 'Admin prueba',
-              role: 'admin', // O 'admin' según tus necesidades
-          };
-      }
-      
-      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-      if (!user) {
-          return res.status(401).json({ message: 'No estás autenticado' });
-      }
-/*
-      if (user.role == 'user') {
-        return res.status(401).json({ message: 'No tienes acceso a esta interfaz de administrador' });
-      }*/
+       if (!user) {
+    return res.redirect('/'); // Redirige a la ruta raíz
+  }
+  if (user.role == 'user') {
+    return res.redirect('/'); // Redirige a la ruta raíz
+  }
+  
       const userT = await User.findAll(); // Obtener todos los exámenes
       res.render('admin/usuarios', { userT, user:user }); // Renderizar la vista y pasar los datos
     } catch (error) {
@@ -545,22 +355,11 @@ export const renderManagePreguntasPage = async (req, res) => {
       // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
      
       if (!user) {
-          user = {
-              id: 0, // ID ficticio
-              email: 'test@example.com',
-              username: 'Admin prueba',
-              role: 'admin', // O 'admin' según tus necesidades
-          };
+        return res.redirect('/'); // Redirige a la ruta raíz
       }
-      
-      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-      if (!user) {
-          return res.status(401).json({ message: 'No estás autenticado' });
-      }
-/*
       if (user.role == 'user') {
-        return res.status(401).json({ message: 'No tienes acceso a esta interfaz de administrador' });
-      }*/
+        return res.redirect('/'); // Redirige a la ruta raíz
+      }
     // Buscar el examen por ID e incluir las preguntas relacionadas y sus alternativas
     const exam = await Exam.findByPk(id, {
       include: {
@@ -590,25 +389,13 @@ export const renderVerPreguntasMateria = async (req, res) => {
   try {
     let user = req.session.user;
 
-      // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
-     
-      if (!user) {
-          user = {
-              id: 0, // ID ficticio
-              email: 'test@example.com',
-              username: 'Admin prueba',
-              role: 'admin', // O 'admin' según tus necesidades
-          };
-      }
-      
-      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-      if (!user) {
-          return res.status(401).json({ message: 'No estás autenticado' });
-      }
-/*
-      if (user.role == 'user') {
-        return res.status(401).json({ message: 'No tienes acceso a esta interfaz de administrador' });
-      }*/
+    if (!user) {
+      return res.redirect('/'); // Redirige a la ruta raíz
+    }
+    if (user.role == 'user') {
+      return res.redirect('/'); // Redirige a la ruta raíz
+    }
+
     // Buscar el Materia por ID e incluir las preguntas relacionadas y sus alternativas
     const materias = await Materia.findByPk(id, {
       include: {
@@ -640,25 +427,14 @@ export const renderEditarPregunta = async (req, res) => {
   try {
     let user = req.session.user;
 
-      // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
-     
-      if (!user) {
-          user = {
-              id: 0, // ID ficticio
-              email: 'test@example.com',
-              username: 'Admin prueba',
-              role: 'admin', // O 'admin' según tus necesidades
-          };
-      }
       
-      // Verifica nuevamente si no hay usuario (en caso de no estar en producción)
-      if (!user) {
-          return res.status(401).json({ message: 'No estás autenticado' });
-      }
-/*
-      if (user.role == 'user') {
-        return res.status(401).json({ message: 'No tienes acceso a esta interfaz de administrador' });
-      }*/
+    if (!user) {
+      return res.redirect('/'); // Redirige a la ruta raíz
+    }
+    if (user.role == 'user') {
+      return res.redirect('/'); // Redirige a la ruta raíz
+    }
+
     // Buscar la pregunta por ID e incluir las alternativas relacionadas
     const pregunta = await Pregunta.findByPk(id, {
       include: {
@@ -684,19 +460,11 @@ export const renderEditarPregunta = async (req, res) => {
 export const renderAdminEstadisticas = async (req, res) => {
   let user = req.session.user;
 
-  // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
-  if (!user) {
-      user = {
-          id: 0, // ID ficticio
-          email: 'test@example.com',
-          username: 'Admin Prueba',
-          role: 'admin',
-      };
+   if (!user) {
+    return res.redirect('/'); // Redirige a la ruta raíz
   }
-
-  // Verifica nuevamente si no hay usuario
-  if (!user) {
-      return res.status(401).json({ message: 'No estás autenticado' });
+  if (user.role == 'user') {
+    return res.redirect('/'); // Redirige a la ruta raíz
   }
 
   try {

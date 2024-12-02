@@ -2,6 +2,7 @@ import express from "express";
 import path from "path"; // Para manejar rutas de archivos
 import { fileURLToPath } from "url";
 import session from "express-session";
+import memoryStore from "memorystore"; 
 
 
 // Importar rutas
@@ -37,12 +38,16 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 
 
+const MemoryStore = memoryStore(session);
 
 app.use(
   session({
     secret: "clave123xdgaea", // Cambia esto por una clave más robusta
     resave: false, // No guardar la sesión si no se modifica
     saveUninitialized: false, // No guardar sesiones vacías
+    store: new MemoryStore({
+      checkPeriod: 86400000, // Prune: revisar y eliminar sesiones expiradas cada 24 horas
+    }),
     cookie: {
       maxAge: 1000 * 60 * 60, // 1 hora en milisegundos
       httpOnly: true, // Seguridad: solo accesible por HTTP
