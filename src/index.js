@@ -2,8 +2,25 @@ import express from "express";
 import path from "path"; // Para manejar rutas de archivos
 import { fileURLToPath } from "url";
 import session from "express-session";
-import redis from "redis";
-import connectRedis from "connect-redis";
+
+
+// Importar rutas
+import authRoutes from "./routes/auth.routes.js";
+import alternativaRoute from "./routes/alternativa.routes.js";
+import canalRoute from "./routes/canal.routes.js";
+import examRoute from "./routes/exam.routes.js";
+import examTypeRoute from "./routes/examType.routes.js";
+import materiaRoute from "./routes/materia.routes.js";
+import preguntaRoute from "./routes/pregunta.routes.js";
+import reglaRoute from "./routes/regla.routes.js";
+import renderAdminRoute  from "./routes/renderAdmin.routes.js";
+import renderUserRoute from "./routes/renderUser.routes.js";
+import simulationRoute from "./routes/simulation.routes.js";
+import simulationRestultRoute from "./routes/simulationResult.routes.js";
+import userRoute from "./routes/user.routes.js";
+import canalMateriaRoutes from './routes/canalMateria.routes.js';
+import calificacion from './routes/calificacion.routes.js';
+import vistasYprocedimientos from './routes/vistas.routes.js';
 
 const app = express();
 
@@ -19,20 +36,10 @@ app.use(express.static(path.join(__dirname, "public")));
 // Middleware para analizar cuerpos JSON
 app.use(express.json());
 
-// Crear el cliente Redis
-const RedisStore = connectRedis(session);  // Correctly use the RedisStore constructor
-const redisClient = redis.createClient({
-  host: 'localhost',  // Cambiar si el servidor Redis está en otro lugar
-  port: 6379,         // Puerto de Redis
-  legacyMode: true    // Permite usar el modo heredado si es necesario
-});
 
-redisClient.connect().catch(console.error);
 
-// Configuración de sesión con Redis
 app.use(
   session({
-    store: new RedisStore({ client: redisClient }),
     secret: "clave123xdgaea", // Cambia esto por una clave más robusta
     resave: false, // No guardar la sesión si no se modifica
     saveUninitialized: false, // No guardar sesiones vacías
@@ -42,6 +49,7 @@ app.use(
     },
   })
 );
+
 
 // Rutas
 app.use(authRoutes);
@@ -61,7 +69,11 @@ app.use('/canal-materias',canalMateriaRoutes);
 app.use(calificacion);
 app.use(vistasYprocedimientos);
 
+
+
+
 // Inicia el servidor
 app.listen(3000, () => {
   console.log("Server running on port 3000");
 });
+
