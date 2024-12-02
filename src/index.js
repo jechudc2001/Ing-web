@@ -3,25 +3,7 @@ import path from "path"; // Para manejar rutas de archivos
 import { fileURLToPath } from "url";
 import session from "express-session";
 import redis from "redis";
-import connectRedis from "connect-redis";
-
-// Importar rutas
-import authRoutes from "./routes/auth.routes.js";
-import alternativaRoute from "./routes/alternativa.routes.js";
-import canalRoute from "./routes/canal.routes.js";
-import examRoute from "./routes/exam.routes.js";
-import examTypeRoute from "./routes/examType.routes.js";
-import materiaRoute from "./routes/materia.routes.js";
-import preguntaRoute from "./routes/pregunta.routes.js";
-import reglaRoute from "./routes/regla.routes.js";
-import renderAdminRoute from "./routes/renderAdmin.routes.js";
-import renderUserRoute from "./routes/renderUser.routes.js";
-import simulationRoute from "./routes/simulation.routes.js";
-import simulationRestultRoute from "./routes/simulationResult.routes.js";
-import userRoute from "./routes/user.routes.js";
-import canalMateriaRoutes from './routes/canalMateria.routes.js';
-import calificacion from './routes/calificacion.routes.js';
-import vistasYprocedimientos from './routes/vistas.routes.js';
+import * as connectRedis from 'connect-redis';
 
 const app = express();
 
