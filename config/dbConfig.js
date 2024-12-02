@@ -15,7 +15,8 @@ const sequelize = new Sequelize(
     port: process.env.DB_PORT, // Puerto de la base de datos
     dialect: 'mysql', 
     dialectModule: mysql2, // Needed to fix sequelize issues with WebPack
-  }
+  },
+  
 );
 
 export default sequelize;
