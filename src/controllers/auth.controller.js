@@ -22,10 +22,13 @@ export const login = async (req, res) => {
             role: user.user_type === 1 ? 'admin' : 'user', 
         };
         
+        const redirectUrl = user.user_type === 1 ? '/examen' : '/userDashboard';
 
         // Respondemos con un objeto JSON
-        return res.json({ message: 'Usuario autenticado correctamente' });
-
+        return res.json({
+          message: 'Usuario autenticado correctamente',
+          redirectUrl: redirectUrl,  // Return the redirect URL
+      });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Error en el servidor' });

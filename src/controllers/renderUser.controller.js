@@ -353,21 +353,26 @@ export const renderUserCalificacion = async (req, res) => {
 
 
 
-export const renderUserGenerarAleatorio= (req, res) => {
-  
+export const renderUserGenerarAleatorio = async (req, res) => {
   let user = req.session.user;
 
-      // Si no hay usuario autenticado y estás en producción, asigna un usuario de prueba
-     
-      if (!user) {
-        return res.redirect('/'); // Redirige a la ruta raíz
-      }
+  // Si no hay usuario autenticado, redirigir a la ruta raíz
+  if (!user) {
+    return res.redirect('/');
+  }
 
-  // Obtén todos los cursos desde la base de datos
-  res.render("user/userGenerarAleatorio", { title: "Calificacion",user:user }
-  );
+  try {
+    
+    // Renderiza la vista con los exámenes y los datos del usuario
+    res.render('user/userGenerarAleatorio', {
+      title: 'Examen aleatorio',
+      user: user,
+    });
+  } catch (error) {
+    console.error('Error fetching exams:', error);
+    res.status(500).send('Error retrieving data from the database');
+  }
 };
-
 
 
 

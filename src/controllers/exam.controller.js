@@ -25,12 +25,7 @@ export const createExam = async (req, res) => {
 // Obtener todos los exámenes
 export const getExams = async (req, res) => {
   try {
-    const exams = await Exam.findAll({
-      include: [
-        { model: Canal, as: 'canal' }, // Incluir información del canal
-        { model: ExamType, as: 'exam_type' } // Incluir información del tipo de examen
-      ]
-    });
+    const exams = await Exam.findAll();
     res.status(200).json(exams);
   } catch (error) {
     res.status(500).json({ message: error.message });
